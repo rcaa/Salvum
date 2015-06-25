@@ -9,10 +9,16 @@ import java.util.Properties;
 import java.util.Set;
 
 import br.ufpe.cin.policy.Policy;
+//#if CONTRIBUTION
+//@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
+//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
+//#endif
+//#if FEATURE
 import br.ufpe.cin.preprocessor.ContextManager;
-import br.ufpe.cin.preprocessor.ContributionPreprocessor;
+import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.PreprocessorException;
 import br.ufpe.cin.preprocessor.FeaturePreprocessor;
+//#endif
 
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -63,6 +69,8 @@ public class MainAnalysis {
 		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
 				.getMapClassFeatures();
 		//#elif CONTRIBUTION
+//@		ContextManagerContribution contextContribution = ContextManagerContribution.getContext();
+//@		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution.getMapClassesLineNumbers();
 		//#endif
 
 		// obtenho a policy
@@ -81,6 +89,7 @@ public class MainAnalysis {
 		ana.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
 				sources, sinks);
 		//#elif CONTRIBUTION
+//@		//TODO add method to automatically label source and sinks for contribution
 		//#endif
 
 		// rodo as analises

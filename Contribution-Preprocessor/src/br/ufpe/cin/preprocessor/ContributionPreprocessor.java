@@ -35,7 +35,7 @@ public class ContributionPreprocessor {
 
 		Scanner scanner = new Scanner(targetProjPath);
 
-		ContextManager manager = ContextManager.getContext();
+		ContextManagerContribution manager = ContextManagerContribution.getContext();
 
 		String className = "";
 
