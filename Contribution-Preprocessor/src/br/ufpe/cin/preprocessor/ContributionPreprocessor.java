@@ -1,11 +1,8 @@
 package br.ufpe.cin.preprocessor;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class ContributionPreprocessor {
 
@@ -23,8 +20,11 @@ public class ContributionPreprocessor {
 	}
 
 	public void preprocess() throws IOException {
-		runDiffCommand();
-		Path targetProjPath = loadDiffFile();
+		
+		DiffFileUtil.runDiffCommand(this.targetProjectPath, this.parentCommitHash,
+				this.childCommitHash, this.diffFilePath);
+		Path targetProjPath = DiffFileUtil.loadDiffFile(this.diffFilePath);
+		
 		Scanner scanner = new Scanner(targetProjPath);
 
 		ContextManager manager = ContextManager.getContext();
@@ -46,35 +46,40 @@ public class ContributionPreprocessor {
 			} else if (nextLine.startsWith(Tag.LINES)) {
 				String[] linesAddition = obtainLineNumbers(nextLine, "+");
 				Integer lineNumber = Integer.valueOf(linesAddition[0]);
-				int totalChunkAddition = Integer.valueOf(linesAddition[1]);
+				int totalChunk = Integer.valueOf(linesAddition[1]);
 
-				String[] linesRemoval = obtainLineNumbers(nextLine, "-");
-				int totalChunkRemoval = Integer.valueOf(linesRemoval[1]);
-
-				int totalChunk = (totalChunkAddition > totalChunkRemoval) ? totalChunkAddition
-						: totalChunkRemoval;
+//				String[] linesRemoval = obtainLineNumbers(nextLine, "-");
+//				int totalChunkRemoval = Integer.valueOf(linesRemoval[1]);
+//
+//				int totalChunk = (totalChunkAddition > totalChunkRemoval) ? totalChunkAddition
+//						: totalChunkRemoval;
 
 				int i = 0;
+				
 				while (i < totalChunk && scanner.hasNextLine()) {
 					String posLine = scanner.nextLine();
+					
+					if (posLine.contains("+			request.getSession().setAttribute(Constants.AUTHENTICATION_TYPE, AuthenticationType.CREDENTIALS);")) {
+						System.out.println();	
+					}
+					
 					if (posLine.startsWith("+")) {
 						// adicionar linha
 						manager.addClassLinesInfo(className, lineNumber);
 					}
 					if (posLine.startsWith("-")) {
 						lineNumber--;
+						totalChunk++;
 					}
 					lineNumber++;
 					i++;
 				}
-
-				// VERIFICAR SE A SAIDA IMPRESSA ESTA CORRETA
 			}
 		}
 
 		System.out.println(manager.getMapClassesLineNumbers().toString());
 
-		deleteDiffFile(targetProjPath);
+		DiffFileUtil.deleteDiffFile(targetProjPath);
 	}
 
 	private String[] obtainLineNumbers(String nextLine, String signal) {
@@ -88,25 +93,6 @@ public class ContributionPreprocessor {
 				indexOf);
 		String[] lines = substring.split(",");
 		return lines;
-	}
-
-	private void runDiffCommand() throws IOException {
-		Runtime rt = Runtime.getRuntime();
-		String[] gitDiffCommands = {
-				"bash",
-				"-c",
-				"git --git-dir " + this.targetProjectPath + ".git diff "
-						+ this.parentCommitHash + " " + this.childCommitHash
-						+ " > " + this.diffFilePath };
-		rt.exec(gitDiffCommands);
-	}
-
-	private Path loadDiffFile() throws IOException {
-		return Paths.get(this.diffFilePath);
-	}
-
-	private void deleteDiffFile(Path targetProjPath) throws IOException {
-		Files.delete(targetProjPath);
 	}
 
 	/**
