@@ -152,6 +152,8 @@ public class IFCAnalysisConfig {
 		}
 	}
 
+	
+	//#if FEATURE
 	public void prepareListsOfSourceAndSinks(Collection<SDGClass> classes,
 			Map<String, Map<String, Set<Integer>>> mapClassFeatures,
 			Policy policy, List<SDGProgramPart> sources,
@@ -199,5 +201,7 @@ public class IFCAnalysisConfig {
 			}
 		}
 	}
+	//#elif CONTRIBUTION
+	//#endif
 
 }

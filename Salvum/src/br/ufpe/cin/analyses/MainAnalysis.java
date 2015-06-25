@@ -47,8 +47,8 @@ public class MainAnalysis {
 		// Primeiro passo logico
 		
 		//#if FEATURE
-//@		preprocessFeature(p);
-//@		 elseif CONTRIBUTION
+		preprocessFeature(p);
+		//#elif CONTRIBUTION
 //@		ContributionPreprocessor cp = new ContributionPreprocessor(p);
 //@		cp.preprocess();
 		//#endif
@@ -57,10 +57,13 @@ public class MainAnalysis {
 		JavaMethodSignature entryMethod = JavaMethodSignature
 				.mainMethodOfClass(p.getProperty("main"));
 
+		//#if FEATURE
 		// mapeamento de features e linhas
 		ContextManager context = ContextManager.getContext();
 		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
 				.getMapClassFeatures();
+		//#elif CONTRIBUTION
+		//#endif
 
 		// obtenho a policy
 		Policy policy = new Policy(p.getProperty("policyDirectory"));
@@ -74,8 +77,11 @@ public class MainAnalysis {
 		// rotulo statements e expressions
 		List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
 		List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
+		//#if FEATURE
 		ana.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
 				sources, sinks);
+		//#elif CONTRIBUTION
+		//#endif
 
 		// rodo as analises
 		IFCAnalysis ifc = ana.runAnalysis(sources, sinks, program);
