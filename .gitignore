@@ -1,0 +1,16 @@
+
+*.log
+
+*.zip
+
+*.ars
+
+.metadata/version.ini
+
+*.class
+
+.metadata/.lock
+
+.metadata/.mylyn/.taskListIndex/segments_1
+
+*metadata*
