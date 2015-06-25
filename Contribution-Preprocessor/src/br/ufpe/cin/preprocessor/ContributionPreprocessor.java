@@ -20,11 +20,11 @@ public class ContributionPreprocessor {
 	}
 
 	public void preprocess() throws IOException {
-		
-		DiffFileUtil.runDiffCommand(this.targetProjectPath, this.parentCommitHash,
-				this.childCommitHash, this.diffFilePath);
+
+		DiffFileUtil.runDiffCommand(this.targetProjectPath,
+				this.parentCommitHash, this.childCommitHash, this.diffFilePath);
 		Path targetProjPath = DiffFileUtil.loadDiffFile(this.diffFilePath);
-		
+
 		Scanner scanner = new Scanner(targetProjPath);
 
 		ContextManager manager = ContextManager.getContext();
@@ -35,34 +35,24 @@ public class ContributionPreprocessor {
 			String nextLine = scanner.nextLine();
 
 			if (nextLine.startsWith(Tag.DIFF)) {
-				// significa que comeca o diff de um novo arquivo
-				className = nextLine.substring(nextLine.indexOf("/src"),
-						nextLine.indexOf("."));
-				className = className.replace("/", ".");
-				className = className.replace(".src.", "");
-				// salvar classe em uma estrutura de dados
-
+				className = formatClassName(nextLine);
 				continue;
 			} else if (nextLine.startsWith(Tag.LINES)) {
 				String[] linesAddition = obtainLineNumbers(nextLine, "+");
 				Integer lineNumber = Integer.valueOf(linesAddition[0]);
 				int totalChunk = Integer.valueOf(linesAddition[1]);
 
-//				String[] linesRemoval = obtainLineNumbers(nextLine, "-");
-//				int totalChunkRemoval = Integer.valueOf(linesRemoval[1]);
-//
-//				int totalChunk = (totalChunkAddition > totalChunkRemoval) ? totalChunkAddition
-//						: totalChunkRemoval;
+				// String[] linesRemoval = obtainLineNumbers(nextLine, "-");
+				// int totalChunkRemoval = Integer.valueOf(linesRemoval[1]);
+				//
+				// int totalChunk = (totalChunkAddition > totalChunkRemoval) ?
+				// totalChunkAddition
+				// : totalChunkRemoval;
 
 				int i = 0;
-				
+
 				while (i < totalChunk && scanner.hasNextLine()) {
 					String posLine = scanner.nextLine();
-					
-					if (posLine.contains("+			request.getSession().setAttribute(Constants.AUTHENTICATION_TYPE, AuthenticationType.CREDENTIALS);")) {
-						System.out.println();	
-					}
-					
 					if (posLine.startsWith("+")) {
 						// adicionar linha
 						manager.addClassLinesInfo(className, lineNumber);
@@ -80,6 +70,16 @@ public class ContributionPreprocessor {
 		System.out.println(manager.getMapClassesLineNumbers().toString());
 
 		DiffFileUtil.deleteDiffFile(targetProjPath);
+	}
+
+	private String formatClassName(String nextLine) {
+		String className;
+		// significa que comeca o diff de um novo arquivo
+		className = nextLine.substring(nextLine.indexOf("/src"),
+				nextLine.indexOf("."));
+		className = className.replace("/", ".");
+		className = className.replace(".src.", "");
+		return className;
 	}
 
 	private String[] obtainLineNumbers(String nextLine, String signal) {
@@ -110,18 +110,6 @@ public class ContributionPreprocessor {
 		String diffFile = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Contribution-Preprocessor/diffFiles/diff.txt";
 
 		try {
-			// if (args.length != 4) {
-			// throw new Exception("Not enough arguments, see JavaDoc");
-			// }
-			// for (String input : args) {
-			// if (input == null || input.isEmpty()) {
-			// throw new Exception("Wrong arguments, see JavaDoc");
-			// }
-			// }
-			// ContributionPreprocessor cp = new
-			// ContributionPreprocessor(args[0],
-			// args[1], args[2], args[3]);
-
 			// test purposes with gitblit
 			ContributionPreprocessor cp = new ContributionPreprocessor(
 					projectPath, parentCommit, childCommit, diffFile);
