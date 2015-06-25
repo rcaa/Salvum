@@ -5,17 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ContextManager {
+public class ContextManagerContribution {
 
 	private Map<String, List<Integer>> mapClassesLineNumbers;
 
-	private final static ContextManager instance = new ContextManager();
+	private final static ContextManagerContribution instance = new ContextManagerContribution();
 
-	private ContextManager() {
+	private ContextManagerContribution() {
 		this.mapClassesLineNumbers = new HashMap<String, List<Integer>>();
 	}
 
-	public static ContextManager getContext() {
+	public static ContextManagerContribution getContext() {
 		return instance;
 	}
 
