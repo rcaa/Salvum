@@ -10,6 +10,7 @@ import java.util.Set;
 
 import br.ufpe.cin.policy.Policy;
 import br.ufpe.cin.preprocessor.ContextManager;
+import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 import br.ufpe.cin.preprocessor.PreprocessorException;
 import br.ufpe.cin.preprocessor.FeaturePreprocessor;
 
@@ -44,8 +45,13 @@ public class MainAnalysis {
 			CancelException {
 
 		// Primeiro passo logico
-		preprocessFeature(p);
-
+		
+		//#if FEATURE
+//@		preprocessFeature(p);
+//@		 elseif CONTRIBUTION
+//@		ContributionPreprocessor cp = new ContributionPreprocessor(p);
+//@		cp.preprocess();
+		//#endif
 		// Segundo passo logico
 
 		JavaMethodSignature entryMethod = JavaMethodSignature
