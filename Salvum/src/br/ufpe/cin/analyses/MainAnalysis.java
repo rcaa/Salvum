@@ -44,7 +44,7 @@ public class MainAnalysis {
 			CancelException {
 
 		// Primeiro passo logico
-		preprocess(p);
+		preprocessFeature(p);
 
 		// Segundo passo logico
 
@@ -79,7 +79,7 @@ public class MainAnalysis {
 		System.out.println(resultByProgramPart);
 	}
 
-	private void preprocess(Properties p) {
+	private void preprocessFeature(Properties p) {
 		try {
 			String sourceDirectory = p.getProperty("sourceDirectory");
 			FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory);
