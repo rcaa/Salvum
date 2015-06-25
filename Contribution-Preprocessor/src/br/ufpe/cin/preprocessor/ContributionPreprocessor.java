@@ -2,6 +2,7 @@ package br.ufpe.cin.preprocessor;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class ContributionPreprocessor {
@@ -17,6 +18,13 @@ public class ContributionPreprocessor {
 		this.parentCommitHash = parentCommitHash;
 		this.childCommitHash = childCommitHash;
 		this.diffFilePath = diffFilePath;
+	}
+	
+	public ContributionPreprocessor(Properties p) {
+		this.targetProjectPath = p.getProperty("targetProjectPath");
+		this.parentCommitHash = p.getProperty("parentCommitHash");
+		this.childCommitHash = p.getProperty("childCommitHash");
+		this.diffFilePath = p.getProperty("diffFilePath");
 	}
 
 	public void preprocess() throws IOException {
