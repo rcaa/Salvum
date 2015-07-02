@@ -49,12 +49,15 @@ public class MainAnalysis {
 			IllegalArgumentException, IOException, UnsoundGraphException,
 			CancelException {
 
+		// obtenho a policy
+		Policy policy = new Policy(p.getProperty("policyDirectory"));
+		
 		// Primeiro passo logico
 		
 		//#if FEATURE
 //@		preprocessFeature(p);
 		//#elif CONTRIBUTION
-		ContributionPreprocessor cp = new ContributionPreprocessor(p);
+		ContributionPreprocessor cp = new ContributionPreprocessor(p, policy.getHash());
 		cp.preprocess();
 		//#endif
 		// Segundo passo logico
@@ -71,9 +74,6 @@ public class MainAnalysis {
 		ContextManagerContribution contextContribution = ContextManagerContribution.getContext();
 		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution.getMapClassesLineNumbers();
 		//#endif
-
-		// obtenho a policy
-		Policy policy = new Policy(p.getProperty("policyDirectory"));
 
 		// montar o SDG graph
 		IFCAnalysisConfig ana = new IFCAnalysisConfig();

@@ -20,10 +20,10 @@ public class ContributionPreprocessor {
 		this.diffFilePath = diffFilePath;
 	}
 	
-	public ContributionPreprocessor(Properties p) {
+	public ContributionPreprocessor(Properties p, String commitHash) {
 		this.sourceDirectory = p.getProperty("sourceDirectory");
 		this.parentCommitHash = p.getProperty("parentCommitHash");
-		this.childCommitHash = p.getProperty("childCommitHash");
+		this.childCommitHash = commitHash;
 		this.diffFilePath = p.getProperty("diffFilePath");
 	}
 
