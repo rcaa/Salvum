@@ -7,29 +7,29 @@ import java.util.Scanner;
 
 public class ContributionPreprocessor {
 
-	private String sourceDirectory;
+	private String targetPathDirectory;
 	private String parentCommitHash;
 	private String childCommitHash;
 	private String diffFilePath;
 
 	public ContributionPreprocessor(String sourceDirectory,
 			String parentCommitHash, String childCommitHash, String diffFilePath) {
-		this.sourceDirectory = sourceDirectory;
+		this.targetPathDirectory = sourceDirectory;
 		this.parentCommitHash = parentCommitHash;
 		this.childCommitHash = childCommitHash;
 		this.diffFilePath = diffFilePath;
 	}
 	
 	public ContributionPreprocessor(Properties p, String commitHash) throws IOException {
-		this.sourceDirectory = p.getProperty("sourceDirectory");
+		this.targetPathDirectory = p.getProperty("targetPathDirectory");
 		this.childCommitHash = commitHash;
-		this.parentCommitHash = DiffFileUtil.runParents(commitHash);
+		this.parentCommitHash = DiffFileUtil.runParents(targetPathDirectory, commitHash);
 		this.diffFilePath = p.getProperty("diffFilePath");
 	}
 
 	public void preprocess() throws IOException {
 
-		DiffFileUtil.runDiffCommand(this.sourceDirectory,
+		DiffFileUtil.runDiffCommand(this.targetPathDirectory,
 				this.parentCommitHash, this.childCommitHash, this.diffFilePath);
 		Path targetProjPath = DiffFileUtil.loadDiffFile(this.diffFilePath);
 

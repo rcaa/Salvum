@@ -30,16 +30,16 @@ public class Policy {
 				//#if FEATURE
 //@				this.feature = elements[3];
 				//#elif CONTRIBUTION
-				this.taskName = elements[3];
-				this.hash = elements[7].substring(1, elements[7].length() - 1);
+				this.taskName = elements[3].substring(0, elements[3].indexOf("\n"));
+				this.hash = elements[6].substring(1, elements[6].length() - 1);
 				//#endif
 			} else if (policy.contains("noset")) {
 				String[] elements = policy.split(" ");
 				//#if FEATURE
 //@				this.feature = elements[0];
 				//#elif CONTRIBUTION
-				this.taskName = elements[0];
-				this.hash = elements[7].substring(1, elements[7].length() - 1);
+				this.taskName = elements[0].substring(0, elements[0].indexOf("\n"));
+				this.hash = elements[6].substring(1, elements[6].length() - 1);
 				//#endif
 				this.setOperator(elements[1]);
 				this.clazz = elements[2];
