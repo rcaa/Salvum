@@ -6,18 +6,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import br.ufpe.cin.policy.Policy;
 //#if CONTRIBUTION
-//@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
-//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
+import br.ufpe.cin.preprocessor.ContributionPreprocessor;
+import br.ufpe.cin.preprocessor.ContextManagerContribution;
 //#endif
 //#if FEATURE
-import br.ufpe.cin.preprocessor.ContextManager;
-import br.ufpe.cin.preprocessor.ContextManagerContribution;
-import br.ufpe.cin.preprocessor.PreprocessorException;
-import br.ufpe.cin.preprocessor.FeaturePreprocessor;
+//@import br.ufpe.cin.preprocessor.ContextManager;
+//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
+//@import br.ufpe.cin.preprocessor.PreprocessorException;
+//@import br.ufpe.cin.preprocessor.FeaturePreprocessor;
 //#endif
 
 import com.ibm.wala.util.CancelException;
@@ -53,10 +52,10 @@ public class MainAnalysis {
 		// Primeiro passo logico
 		
 		//#if FEATURE
-		preprocessFeature(p);
+//@		preprocessFeature(p);
 		//#elif CONTRIBUTION
-//@		ContributionPreprocessor cp = new ContributionPreprocessor(p);
-//@		cp.preprocess();
+		ContributionPreprocessor cp = new ContributionPreprocessor(p);
+		cp.preprocess();
 		//#endif
 		// Segundo passo logico
 
@@ -64,13 +63,13 @@ public class MainAnalysis {
 				.mainMethodOfClass(p.getProperty("main"));
 
 		//#if FEATURE
-		// mapeamento de features e linhas
-		ContextManager context = ContextManager.getContext();
-		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
-				.getMapClassFeatures();
+//@		// mapeamento de features e linhas
+//@		ContextManager context = ContextManager.getContext();
+//@		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
+//@				.getMapClassFeatures();
 		//#elif CONTRIBUTION
-//@		ContextManagerContribution contextContribution = ContextManagerContribution.getContext();
-//@		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution.getMapClassesLineNumbers();
+		ContextManagerContribution contextContribution = ContextManagerContribution.getContext();
+		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution.getMapClassesLineNumbers();
 		//#endif
 
 		// obtenho a policy
@@ -86,10 +85,11 @@ public class MainAnalysis {
 		List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
 		List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
 		//#if FEATURE
-		ana.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
-				sources, sinks);
+//@		ana.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
+//@				sources, sinks);
 		//#elif CONTRIBUTION
-//@		//TODO add method to automatically label source and sinks for contribution
+		ana.prepareListsOfSourceAndSinksContribution(classes, mapClassesLineNumbers, policy,
+			sources, sinks);
 		//#endif
 
 		// rodo as analises
@@ -100,13 +100,16 @@ public class MainAnalysis {
 		System.out.println(resultByProgramPart);
 	}
 
-	private void preprocessFeature(Properties p) {
-		try {
-			String sourceDirectory = p.getProperty("sourceDirectory");
-			FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory);
-			pp.execute();
-		} catch (PreprocessorException e) {
-			e.printStackTrace();
-		}
-	}
+	//#if FEATURE
+//@	private void preprocessFeature(Properties p) {
+//@		try {
+//@			String sourceDirectory = p.getProperty("sourceDirectory");
+//@			FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory);
+//@			pp.execute();
+//@		} catch (PreprocessorException e) {
+//@			e.printStackTrace();
+//@		}
+//@	}
+	//#elif CONTRIBUTION
+	//#endif
 }

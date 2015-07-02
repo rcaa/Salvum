@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+//#if FEATURE
+//@import java.util.Set;
+//#endif
 
 import br.ufpe.cin.policy.Policy;
 
@@ -154,12 +156,60 @@ public class IFCAnalysisConfig {
 
 	
 	//#if FEATURE
-	public void prepareListsOfSourceAndSinks(Collection<SDGClass> classes,
-			Map<String, Map<String, Set<Integer>>> mapClassFeatures,
+//@	public void prepareListsOfSourceAndSinks(Collection<SDGClass> classes,
+//@			Map<String, Map<String, Set<Integer>>> mapClassFeatures,
+//@			Policy policy, List<SDGProgramPart> sources,
+//@			List<SDGProgramPart> sinks) {
+//@		for (SDGClass sdgClass : classes) {
+//@			if (!mapClassFeatures.containsKey(sdgClass.toString())) {
+//@				continue;
+//@			}
+//@
+//@			// por enquanto so marca atributo como source
+//@			for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
+//@				if (sdgAttribute.toString().equals(
+//@						policy.getSensitiveResource())) {
+//@					if (policy.getOperator().equals("noflow")) {
+//@						sources.add(sdgAttribute);
+//@					} else if (policy.getOperator().equals("noset")) {
+//@						sinks.add(sdgAttribute);
+//@					}
+//@				}
+//@			}
+//@
+//@			// por enquanto so marca instrucao de metodo como sink
+//@			for (SDGMethod sdgMethod : sdgClass.getMethods()) {
+//@				IMethod meth = sdgMethod.getMethod();
+//@				List<SDGInstruction> methodInstructions = sdgMethod
+//@						.getInstructions();
+//@				for (SDGInstruction sdgInstruction : methodInstructions) {
+//@					Map<String, Set<Integer>> mapFeatures = mapClassFeatures
+//@							.get(sdgClass.toString());
+//@					Set<Integer> lineNumbers = mapFeatures.get(policy
+//@							.getFeature());
+//@
+//@					Integer sourceLine = meth.getLineNumber(sdgInstruction
+//@							.getBytecodeIndex());
+//@
+//@					if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
+//@						if (policy.getOperator().equals("noflow")) {
+//@							sinks.add(sdgInstruction);
+//@						} else if (policy.getOperator().equals("noset")) {
+//@							sources.add(sdgInstruction);
+//@						}
+//@
+//@					}
+//@				}
+//@			}
+//@		}
+//@	}
+	//#elif CONTRIBUTION
+	public void prepareListsOfSourceAndSinksContribution(Collection<SDGClass> classes,
+			Map<String, List<Integer>> mapClassesLineNumbers,
 			Policy policy, List<SDGProgramPart> sources,
 			List<SDGProgramPart> sinks) {
 		for (SDGClass sdgClass : classes) {
-			if (!mapClassFeatures.containsKey(sdgClass.toString())) {
+			if (!mapClassesLineNumbers.containsKey(sdgClass.toString())) {
 				continue;
 			}
 
@@ -181,10 +231,10 @@ public class IFCAnalysisConfig {
 				List<SDGInstruction> methodInstructions = sdgMethod
 						.getInstructions();
 				for (SDGInstruction sdgInstruction : methodInstructions) {
-					Map<String, Set<Integer>> mapFeatures = mapClassFeatures
-							.get(sdgClass.toString());
-					Set<Integer> lineNumbers = mapFeatures.get(policy
-							.getFeature());
+					
+					
+					
+					List<Integer> lineNumbers = mapClassesLineNumbers.get(sdgClass.toString());
 
 					Integer sourceLine = meth.getLineNumber(sdgInstruction
 							.getBytecodeIndex());
@@ -201,7 +251,5 @@ public class IFCAnalysisConfig {
 			}
 		}
 	}
-	//#elif CONTRIBUTION
 	//#endif
-
 }
