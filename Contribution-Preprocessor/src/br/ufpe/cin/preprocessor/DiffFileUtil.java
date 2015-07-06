@@ -4,7 +4,6 @@ package br.ufpe.cin.preprocessor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -27,9 +26,9 @@ public class DiffFileUtil {
 		return Paths.get(diffFilePath);
 	}
 
-	public static void deleteDiffFile(Path targetProjPath) throws IOException {
-		Files.delete(targetProjPath);
-	}
+//	public static void deleteDiffFile(Path targetProjPath) throws IOException {
+//		Files.delete(targetProjPath);
+//	}
 
 	public static String runParents(String targetPathDirectory,
 			String commitHash) throws IOException {
@@ -53,8 +52,7 @@ public class DiffFileUtil {
 				process.getErrorStream()));
 
 		// read any errors from the attempted command
-		System.out
-				.println("Here is the standard error of the command (if any):\n");
+		
 		s = stdError.readLine();
 		if (s != null) {
 			return s;

@@ -54,7 +54,7 @@ public class IFCAnalysisConfig {
 		 * 1.4 stubs
 		 */
 		SDGConfig config = new SDGConfig(classPath, entryMethod.toBCString(),
-				Stubs.JRE_14);
+				Stubs.JRE_15);
 
 		/**
 		 * compute interference edges to model dependencies between threads (set
@@ -79,6 +79,14 @@ public class IFCAnalysisConfig {
 		 * cannot happen
 		 */
 		config.setExceptionAnalysis(ExceptionAnalysis.INTERPROC);
+		
+		
+		
+		config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
+		 
+		 
+		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
+		
 
 		/** build the PDG */
 		SDGProgram program = SDGProgram.createSDGProgram(config, System.out,

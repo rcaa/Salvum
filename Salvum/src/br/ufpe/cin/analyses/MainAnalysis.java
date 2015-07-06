@@ -14,9 +14,9 @@ import br.ufpe.cin.preprocessor.ContextManagerContribution;
 //#endif
 //#if FEATURE
 //@import br.ufpe.cin.preprocessor.ContextManager;
-//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
 //@import br.ufpe.cin.preprocessor.PreprocessorException;
 //@import br.ufpe.cin.preprocessor.FeaturePreprocessor;
+//@import java.util.Set;
 //#endif
 
 import com.ibm.wala.util.CancelException;
@@ -63,7 +63,7 @@ public class MainAnalysis {
 		// Segundo passo logico
 
 		JavaMethodSignature entryMethod = JavaMethodSignature
-				.mainMethodOfClass(p.getProperty("main"));
+				.fromString(p.getProperty("main"));
 
 		//#if FEATURE
 //@		// mapeamento de features e linhas

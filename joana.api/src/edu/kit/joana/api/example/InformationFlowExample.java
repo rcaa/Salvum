@@ -49,7 +49,8 @@ public class InformationFlowExample {
 		 */
 //		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass("com.gitblit.authority.GitblitAuthority");
 		JavaMethodSignature entryMethod = JavaMethodSignature
-				.fromString("com.gitblit.wicket.pages.RootPage.loginUser(Lcom/gitblit/models/UserModel;)V");
+				//.fromString("com.gitblit.wicket.pages.RootPage.loginUser(Lcom/gitblit/models/UserModel;)V");
+				.fromString("com.gitblit.manager.AuthenticationManager.authenticate(Ljavax/servlet/http/HttpServletRequest;Z)Lcom/gitblit/models/UserModel;");
 
 		/**
 		 * For multi-threaded programs, it is currently neccessary to use the
@@ -63,6 +64,9 @@ public class InformationFlowExample {
 		// #if HOME
 		
 		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
+		 
+		 
+		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
 		// #else
 //@
 //@		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/gitblit/ext/wicket-1.4.21.jar");

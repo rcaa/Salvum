@@ -77,7 +77,7 @@ public class ContributionPreprocessor {
 
 		System.out.println(manager.getMapClassesLineNumbers().toString());
 
-		DiffFileUtil.deleteDiffFile(targetProjPath);
+	//	DiffFileUtil.deleteDiffFile(targetProjPath);
 	}
 
 	private String formatClassName(String nextLine) {
