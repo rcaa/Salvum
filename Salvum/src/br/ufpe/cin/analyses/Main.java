@@ -33,12 +33,12 @@ import edu.kit.joana.ifc.sdg.core.violations.IViolation;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 import gnu.trove.map.TObjectIntMap;
 
-public class MainAnalysis {
+public class Main {
 
 	public static void main(String[] args) {
 		Properties p = CommandLine.parse(args);
 		try {
-			MainAnalysis m = new MainAnalysis();
+			Main m = new Main();
 			m.run(p);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,7 +76,7 @@ public class MainAnalysis {
 		//#endif
 
 		// montar o SDG graph
-		IFCAnalysisConfig ana = new IFCAnalysisConfig();
+		AnalysisConfig ana = new AnalysisConfig();
 		SDGProgram program = ana.prepareAnalysis(p.getProperty("classpath"),
 				entryMethod);
 		Collection<SDGClass> classes = program.getClasses();
@@ -84,16 +84,19 @@ public class MainAnalysis {
 		// rotulo statements e expressions
 		List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
 		List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
+		LabelConfig lconfig = new LabelConfig();
+		
 		//#if FEATURE
 //@		ana.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
 //@				sources, sinks);
 		//#elif CONTRIBUTION
-		ana.prepareListsOfSourceAndSinksContribution(classes, mapClassesLineNumbers, policy,
+		lconfig.prepareListsOfSourceAndSinksContribution(classes, mapClassesLineNumbers, policy,
 			sources, sinks);
 		//#endif
 
 		// rodo as analises
-		IFCAnalysis ifc = ana.runAnalysis(sources, sinks, program);
+		IFCAnalysis ifc = new IFCAnalysis(program);
+		lconfig.labellingElements(sources, sinks, program, ifc);
 		Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 		TObjectIntMap<IViolation<SDGProgramPart>> resultByProgramPart = ifc
 				.groupByPPPart(result);

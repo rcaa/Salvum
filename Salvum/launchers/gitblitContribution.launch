@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/Salvum/src/br/ufpe/cin/analyses/MainAnalysis.java"/>
+<listEntry value="/Salvum/src/br/ufpe/cin/analyses/Main.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="br.ufpe.cin.analyses.MainAnalysis"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="br.ufpe.cin.analyses.Main"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-classpath /Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/bin -main com.gitblit.manager.AuthenticationManager.authenticate(Ljavax/servlet/http/HttpServletRequest;Z)Lcom/gitblit/models/UserModel; -targetPathDirectory /Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ -policyDirectory /Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Salvum/policies/gitblitContribution.pl -diffFilePath /Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Contribution-Preprocessor/diffFiles/diff.txt"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Salvum"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx800M"/>
