@@ -11,7 +11,6 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import edu.kit.joana.api.sdg.SDGConfig;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.ifc.sdg.graph.SDGSerializer;
-import edu.kit.joana.ifc.sdg.mhpoptimization.MHPType;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 import edu.kit.joana.util.Stubs;
 import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
@@ -31,7 +30,7 @@ public class SDGConstruction {
 		 * the entry method is the main method which starts the program you want
 		 * to analyze
 		 */
-		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass("examples.Main1");
+		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass("context.Main");
 
 		/**
 		 * For multi-threaded programs, it is currently neccessary to use the
@@ -56,19 +55,19 @@ public class SDGConstruction {
 		 * additional MHP analysis to prune interference edges (does not matter
 		 * for programs without multiple threads)
 		 */
-		config.setMhpType(MHPType.SIMPLE);
+		//config.setMhpType(MHPType.SIMPLE);
 
 		/**
 		 * precision of the used points-to analysis - INSTANCE_BASED is a good
 		 * value for simple examples
 		 */
-		config.setPointsToPrecision(PointsToPrecision.INSTANCE_BASED);
+		config.setPointsToPrecision(PointsToPrecision.OBJECT_SENSITIVE);
 
 		/**
 		 * exception analysis is used to detect exceptional control-flow which
 		 * cannot happen
 		 */
-		config.setExceptionAnalysis(ExceptionAnalysis.INTERPROC);
+		config.setExceptionAnalysis(ExceptionAnalysis.IGNORE_ALL);
 
 		/** build the PDG */
 		SDGProgram program = SDGProgram.createSDGProgram(config, System.out,

@@ -1,3 +1,10 @@
+/**
+ * This file is part of the Joana IFC project. It is developed at the
+ * Programming Paradigms Group of the Karlsruhe Institute of Technology.
+ *
+ * For further details on licensing please read the information at
+ * http://joana.ipd.kit.edu or contact the authors.
+ */
 package edu.kit.joana.api.example;
 
 import java.io.FileOutputStream;
@@ -12,13 +19,14 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import edu.kit.joana.api.sdg.SDGConfig;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.ifc.sdg.graph.SDGSerializer;
-import edu.kit.joana.ifc.sdg.mhpoptimization.MHPType;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 import edu.kit.joana.util.Stubs;
 import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
 import edu.kit.joana.wala.core.SDGBuilder.PointsToPrecision;
-
-public class InformationFlowExample {
+/**
+ * TODO: @author Add your name here.
+ */
+public class HSQLDBExample {
 
 	public static void main(String[] args) throws ClassHierarchyException, IOException, UnsoundGraphException,
 			CancelException {
@@ -38,39 +46,39 @@ public class InformationFlowExample {
 		 * classes of the program which you want to analyze
 		 */
 		// #if HOME
-//@		 String classPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/bin";
+//@		 String classPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/bin";
 		// #else
-		String classPath = "/home/local/CIN/rcaa2/opensource/gitblit/bin";
+		String classPath = "/home/local/CIN/rcaa2/opensource/HSQLDB/bin";
 		// #endif
 
 		/**
 		 * the entry method is the main method which starts the program you want
 		 * to analyze
 		 */
-//		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass("com.gitblit.authority.GitblitAuthority");
-		JavaMethodSignature entryMethod = JavaMethodSignature
-				.fromString("com.gitblit.wicket.pages.RootPage.loginUser(Lcom/gitblit/models/UserModel;)V");
+		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass("org.hsqldb.util.DatabaseManager");
+	//	JavaMethodSignature entryMethod = JavaMethodSignature
+		//		.fromString("com.gitblit.wicket.pages.RootPage.loginUser(Lcom/gitblit/models/UserModel;)V");
 				//.fromString("com.gitblit.manager.AuthenticationManager.authenticate(Ljavax/servlet/http/HttpServletRequest;Z)Lcom/gitblit/models/UserModel;");
 
 		/**
 		 * For multi-threaded programs, it is currently neccessary to use the
 		 * jdk 1.4 stubs
 		 */
-		SDGConfig config = new SDGConfig(classPath, entryMethod.toBCString(), Stubs.JRE_14);
+		SDGConfig config = new SDGConfig(classPath, entryMethod.toBCString(), Stubs.JRE_15);
 
 		/**
 		 * adiciona libs necessarias (dependencias)
 		 */
 		// #if HOME
 //@		
-//@		 //config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
+//@		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/lib/ant.jar");
 //@		 
 //@		 
-//@		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
+//@		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/lib/servlet-2_3-fcs-classfiles.jar");
 		// #else
 
-		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
-		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/gitblit/ext/wicket-1.4.21.jar");
+		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/HSQLDB/lib/ant.jar");
+		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/HSQLDB/lib/servlet-2_3-fcs-classfiles.jar");
 		// #endif
 
 		/**
