@@ -136,14 +136,17 @@ public class LabelConfig {
 			Policy policy, List<SDGProgramPart> sources,
 			List<SDGProgramPart> sinks) {
 		for (SDGClass sdgClass : classes) {
-			if (!mapClassesLineNumbers.containsKey(sdgClass.toString())) {
-				continue;
+			if (sdgClass.toString().contains("UserModel")) {
+				System.out.println(policy.getClazz());
+			}
+			if (mapClassesLineNumbers.containsKey(sdgClass.toString()) || sdgClass.toString().contains(policy.getClazz())) {
+				iterateOverAttributes(policy, sources, sinks, sdgClass);
+
+				iterateOverMethods(mapClassesLineNumbers, policy, sources, sinks,
+						sdgClass);
 			}
 
-			iterateOverAttributes(policy, sources, sinks, sdgClass);
-
-			iterateOverMethods(mapClassesLineNumbers, policy, sources, sinks,
-					sdgClass);
+			
 		}
 	}
 

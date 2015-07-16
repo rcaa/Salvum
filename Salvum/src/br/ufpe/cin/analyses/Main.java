@@ -56,29 +56,28 @@ public class Main {
 		
 		//#if FEATURE
 //@		preprocessFeature(p);
-		//#elif CONTRIBUTION
-		ContributionPreprocessor cp = new ContributionPreprocessor(p, policy.getHash());
-		cp.preprocess();
-		//#endif
-		// Segundo passo logico
-
-		JavaMethodSignature entryMethod = JavaMethodSignature
-				.fromString(p.getProperty("main"));
-
-		//#if FEATURE
 //@		// mapeamento de features e linhas
 //@		ContextManager context = ContextManager.getContext();
 //@		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
 //@				.getMapClassFeatures();
 		//#elif CONTRIBUTION
+		ContributionPreprocessor cp = new ContributionPreprocessor(p, policy.getHash());
+		cp.preprocess();
 		ContextManagerContribution contextContribution = ContextManagerContribution.getContext();
 		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution.getMapClassesLineNumbers();
 		//#endif
+		// Segundo passo logico
 
 		// montar o SDG graph
 		AnalysisConfig ana = new AnalysisConfig();
-		SDGProgram program = ana.prepareAnalysis(p.getProperty("classpath"),
-				entryMethod);
+		
+		//JavaMethodSignature entryMethod = JavaMethodSignature
+		//		.fromString(p.getProperty("main"));
+		//SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
+		//		entryMethod);
+		
+		SDGProgram program = ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
+		// chamar o metodo pra carregar o grafo: ana.retrieveSDG(String path)
 		Collection<SDGClass> classes = program.getClasses();
 
 		// rotulo statements e expressions

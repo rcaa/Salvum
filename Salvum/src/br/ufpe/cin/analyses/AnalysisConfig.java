@@ -15,8 +15,12 @@ import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
 import edu.kit.joana.wala.core.SDGBuilder.PointsToPrecision;
 
 public class AnalysisConfig {
+	
+	public SDGProgram retrieveSDG(String path) throws IOException {
+		return SDGProgram.loadSDG(path);
+	}
 
-	public SDGProgram prepareAnalysis(String classPath,
+	public SDGProgram buildSDG(String classPath,
 			JavaMethodSignature entryMethod) throws ClassHierarchyException,
 			IOException, UnsoundGraphException, CancelException {
 		/**
@@ -66,10 +70,10 @@ public class AnalysisConfig {
 		
 		
 		
-		config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
+		//config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
 		 
 		 
-		config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
+		//config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
 		
 
 		/** build the PDG */
