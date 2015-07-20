@@ -7,22 +7,22 @@ import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class DiffFileUtil {
+public class GitUtil {
 
 	public static void runDiffCommand(String targetPathDirectory,
-			String parentCommitHash, String childCommitHash, String diffFilePath)
+			String parentCommitHash, String currentCommitHash, String diffFilePath)
 			throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] gitDiffCommands = {
 				"bash",
 				"-c",
 				"git --git-dir " + targetPathDirectory + ".git diff "
-						+ parentCommitHash + " " + childCommitHash + " > "
+						+ parentCommitHash + " " + currentCommitHash + " > "
 						+ diffFilePath };
 		rt.exec(gitDiffCommands);
 	}
 
-	public static Path loadDiffFile(String diffFilePath) throws IOException {
+	public static Path loadDiffFile(String diffFilePath, String currentCommitHash) throws IOException {
 		return Paths.get(diffFilePath);
 	}
 
@@ -31,13 +31,13 @@ public class DiffFileUtil {
 //	}
 
 	public static String runParents(String targetPathDirectory,
-			String commitHash) throws IOException {
+			String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] gitDiffCommands = {
 				"bash",
 				"-c",
 				"git --git-dir " + targetPathDirectory
-						+ ".git rev-list --parents -n 1  " + commitHash };
+						+ ".git rev-list --parents -n 1  " + currentCommitHash };
 		Process process = rt.exec(gitDiffCommands);
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));

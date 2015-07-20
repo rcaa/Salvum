@@ -71,12 +71,12 @@ public class Main {
 		// montar o SDG graph
 		AnalysisConfig ana = new AnalysisConfig();
 		
-		//JavaMethodSignature entryMethod = JavaMethodSignature
-		//		.fromString(p.getProperty("main"));
-		//SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
-		//		entryMethod);
+		JavaMethodSignature entryMethod = JavaMethodSignature
+				.fromString(p.getProperty("main"));
+		SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
+				entryMethod);
 		
-		SDGProgram program = ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
+		//SDGProgram program = ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
 		// chamar o metodo pra carregar o grafo: ana.retrieveSDG(String path)
 		Collection<SDGClass> classes = program.getClasses();
 

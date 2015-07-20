@@ -9,29 +9,29 @@ public class ContributionPreprocessor {
 
 	private String targetPathDirectory;
 	private String parentCommitHash;
-	private String childCommitHash;
+	private String currentCommitHash;
 	private String diffFilePath;
 
 	public ContributionPreprocessor(String sourceDirectory,
-			String parentCommitHash, String childCommitHash, String diffFilePath) {
+			String parentCommitHash, String currentCommitHash, String diffFilePath) {
 		this.targetPathDirectory = sourceDirectory;
 		this.parentCommitHash = parentCommitHash;
-		this.childCommitHash = childCommitHash;
-		this.diffFilePath = diffFilePath;
+		this.currentCommitHash = currentCommitHash;
+		this.diffFilePath = setDiffFilePath(currentCommitHash, diffFilePath);
 	}
 	
-	public ContributionPreprocessor(Properties p, String commitHash) throws IOException {
+	public ContributionPreprocessor(Properties p, String currentCommitHash) throws IOException {
 		this.targetPathDirectory = p.getProperty("targetPathDirectory");
-		this.childCommitHash = commitHash;
-		this.parentCommitHash = DiffFileUtil.runParents(targetPathDirectory, commitHash);
-		this.diffFilePath = p.getProperty("diffFilePath");
+		this.currentCommitHash = currentCommitHash;
+		this.parentCommitHash = GitUtil.runParents(targetPathDirectory, currentCommitHash);
+		this.diffFilePath = setDiffFilePath(currentCommitHash, p.getProperty("diffFilePath"));
 	}
 
 	public void preprocess() throws IOException {
 
-		DiffFileUtil.runDiffCommand(this.targetPathDirectory,
-				this.parentCommitHash, this.childCommitHash, this.diffFilePath);
-		Path targetProjPath = DiffFileUtil.loadDiffFile(this.diffFilePath);
+		GitUtil.runDiffCommand(this.targetPathDirectory,
+				this.parentCommitHash, this.currentCommitHash, this.diffFilePath);
+		Path targetProjPath = GitUtil.loadDiffFile(this.diffFilePath, this.currentCommitHash);
 
 		Scanner scanner = new Scanner(targetProjPath);
 
@@ -102,6 +102,10 @@ public class ContributionPreprocessor {
 		String[] lines = substring.split(",");
 		return lines;
 	}
+	
+	private static String setDiffFilePath(String currentCommitHash, String diffFilePath) {
+		return diffFilePath + currentCommitHash.substring(0, 8) + ".txt";
+	}
 
 	/**
 	 * 
@@ -114,13 +118,13 @@ public class ContributionPreprocessor {
 		// test purposes with gitblit
 		String projectPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/";
 		String parentCommit = "2365822625a0a46b2d25f83b698801cd18e811c0";
-		String childCommit = "efdb2b3d0c6f03a9aac9e65892cbc8ff755f246f";
+		String currentCommitHash = "efdb2b3d0c6f03a9aac9e65892cbc8ff755f246f";
 		String diffFile = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Contribution-Preprocessor/diffFiles/diff.txt";
 
 		try {
 			// test purposes with gitblit
 			ContributionPreprocessor cp = new ContributionPreprocessor(
-					projectPath, parentCommit, childCommit, diffFile);
+					projectPath, parentCommit, currentCommitHash, diffFile);
 			cp.preprocess();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
