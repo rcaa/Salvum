@@ -6,4 +6,8 @@ public class C extends S {
 		Object a1 = new A1();
 		Object b1 = id2(a1);
 	}
+	
+	public Object id2(Object o) {
+		return super.id2(o);
+	}
 }

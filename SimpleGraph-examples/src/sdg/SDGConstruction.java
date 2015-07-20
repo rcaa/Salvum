@@ -30,7 +30,7 @@ public class SDGConstruction {
 		 * the entry method is the main method which starts the program you want
 		 * to analyze
 		 */
-		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass("context.Main");
+		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass("typebasedLimitation.Main");
 
 		/**
 		 * For multi-threaded programs, it is currently neccessary to use the
@@ -61,7 +61,7 @@ public class SDGConstruction {
 		 * precision of the used points-to analysis - INSTANCE_BASED is a good
 		 * value for simple examples
 		 */
-		config.setPointsToPrecision(PointsToPrecision.OBJECT_SENSITIVE);
+		config.setPointsToPrecision(PointsToPrecision.TYPE_BASED);
 
 		/**
 		 * exception analysis is used to detect exceptional control-flow which
