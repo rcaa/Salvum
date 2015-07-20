@@ -16,7 +16,7 @@ public class GitUtil {
 		String[] gitDiffCommands = {
 				"bash",
 				"-c",
-				"git --git-dir " + targetPathDirectory + ".git diff "
+				Tag.GIT_DIR + targetPathDirectory + ".git diff "
 						+ parentCommitHash + " " + currentCommitHash + " > "
 						+ diffFilePath };
 		rt.exec(gitDiffCommands);
@@ -33,12 +33,12 @@ public class GitUtil {
 	public static String runParents(String targetPathDirectory,
 			String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
-		String[] gitDiffCommands = {
+		String[] gitParentCommitCommand = {
 				"bash",
 				"-c",
-				"git --git-dir " + targetPathDirectory
+				Tag.GIT_DIR + targetPathDirectory
 						+ ".git rev-list --parents -n 1  " + currentCommitHash };
-		Process process = rt.exec(gitDiffCommands);
+		Process process = rt.exec(gitParentCommitCommand);
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));
 
@@ -59,6 +59,14 @@ public class GitUtil {
 		}
 		return null;
 	}
-
+	
+	public void checkoutCommitHash(String currentCommitHash) throws IOException {
+		Runtime rt = Runtime.getRuntime();
+		String[] gitCheckoutCommand = {
+				"bash",
+				"-c",
+				Tag.GIT_DIR + "checkout " + currentCommitHash };
+		rt.exec(gitCheckoutCommand);
+	}
 }
 // #endif
