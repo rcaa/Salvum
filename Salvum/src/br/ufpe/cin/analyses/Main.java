@@ -74,7 +74,7 @@ public class Main {
 		JavaMethodSignature entryMethod = JavaMethodSignature
 				.fromString(p.getProperty("main"));
 		SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
-				entryMethod);
+				entryMethod, p.getProperty("thirdPartyLibsPath"));
 		
 		//SDGProgram program = ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
 		// chamar o metodo pra carregar o grafo: ana.retrieveSDG(String path)

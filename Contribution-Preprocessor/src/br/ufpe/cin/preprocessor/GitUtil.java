@@ -60,7 +60,7 @@ public class GitUtil {
 		return null;
 	}
 	
-	public void checkoutCommitHash(String currentCommitHash) throws IOException {
+	public static void checkoutCommitHash(String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] gitCheckoutCommand = {
 				"bash",

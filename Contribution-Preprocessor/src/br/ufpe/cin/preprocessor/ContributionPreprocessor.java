@@ -29,6 +29,8 @@ public class ContributionPreprocessor {
 
 	public void preprocess() throws IOException {
 
+		GitUtil.checkoutCommitHash(this.currentCommitHash);
+		
 		GitUtil.runDiffCommand(this.targetPathDirectory,
 				this.parentCommitHash, this.currentCommitHash, this.diffFilePath);
 		Path targetProjPath = GitUtil.loadDiffFile(this.diffFilePath, this.currentCommitHash);

@@ -22,7 +22,7 @@ public class AnalysisConfig {
 	}
 
 	public SDGProgram buildSDG(String classPath,
-			JavaMethodSignature entryMethod) throws ClassHierarchyException,
+			JavaMethodSignature entryMethod, String thirdPartyLibsPath) throws ClassHierarchyException,
 			IOException, UnsoundGraphException, CancelException {
 		/**
 		 * the class path is either a directory or a jar containing all the
@@ -70,12 +70,14 @@ public class AnalysisConfig {
 		config.setExceptionAnalysis(ExceptionAnalysis.INTERPROC);
 		
 		
-		
-		//config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
-		 
-		 
-		//config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
-		
+		if (thirdPartyLibsPath != null && !thirdPartyLibsPath.isEmpty()) {
+			String[] paths = thirdPartyLibsPath.split("%%");
+			for (String path : paths) {
+				if (path != null && !path.isEmpty()) {
+					config.setThirdPartyLibsPath(path);
+				}
+			}
+		}
 
 		/** build the PDG */
 		SDGProgram program = SDGProgram.createSDGProgram(config, System.out,
