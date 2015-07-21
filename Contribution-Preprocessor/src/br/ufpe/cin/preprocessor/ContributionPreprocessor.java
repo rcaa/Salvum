@@ -28,8 +28,6 @@ public class ContributionPreprocessor {
 	}
 
 	public void preprocess() throws IOException {
-
-		GitUtil.checkoutCommitHash(this.targetPathDirectory, this.currentCommitHash);
 		
 		GitUtil.runDiffCommand(this.targetPathDirectory,
 				this.parentCommitHash, this.currentCommitHash, this.diffFilePath);
@@ -77,6 +75,8 @@ public class ContributionPreprocessor {
 			}
 		}
 
+		GitUtil.checkoutCommitHash(this.targetPathDirectory, this.currentCommitHash);
+		
 		System.out.println(manager.getMapClassesLineNumbers().toString());
 
 	//	DiffFileUtil.deleteDiffFile(targetProjPath);

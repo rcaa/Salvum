@@ -65,8 +65,9 @@ public class GitUtil {
 	public static void checkoutCommitHash(String targetPathDirectory,
 			String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
-		rt.exec(Tag.GIT_DIR + targetPathDirectory + ".git checkout -f "
-				+ currentCommitHash);
+		rt.exec(Tag.GIT_DIR + targetPathDirectory
+				+ ".git checkout-index -a -f --prefix=" + targetPathDirectory
+				+ " " + currentCommitHash);
 	}
 }
 // #endif
