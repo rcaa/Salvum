@@ -110,9 +110,9 @@ public class Main {
 
 	private void setOutput(Properties p, Policy policy)
 			throws FileNotFoundException {
-		String outputPath = p.getProperty("output") + "-" + policy.getHash().substring(0, 8);
-		PrintStream out = new PrintStream(new FileOutputStream(outputPath + "output.txt"));
-		PrintStream outST = new PrintStream(new FileOutputStream(outputPath + "outputerror.txt"));
+		String outputPath = p.getProperty("output") + policy.getHash().substring(0, 8);
+		PrintStream out = new PrintStream(new FileOutputStream(outputPath + "-output.txt"));
+		PrintStream outST = new PrintStream(new FileOutputStream(outputPath + "-outputerror.txt"));
 		System.setOut(out);
 		System.setErr(outST);
 	}
