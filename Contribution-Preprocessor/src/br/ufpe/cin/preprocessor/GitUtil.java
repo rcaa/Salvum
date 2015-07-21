@@ -10,8 +10,8 @@ import java.nio.file.Paths;
 public class GitUtil {
 
 	public static void runDiffCommand(String targetPathDirectory,
-			String parentCommitHash, String currentCommitHash, String diffFilePath)
-			throws IOException {
+			String parentCommitHash, String currentCommitHash,
+			String diffFilePath) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] gitDiffCommands = {
 				"bash",
@@ -22,13 +22,15 @@ public class GitUtil {
 		rt.exec(gitDiffCommands);
 	}
 
-	public static Path loadDiffFile(String diffFilePath, String currentCommitHash) throws IOException {
+	public static Path loadDiffFile(String diffFilePath,
+			String currentCommitHash) throws IOException {
 		return Paths.get(diffFilePath);
 	}
 
-//	public static void deleteDiffFile(Path targetProjPath) throws IOException {
-//		Files.delete(targetProjPath);
-//	}
+	// public static void deleteDiffFile(Path targetProjPath) throws IOException
+	// {
+	// Files.delete(targetProjPath);
+	// }
 
 	public static String runParents(String targetPathDirectory,
 			String currentCommitHash) throws IOException {
@@ -52,21 +54,19 @@ public class GitUtil {
 				process.getErrorStream()));
 
 		// read any errors from the attempted command
-		
+
 		s = stdError.readLine();
 		if (s != null) {
 			return s;
 		}
 		return null;
 	}
-	
-	public static void checkoutCommitHash(String currentCommitHash) throws IOException {
+
+	public static void checkoutCommitHash(String targetPathDirectory,
+			String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
-		String[] gitCheckoutCommand = {
-				"bash",
-				"-c",
-				Tag.GIT_DIR + "checkout " + currentCommitHash };
-		rt.exec(gitCheckoutCommand);
+		rt.exec(Tag.GIT_DIR + targetPathDirectory + ".git checkout -f "
+				+ currentCommitHash);
 	}
 }
 // #endif
