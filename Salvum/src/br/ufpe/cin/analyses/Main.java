@@ -1,6 +1,9 @@
 package br.ufpe.cin.analyses;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,9 +51,11 @@ public class Main {
 	private void run(Properties p) throws WalaException,
 			IllegalArgumentException, IOException, UnsoundGraphException,
 			CancelException {
-
+		
 		// obtenho a policy
 		Policy policy = new Policy(p.getProperty("policyDirectory"));
+		
+		setOutput(p, policy);
 		
 		// Primeiro passo logico
 		
@@ -99,7 +104,17 @@ public class Main {
 		Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 		TObjectIntMap<IViolation<SDGProgramPart>> resultByProgramPart = ifc
 				.groupByPPPart(result);
+		
 		System.out.println(resultByProgramPart);
+	}
+
+	private void setOutput(Properties p, Policy policy)
+			throws FileNotFoundException {
+		String outputPath = p.getProperty("output") + "-" + policy.getHash().substring(0, 8);
+		PrintStream out = new PrintStream(new FileOutputStream(outputPath + "output.txt"));
+		PrintStream outST = new PrintStream(new FileOutputStream(outputPath + "outputerror.txt"));
+		System.setOut(out);
+		System.setErr(outST);
 	}
 
 	//#if FEATURE
