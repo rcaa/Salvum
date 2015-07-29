@@ -1,9 +1,0 @@
-Exception in thread "main" java.lang.Error: Cannot locate property 'joana.base.dir'! Please provide a property 'joana.base.dir' to the jvm or a project.properties in the base dir of your eclipse project!
-	at edu.kit.joana.util.Stubs.determineStubsBasePath(Stubs.java:76)
-	at edu.kit.joana.util.Stubs.getPath(Stubs.java:55)
-	at edu.kit.joana.api.sdg.SDGProgram.makeBuildPreparationConfig(SDGProgram.java:305)
-	at edu.kit.joana.api.sdg.SDGProgram.createSDGProgram(SDGProgram.java:233)
-	at edu.kit.joana.api.sdg.SDGProgram.createSDGProgram(SDGProgram.java:222)
-	at br.ufpe.cin.analyses.AnalysisConfig.buildSDG(AnalysisConfig.java:83)
-	at br.ufpe.cin.analyses.Main.run(Main.java:98)
-	at br.ufpe.cin.analyses.Main.main(Main.java:59)

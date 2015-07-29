@@ -1,1 +1,12 @@
 {}
+
+Tempo de inicio da analise: 1438202152285
+Setting up analysis scope... (from file /Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.contrib.lib/stubs/jSDG-stubs-jre1.5.jar) done.
+Creating class hierarchy... 
+(3332 classes) done.
+Setting up entrypoint com.gitblit.manager.AuthenticationManager.authenticate(Ljavax/servlet/http/HttpServletRequest;Z)Lcom/gitblit/models/UserModel;... done.
+Building system dependence graph... 
+	callgraph: 517 nodes and 1639 edges
+
+Tempo de termino do call graph: 1438202166944
+	interproc exception analysis... 	intraproc: calls.mergeable..clinit.statics.heap(if,adj,df

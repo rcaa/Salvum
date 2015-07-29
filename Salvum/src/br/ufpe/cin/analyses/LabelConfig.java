@@ -3,6 +3,7 @@ package br.ufpe.cin.analyses;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import br.ufpe.cin.policy.Policy;
 
@@ -177,14 +178,18 @@ public class LabelConfig {
 			SDGClass sdgClass) {
 		// por enquanto so marca atributo como source
 		for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
-			if (sdgAttribute.toString().equals(
-					policy.getSensitiveResource())) {
-				if (policy.getOperator().equals("noflow")) {
-					sources.add(sdgAttribute);
-				} else if (policy.getOperator().equals("noset")) {
-					sinks.add(sdgAttribute);
+			
+			Set<String> sensitiveResources = policy.getSensitiveResources();
+			for (String sensitiveResource : sensitiveResources) {
+				if (sdgAttribute.toString().equals(sensitiveResource)) {
+					if (policy.getOperator().equals("noflow")) {
+						sources.add(sdgAttribute);
+					} else if (policy.getOperator().equals("noset")) {
+						sinks.add(sdgAttribute);
+					}
 				}
 			}
+			
 		}
 	}
 	

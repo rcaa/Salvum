@@ -55,7 +55,7 @@ public class Policy {
 		this.programElements = new HashSet<>();
 		String programElements = element.substring(1,
 				element.length() - 1);
-		String[] listOfProgramElements = programElements.split(", ");
+		String[] listOfProgramElements = programElements.split(",");
 		for (String programElement : listOfProgramElements) {
 			this.getProgramElements().add(programElement);
 		}
@@ -95,7 +95,7 @@ public class Policy {
 		this.clazz = clazz;
 	}
 
-	public Set<String> getSensitiveResource() {
+	public Set<String> getSensitiveResources() {
 		Set<String> sesitiveResources = new HashSet<>();
 		for (String programElement : programElements) {
 			sesitiveResources.add(clazz + "." + programElement);
@@ -109,7 +109,7 @@ public class Policy {
 		int i = 0;
 		for (String programElement : programElements) {
 			if (i != programElements.size()) {
-				elements = elements + programElement + ", ";
+				elements = elements + programElement + ",";
 			}
 			i++;
 		}
