@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Policy {
 
@@ -15,7 +17,7 @@ public class Policy {
 	//#endif
 	private String operator;
 	private String clazz;
-	private String programElement;
+	private Set<String> programElements;
 
 	public Policy(String policyDirectory) {
 		Path path = FileSystems.getDefault().getPath(policyDirectory);
@@ -24,8 +26,7 @@ public class Policy {
 			if (policy.contains("noflow")) {
 				String[] elements = policy.split(" ");
 				this.clazz = elements[0];
-				this.programElement = elements[1].substring(1,
-						elements[1].length() - 1);
+				retreiveProgramElements(elements[1]);
 				this.setOperator(elements[2]);
 				//#if FEATURE
 //@				this.feature = elements[3];
@@ -43,11 +44,20 @@ public class Policy {
 				//#endif
 				this.setOperator(elements[1]);
 				this.clazz = elements[2];
-				this.programElement = elements[3].substring(1,
-						elements[3].length() - 1);
+				retreiveProgramElements(elements[3]);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void retreiveProgramElements(String element) {
+		this.programElements = new HashSet<>();
+		String programElements = element.substring(1,
+				element.length() - 1);
+		String[] listOfProgramElements = programElements.split(", ");
+		for (String programElement : listOfProgramElements) {
+			this.getProgramElements().add(programElement);
 		}
 	}
 
@@ -85,21 +95,26 @@ public class Policy {
 		this.clazz = clazz;
 	}
 
-	public String getProgramElement() {
-		return programElement;
-	}
-
-	public void setProgramElement(String programElement) {
-		this.programElement = programElement;
-	}
-
-	public String getSensitiveResource() {
-		return clazz + "." + programElement;
+	public Set<String> getSensitiveResource() {
+		Set<String> sesitiveResources = new HashSet<>();
+		for (String programElement : programElements) {
+			sesitiveResources.add(clazz + "." + programElement);
+		}
+		return sesitiveResources;
 	}
 
 	@Override
 	public String toString() {
-		return this.clazz + " {" + this.programElement + "}" + " "
+		String elements = "";
+		int i = 0;
+		for (String programElement : programElements) {
+			if (i != programElements.size()) {
+				elements = elements + programElement + ", ";
+			}
+			i++;
+		}
+		
+		return this.clazz + " {" + elements + "}" + " "
 				+ this.getOperator() + " " + 
 				//#if FEATURE
 //@				this.feature + ";";
@@ -114,5 +129,13 @@ public class Policy {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public Set<String> getProgramElements() {
+		return programElements;
+	}
+
+	public void setProgramElements(Set<String> programElements) {
+		this.programElements = programElements;
 	}
 }
