@@ -10,10 +10,10 @@ import java.util.Set;
 public class Policy {
 
 	//#if FEATURE
-	private String feature;
+//@	private String feature;
 	//#elif CONTRIBUTION
-//@	private String hash;
-//@	private String taskName;
+	private String hash;
+	private String taskName;
 	//#endif
 	private String operator;
 	private String clazz;
@@ -29,18 +29,18 @@ public class Policy {
 				retreiveProgramElements(elements[1]);
 				this.setOperator(elements[2]);
 				//#if FEATURE
-				this.feature = elements[3];
+//@				this.feature = elements[3];
 				//#elif CONTRIBUTION
-//@				this.taskName = elements[3].substring(0, elements[3].indexOf("\n"));
-//@				this.hash = elements[6].substring(1, elements[6].length() - 1);
+				this.taskName = elements[3].substring(0, elements[3].indexOf("\n"));
+				this.hash = elements[6].substring(1, elements[6].length() - 1);
 				//#endif
 			} else if (policy.contains("noset")) {
 				String[] elements = policy.split(" ");
 				//#if FEATURE
-				this.feature = elements[0];
+//@				this.feature = elements[0];
 				//#elif CONTRIBUTION
-//@				this.taskName = elements[0].substring(0, elements[0].indexOf("\n"));
-//@				this.hash = elements[6].substring(1, elements[6].length() - 1);
+				this.taskName = elements[0].substring(0, elements[0].indexOf("\n"));
+				this.hash = elements[6].substring(1, elements[6].length() - 1);
 				//#endif
 				this.setOperator(elements[1]);
 				this.clazz = elements[2];
@@ -62,29 +62,29 @@ public class Policy {
 	}
 
 	//#if FEATURE
-	public String getFeature() {
-		return feature;
+//@	public String getFeature() {
+//@		return feature;
+//@	}
+//@
+//@	public void setFeature(String feature) {
+//@		this.feature = feature;
+//@	}
+	//#elif CONTRIBUTION
+	public String getHash() {
+		return hash;
 	}
 
-	public void setFeature(String feature) {
-		this.feature = feature;
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
-	//#elif CONTRIBUTION
-//@	public String getHash() {
-//@		return hash;
-//@	}
-//@
-//@	public void setHash(String hash) {
-//@		this.hash = hash;
-//@	}
-//@
-//@	public String getTaskName() {
-//@		return taskName;
-//@	}
-//@
-//@	public void setTaskName(String taskName) {
-//@		this.taskName = taskName;
-//@	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
 	//#endif
 
 	public String getClazz() {
@@ -117,9 +117,9 @@ public class Policy {
 		return this.clazz + " {" + elements + "}" + " "
 				+ this.getOperator() + " " + 
 				//#if FEATURE
-				this.feature + ";";
+//@				this.feature + ";";
 				//#elif CONTRIBUTION
-//@				taskName + " where " + taskName + " = " + "{" + hash + "}";
+				taskName + " where " + taskName + " = " + "{" + hash + "}";
 				//#endif
 	}
 

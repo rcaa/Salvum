@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 //#if FEATURE
-import java.util.Set;
-
-import br.ufpe.cin.feature.preprocessor.ContextManager;
-import br.ufpe.cin.feature.preprocessor.FeaturePreprocessor;
-import br.ufpe.cin.feature.preprocessor.PreprocessorException;
+//@import java.util.Set;
+//@
+//@import br.ufpe.cin.feature.preprocessor.ContextManager;
+//@import br.ufpe.cin.feature.preprocessor.FeaturePreprocessor;
+//@import br.ufpe.cin.feature.preprocessor.PreprocessorException;
 //#endif
 import br.ufpe.cin.policy.Policy;
 //#if CONTRIBUTION
-//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
-//@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
+import br.ufpe.cin.preprocessor.ContextManagerContribution;
+import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 //#endif
 
 import com.ibm.wala.util.CancelException;
@@ -83,25 +83,25 @@ public class Main {
 		// Primeiro passo logico
 
 		// #if FEATURE
-		try {
-			String sourceDirectory = p.getProperty("sourceDirectory");
-		    FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory);
-			pp.execute();
-		} catch (PreprocessorException e) {
-			e.printStackTrace();
-		}
-		 // mapeamento de features e linhas
-		ContextManager context = ContextManager.getContext();
-		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
-		 .getMapClassFeatures();
+//@		try {
+//@			String sourceDirectory = p.getProperty("sourceDirectory");
+//@		    FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory);
+//@			pp.execute();
+//@		} catch (PreprocessorException e) {
+//@			e.printStackTrace();
+//@		}
+//@		 // mapeamento de features e linhas
+//@		ContextManager context = ContextManager.getContext();
+//@		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
+//@		 .getMapClassFeatures();
 		// #elif CONTRIBUTION
-//@		ContributionPreprocessor cp = new ContributionPreprocessor(p,
-//@				policy.getHash());
-//@		cp.preprocess();
-//@		ContextManagerContribution contextContribution = ContextManagerContribution
-//@				.getContext();
-//@		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
-//@				.getMapClassesLineNumbers();
+		ContributionPreprocessor cp = new ContributionPreprocessor(p,
+				policy.getHash());
+		cp.preprocess();
+		ContextManagerContribution contextContribution = ContextManagerContribution
+				.getContext();
+		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
+				.getMapClassesLineNumbers();
 		// #endif
 		// Segundo passo logico
 
@@ -124,11 +124,11 @@ public class Main {
 		LabelConfig lconfig = new LabelConfig();
 
 		// #if FEATURE
-		lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
-		 sources, sinks);
+//@		lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
+//@		 sources, sinks);
 		// #elif CONTRIBUTION
-//@		lconfig.prepareListsOfSourceAndSinksContribution(classes,
-//@				mapClassesLineNumbers, policy, sources, sinks);
+		lconfig.prepareListsOfSourceAndSinksContribution(classes,
+				mapClassesLineNumbers, policy, sources, sinks);
 		// #endif
 
 		// rodo as analises
@@ -145,9 +145,9 @@ public class Main {
 			throws FileNotFoundException {
 		String outputPath = p.getProperty("output")
 				// #if FEATURE
-				+policy.getFeature();
+//@				+policy.getFeature();
 				// #elif CONTRIBUTION
-//@				+ policy.getHash().substring(0, 8);
+				+ policy.getHash().substring(0, 8);
 				// #endif
 		PrintStream out = new PrintStream(new FileOutputStream(outputPath
 				+ "-output.txt"));
