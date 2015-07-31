@@ -1,0 +1,24 @@
+diff --git a/src/controller/UserController.java b/src/controller/UserController.java
+index c588a58..312739b 100644
+--- a/src/controller/UserController.java
++++ b/src/controller/UserController.java
+@@ -13,4 +13,4 @@ public class UserController {
+ 		}
+ 		return new String(pwdReverse);
+ 	}
+-}
++}
+\ No newline at end of file
+diff --git a/src/view/Main.java b/src/view/Main.java
+index c8dc6af..bca8916 100644
+--- a/src/view/Main.java
++++ b/src/view/Main.java
+@@ -8,6 +8,7 @@ public class Main {
+ 	public static void main(String[] args) {
+ 		UserController uc = new UserController();
+ 		User u = new User("rca", "123456");
+-		uc.reverseCharacters(u);
++		String pwd = uc.reverseCharacters(u);
++		System.out.println(pwd);
+ 	}
+ }
