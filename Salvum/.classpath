@@ -25,5 +25,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.wala.summary"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.wala.util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Contribution-Preprocessor"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Feature-Preprocessor"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

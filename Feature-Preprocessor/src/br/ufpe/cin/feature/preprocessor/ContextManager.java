@@ -1,4 +1,4 @@
-package br.ufpe.cin.preprocessor;
+package br.ufpe.cin.feature.preprocessor;
 
 import java.util.HashMap;
 import java.util.HashSet;

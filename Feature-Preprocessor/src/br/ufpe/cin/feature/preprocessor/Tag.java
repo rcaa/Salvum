@@ -1,4 +1,4 @@
-package br.ufpe.cin.preprocessor;
+package br.ufpe.cin.feature.preprocessor;
 
 public final class Tag {
 
