@@ -43,9 +43,9 @@ public class Main {
 
 		Properties p = new Properties();
 
-		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
-				"/joana/Salvum/configFiles/simpleContributionExample.properties";
-//		String propertiesPath = args[0];
+		//String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
+		//		"/joana/Salvum/configFiles/simpleContributionExample.properties";
+		String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -108,9 +108,9 @@ public class Main {
 		// montar o SDG graph
 		AnalysisConfig ana = new AnalysisConfig();
 
-//		JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-//				.getProperty("main"));
-		JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass(p.getProperty("main"));
+		JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+				.getProperty("main"));
+	//	JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass(p.getProperty("main"));
 		SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
 				entryMethod, p.getProperty("thirdPartyLibsPath"));
 

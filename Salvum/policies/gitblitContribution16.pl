@@ -1,2 +1,2 @@
 com.gitblit.models.UserModel {password,cookie,emailAddress,locality,organizationalUnit,stateProvince} noflow ServletsTask
-	where ServletsTask = {efdb2b3d0c6f03a9aac9e65892cbc8ff755f246f}
+	where ServletsTask = {872cf0f29c84b65489ae1175a71e07807d0c630e}
