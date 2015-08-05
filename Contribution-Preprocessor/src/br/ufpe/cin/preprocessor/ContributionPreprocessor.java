@@ -44,7 +44,18 @@ public class ContributionPreprocessor {
 
 			if (nextLine.startsWith(Tag.DIFF)) {
 				className = formatClassName(nextLine);
-				continue;
+				if (className == null) {
+					// tenho que percorrer as linhas que nao sao interessantes
+					// linha de arquivos que nao sao classes
+					// percorrer linhas ate o proximo DIFF
+					while (scanner.hasNextLine()) {
+						String nextLineTemp = scanner.nextLine();
+						if (nextLineTemp.contains(Tag.DIFF)) {
+							className = formatClassName(nextLineTemp);
+							break;
+						}
+					}
+				}
 			} else if (nextLine.startsWith(Tag.LINES)) {
 				String[] linesAddition = obtainLineNumbers(nextLine, "+");
 				Integer lineNumber = Integer.valueOf(linesAddition[0]);
@@ -83,12 +94,14 @@ public class ContributionPreprocessor {
 	}
 
 	private String formatClassName(String nextLine) {
-		String className;
+		String className = null;
 		// significa que comeca o diff de um novo arquivo
-		className = nextLine.substring(nextLine.indexOf("/src"),
-				nextLine.indexOf("."));
-		className = className.replace("/", ".");
-		className = className.replace(".src.", "");
+		if (nextLine.contains(".java") && nextLine.contains("/src")) {
+			className = nextLine.substring(nextLine.indexOf("/src"),
+					nextLine.indexOf("."));
+			className = className.replace("/", ".");
+			className = className.replace(".src.", "");
+		}
 		return className;
 	}
 
@@ -118,10 +131,10 @@ public class ContributionPreprocessor {
 	 */
 	public static void main(String[] args) {
 		// test purposes with gitblit
-		String projectPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/";
-		String parentCommit = "2365822625a0a46b2d25f83b698801cd18e811c0";
-		String currentCommitHash = "efdb2b3d0c6f03a9aac9e65892cbc8ff755f246f";
-		String diffFile = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Contribution-Preprocessor/diffFiles/diff.txt";
+		String projectPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/SimpleContributionExample/";
+		String parentCommit = "cfbb4d342003ddbc04cf1e3a802fb1ee3450970c";
+		String currentCommitHash = "cbb18df491005dd61f0a8131e6c3c5b6ed59ad66";
+		String diffFile = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Contribution-Preprocessor/diffFiles/";
 
 		try {
 			// test purposes with gitblit
