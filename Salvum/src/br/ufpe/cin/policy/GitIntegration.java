@@ -12,16 +12,35 @@ public class GitIntegration {
 
 	public static List<String> searchCommitHashesFromMessages(
 			String targetPathDirectory, String message) throws IOException {
+
+		List<String> commitHashes = new ArrayList<>();
 		Runtime rt = Runtime.getRuntime();
-		String command = Tag.GIT_DIR + targetPathDirectory
-				+ ".git log --grep=" + message;
-		System.out.println(command);
+		String[] command = new String[] { "bash", "-c",
+				Tag.GIT_DIR + targetPathDirectory + ".git log -i --grep=",
+				"\"" + message + "\"" };
+		iterateLog(commitHashes, rt, command);
+		return commitHashes;
+	}
+
+	public static List<String> searchCommitHashesFromAuthor(
+			String targetPathDirectory, String author) throws IOException {
+
+		List<String> commitHashes = new ArrayList<>();
+
+		Runtime rt = Runtime.getRuntime();
+		String[] command = new String[] { "bash", "-c",
+				Tag.GIT_DIR + targetPathDirectory + ".git log --author=",
+				"\"" + author + "\"" };
+		iterateLog(commitHashes, rt, command);
+		return commitHashes;
+	}
+
+	private static void iterateLog(List<String> commitHashes, Runtime rt,
+			String[] command) throws IOException {
 		Process process = rt.exec(command);
 
 		Scanner scanner = new Scanner(new InputStreamReader(
 				process.getInputStream()));
-
-		List<String> commitHashes = new ArrayList<>();
 
 		while (scanner.hasNextLine()) {
 			String nextLine = scanner.nextLine();
@@ -39,16 +58,15 @@ public class GitIntegration {
 		while (stdError.hasNextLine()) {
 			System.out.println(stdError.nextLine());
 		}
-		return commitHashes;
 	}
 
 	public static void main(String[] args) {
 		try {
 			List<String> hashes = GitIntegration
-					.searchCommitHashesFromMessages(
+					.searchCommitHashesFromAuthor(
 							"/Users/rodrigoandrade/Documents/workspaces"
 									+ "/Doutorado/opensource/SimpleContributionExample/",
-							"adding");
+							"Rodrigo Andrade");
 			for (String hash : hashes) {
 				System.out.println(hash);
 			}
