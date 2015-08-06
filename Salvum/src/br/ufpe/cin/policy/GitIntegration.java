@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import br.ufpe.cin.preprocessor.Tag;
-
 public class GitIntegration {
 
 	public static List<String> searchCommitHashesFromMessages(
@@ -15,9 +13,8 @@ public class GitIntegration {
 
 		List<String> commitHashes = new ArrayList<>();
 		Runtime rt = Runtime.getRuntime();
-		String[] command = new String[] { "bash", "-c",
-				Tag.GIT_DIR + targetPathDirectory + ".git log -i --grep=",
-				"\"" + message + "\"" };
+		String[] command = new String[] { "git", "--git-dir",
+				targetPathDirectory + ".git", "log", "-i", "--grep=" + message };
 		iterateLog(commitHashes, rt, command);
 		return commitHashes;
 	}
@@ -28,9 +25,20 @@ public class GitIntegration {
 		List<String> commitHashes = new ArrayList<>();
 
 		Runtime rt = Runtime.getRuntime();
-		String[] command = new String[] { "bash", "-c",
-				Tag.GIT_DIR + targetPathDirectory + ".git log --author=",
-				"\"" + author + "\"" };
+		String[] command = new String[] { "git", "--git-dir",
+				targetPathDirectory + ".git", "log", "--author=" + author };
+		iterateLog(commitHashes, rt, command);
+		return commitHashes;
+	}
+
+	public static List<String> searchCommitHashesFromFile(
+			String targetPathDirectory, String file) throws IOException {
+
+		List<String> commitHashes = new ArrayList<>();
+
+		Runtime rt = Runtime.getRuntime();
+		String[] command = new String[] {"git", "--git-dir",
+				targetPathDirectory + ".git", "log", "-i", "--", file };
 		iterateLog(commitHashes, rt, command);
 		return commitHashes;
 	}
@@ -63,10 +71,10 @@ public class GitIntegration {
 	public static void main(String[] args) {
 		try {
 			List<String> hashes = GitIntegration
-					.searchCommitHashesFromAuthor(
+					.searchCommitHashesFromFile(
 							"/Users/rodrigoandrade/Documents/workspaces"
 									+ "/Doutorado/opensource/SimpleContributionExample/",
-							"Rodrigo Andrade");
+							"src/controller/UserController.java");
 			for (String hash : hashes) {
 				System.out.println(hash);
 			}
