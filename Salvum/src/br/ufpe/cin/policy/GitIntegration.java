@@ -71,10 +71,10 @@ public class GitIntegration {
 	public static void main(String[] args) {
 		try {
 			List<String> hashes = GitIntegration
-					.searchCommitHashesFromFile(
+					.searchCommitHashesFromAuthor(
 							"/Users/rodrigoandrade/Documents/workspaces"
 									+ "/Doutorado/opensource/SimpleContributionExample/",
-							"src/controller/UserController.java");
+							"rodrigo_cardoso@hotmail.it");
 			for (String hash : hashes) {
 				System.out.println(hash);
 			}

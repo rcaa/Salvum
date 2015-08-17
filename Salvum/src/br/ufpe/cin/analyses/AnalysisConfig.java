@@ -61,7 +61,7 @@ public class AnalysisConfig {
 		 * precision of the used points-to analysis - INSTANCE_BASED is a good
 		 * value for simple examples
 		 */
-		config.setPointsToPrecision(PointsToPrecision.TYPE_BASED);
+		config.setPointsToPrecision(PointsToPrecision.INSTANCE_BASED);
 
 		/**
 		 * exception analysis is used to detect exceptional control-flow which
@@ -69,16 +69,8 @@ public class AnalysisConfig {
 		 */
 		config.setExceptionAnalysis(ExceptionAnalysis.INTERPROC);
 		
+		config.setThirdPartyLibsPath(thirdPartyLibsPath);
 		
-		if (thirdPartyLibsPath != null && !thirdPartyLibsPath.isEmpty()) {
-			String[] paths = thirdPartyLibsPath.split("%%");
-			for (String path : paths) {
-				if (path != null && !path.isEmpty()) {
-					config.setThirdPartyLibsPath(path);
-				}
-			}
-		}
-
 		/** build the PDG */
 		SDGProgram program = SDGProgram.createSDGProgram(config, System.out,
 				new NullProgressMonitor());

@@ -43,9 +43,9 @@ public class Main {
 
 		Properties p = new Properties();
 
-		//String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
-		//		"/joana/Salvum/configFiles/simpleContributionExample.properties";
-		String propertiesPath = args[0];
+		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
+				"/joana/Salvum/configFiles/gitblitLocal.properties";
+		//String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -78,7 +78,7 @@ public class Main {
 		// obtenho a policy
 		Policy policy = new Policy(p.getProperty("policyDirectory"));
 
-		setOutput(p, policy);
+		//setOutput(p, policy);
 		
 		// Primeiro passo logico
 
@@ -104,6 +104,9 @@ public class Main {
 				.getMapClassesLineNumbers();
 		// #endif
 		// Segundo passo logico
+		
+		// pegar o nome de todos os metodos de cada classe alterada acima
+		
 
 		// montar o SDG graph
 		AnalysisConfig ana = new AnalysisConfig();
