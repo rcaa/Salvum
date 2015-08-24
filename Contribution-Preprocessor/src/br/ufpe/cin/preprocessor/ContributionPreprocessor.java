@@ -132,8 +132,8 @@ public class ContributionPreprocessor {
 	public static void main(String[] args) {
 		// test purposes with gitblit
 		String projectPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/SimpleContributionExample/";
-		String parentCommit = "cfbb4d342003ddbc04cf1e3a802fb1ee3450970c";
-		String currentCommitHash = "cbb18df491005dd61f0a8131e6c3c5b6ed59ad66";
+		String parentCommit = "cd05cb8fba6621b64799735da179e6794c810bb3";
+		String currentCommitHash = "d61da68d24a09d308ef1a5ab020219de65d029a3";
 		String diffFile = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Contribution-Preprocessor/diffFiles/";
 
 		try {

@@ -1,0 +1,19 @@
+{others.D=[6]}
+
+Tempo de inicio da analise: 1440452751476
+Setting up analysis scope... (from file /Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.contrib.lib/stubs/jSDG-stubs-jre1.4.jar) done.
+Creating class hierarchy... (559 classes) done.
+Setting up entrypoint others.C.main([Ljava/lang/String;)V... done.
+Building system dependence graph... 
+	callgraph: 9 nodes and 9 edges
+
+Tempo de termino do call graph: 1440452754778
+	interproc exception analysis... 	intraproc: calls.mergeable..clinit.statics.heap(if,adj,df,reg).misc.killdef.convert.summary..
+done.
+Time needed: 5399ms - Memory: 23M used.
+others.D.m(I)V
+others.D.<init>()V
+others.C.n(Ljava/lang/Object;)V
+others.C.<init>()V
+others.C.main([Ljava/lang/String;)V
+{Illegal Flow from others.C.x to (void others.D.m(int):4) v4.println(p1)->act1, visible for low=1}

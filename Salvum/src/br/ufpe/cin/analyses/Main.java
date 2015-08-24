@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -43,9 +46,10 @@ public class Main {
 
 		Properties p = new Properties();
 
-//		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
-//				"/joana/Salvum/configFiles/gitblitLocal.properties";
-		String propertiesPath = args[0];
+		 String propertiesPath =
+		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
+		 "/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
+		//String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -76,83 +80,98 @@ public class Main {
 			CancelException {
 
 		// obtenho a policy
-		Policy policy = new Policy(p.getProperty("policyDirectory"));
-
-		setOutput(p, policy);
+		Path path = FileSystems.getDefault().getPath(
+				p.getProperty("policyDirectory"));
+		String policyText = new String(Files.readAllBytes(path));
+		List<String> hashes = Policy.findHashes(policyText,
+				p.getProperty("targetPathDirectory"));
 		
-		// Primeiro passo logico
+		if (hashes == null || hashes.isEmpty()) {
+			throw new IOException("could not find hashes");
+		}
 
-		// #if FEATURE
-//@		try {
-//@			String sourceDirectory = p.getProperty("sourceDirectory");
-//@		    FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory);
-//@			pp.execute();
-//@		} catch (PreprocessorException e) {
-//@			e.printStackTrace();
-//@		}
-//@		 // mapeamento de features e linhas
-//@		ContextManager context = ContextManager.getContext();
-//@		Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
-//@		 .getMapClassFeatures();
-		// #elif CONTRIBUTION
-		ContributionPreprocessor cp = new ContributionPreprocessor(p,
-				policy.getHash());
-		cp.preprocess();
-		ContextManagerContribution contextContribution = ContextManagerContribution
-				.getContext();
-		Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
-				.getMapClassesLineNumbers();
-		// #endif
-		// Segundo passo logico
-		
-		// pegar o nome de todos os metodos de cada classe alterada acima
-		
+		for (String hash : hashes) {
+			Policy policy = new Policy(policyText, hash);
+			setOutput(p, policy);
 
-		// montar o SDG graph
-		AnalysisConfig ana = new AnalysisConfig();
+			// Primeiro passo logico
 
-		JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-				.getProperty("main"));
-	//	JavaMethodSignature entryMethod = JavaMethodSignature.mainMethodOfClass(p.getProperty("main"));
-		SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
-				entryMethod, p.getProperty("thirdPartyLibsPath"));
+			// #if FEATURE
+			// @ try {
+			// @ String sourceDirectory = p.getProperty("sourceDirectory");
+			// @ FeaturePreprocessor pp = new
+//@			// FeaturePreprocessor(sourceDirectory);
+			// @ pp.execute();
+			// @ } catch (PreprocessorException e) {
+			// @ e.printStackTrace();
+			// @ }
+			// @ // mapeamento de features e linhas
+			// @ ContextManager context = ContextManager.getContext();
+			// @ Map<String, Map<String, Set<Integer>>> mapClassFeatures =
+//@			// context
+			// @ .getMapClassFeatures();
+			// #elif CONTRIBUTION
+			ContributionPreprocessor cp = new ContributionPreprocessor(p,
+					policy.getHash());
+			cp.preprocess();
+			ContextManagerContribution contextContribution = ContextManagerContribution
+					.getContext();
+			Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
+					.getMapClassesLineNumbers();
+			// #endif
+			// Segundo passo logico
 
-		// SDGProgram program =
-		// ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
-		// chamar o metodo pra carregar o grafo: ana.retrieveSDG(String path)
-		Collection<SDGClass> classes = program.getClasses();
+			// pegar o nome de todos os metodos de cada classe alterada acima
 
-		// rotulo statements e expressions
-		List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
-		List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
-		LabelConfig lconfig = new LabelConfig();
+			// montar o SDG graph
+			AnalysisConfig ana = new AnalysisConfig();
 
-		// #if FEATURE
-//@		lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures, policy,
-//@		 sources, sinks);
-		// #elif CONTRIBUTION
-		lconfig.prepareListsOfSourceAndSinksContribution(classes,
-				mapClassesLineNumbers, policy, sources, sinks);
-		// #endif
+			JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+					.getProperty("main"));
+			// JavaMethodSignature entryMethod =
+			// JavaMethodSignature.mainMethodOfClass(p.getProperty("main"));
+			SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
+					entryMethod, p.getProperty("thirdPartyLibsPath"));
 
-		// rodo as analises
-		IFCAnalysis ifc = new IFCAnalysis(program);
-		lconfig.labellingElements(sources, sinks, program, ifc);
-		Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
-		TObjectIntMap<IViolation<SDGProgramPart>> resultByProgramPart = ifc
-				.groupByPPPart(result);
+			// SDGProgram program =
+			// ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
+			// chamar o metodo pra carregar o grafo: ana.retrieveSDG(String
+			// path)
+			Collection<SDGClass> classes = program.getClasses();
 
-		System.out.println(resultByProgramPart);
+			// rotulo statements e expressions
+			List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
+			List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
+			LabelConfig lconfig = new LabelConfig();
+
+			// #if FEATURE
+			// @ lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures,
+//@			// policy,
+			// @ sources, sinks);
+			// #elif CONTRIBUTION
+			lconfig.prepareListsOfSourceAndSinksContribution(classes,
+					mapClassesLineNumbers, policy, sources, sinks);
+			// #endif
+
+			// rodo as analises
+			IFCAnalysis ifc = new IFCAnalysis(program);
+			lconfig.labellingElements(sources, sinks, program, ifc);
+			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
+			TObjectIntMap<IViolation<SDGProgramPart>> resultByProgramPart = ifc
+					.groupByPPPart(result);
+
+			System.out.println(resultByProgramPart);
+		}
 	}
 
 	private void setOutput(Properties p, Policy policy)
 			throws FileNotFoundException {
 		String outputPath = p.getProperty("output")
-				// #if FEATURE
-//@				+policy.getFeature();
+		// #if FEATURE
+		// @ +policy.getFeature();
 				// #elif CONTRIBUTION
 				+ policy.getHash().substring(0, 8);
-				// #endif
+		// #endif
 		PrintStream out = new PrintStream(new FileOutputStream(outputPath
 				+ "-output.txt"));
 		PrintStream outST = new PrintStream(new FileOutputStream(outputPath

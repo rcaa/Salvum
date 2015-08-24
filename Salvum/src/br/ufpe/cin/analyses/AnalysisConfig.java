@@ -43,7 +43,7 @@ public class AnalysisConfig {
 		 * 1.4 stubs
 		 */
 		SDGConfig config = new SDGConfig(classPath, entryMethod.toBCString(),
-				Stubs.JRE_15);
+				Stubs.JRE_14);
 
 		/**
 		 * compute interference edges to model dependencies between threads (set
