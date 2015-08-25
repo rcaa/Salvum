@@ -1,1 +1,0 @@
-LOGGING noset model.User {passwordHash}
