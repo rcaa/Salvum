@@ -2,6 +2,9 @@ package br.ufpe.cin.preprocessor;
 
 //#if CONTRIBUTION
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
@@ -17,9 +20,38 @@ public class GitUtil {
 				"bash",
 				"-c",
 				Tag.GIT_DIR + targetPathDirectory + ".git diff "
-						+ parentCommitHash + " " + currentCommitHash + " > "
-						+ diffFilePath };
-		rt.exec(gitDiffCommands);
+						+ parentCommitHash + " " + currentCommitHash };
+		Process process = rt.exec(gitDiffCommands);
+		
+
+		
+		File file = new File(diffFilePath);
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		
+		
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+				process.getInputStream()));
+		
+		// read the output from the command
+		String line = "";
+		while ((line = stdInput.readLine()) != null) {
+			bw.write(line + "\n");
+		}
+
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(
+				process.getErrorStream()));
+
+		// read any errors from the attempted command
+
+		while ((line = stdError.readLine()) != null) {
+			bw.write(line + "\n");
+		}
+		
+		bw.close();
 	}
 
 	public static Path loadDiffFile(String diffFilePath,

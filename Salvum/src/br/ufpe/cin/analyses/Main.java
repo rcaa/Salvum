@@ -48,7 +48,7 @@ public class Main {
 
 		 String propertiesPath =
 		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
-		 "/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
+		 "/joana/Salvum/configFiles/gitblitLocal.properties";
 		//String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -85,6 +85,7 @@ public class Main {
 		String policyText = new String(Files.readAllBytes(path));
 		List<String> hashes = Policy.findHashes(policyText,
 				p.getProperty("targetPathDirectory"));
+		System.out.println(hashes);
 		
 		if (hashes == null || hashes.isEmpty()) {
 			throw new IOException("could not find hashes");
