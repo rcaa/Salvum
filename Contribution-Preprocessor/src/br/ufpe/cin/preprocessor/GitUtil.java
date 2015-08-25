@@ -23,40 +23,13 @@ public class GitUtil {
 						+ parentCommitHash + " " + currentCommitHash };
 		Process process = rt.exec(gitDiffCommands);
 		
-
+		BufferedWriter bw = createDiffFile(diffFilePath);
 		
-		File file = new File(diffFilePath);
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		
-		
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-				process.getInputStream()));
-		
-		// read the output from the command
-		String line = "";
-		while ((line = stdInput.readLine()) != null) {
-			bw.write(line + "\n");
-		}
+		writeDiffFile(process, bw);
 
-		BufferedReader stdError = new BufferedReader(new InputStreamReader(
-				process.getErrorStream()));
-
-		// read any errors from the attempted command
-
-		while ((line = stdError.readLine()) != null) {
-			bw.write(line + "\n");
-		}
+		writeErrorsDiffFile(process, bw);
 		
 		bw.close();
-	}
-
-	public static Path loadDiffFile(String diffFilePath,
-			String currentCommitHash) throws IOException {
-		return Paths.get(diffFilePath);
 	}
 
 	// public static void deleteDiffFile(Path targetProjPath) throws IOException
@@ -100,6 +73,47 @@ public class GitUtil {
 		rt.exec(Tag.GIT_DIR + targetPathDirectory
 				+ ".git checkout-index -a -f --prefix=" + targetPathDirectory
 				+ " " + currentCommitHash);
+	}
+	
+	private static void writeErrorsDiffFile(Process process, BufferedWriter bw)
+			throws IOException {
+		String line = "";
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(
+				process.getErrorStream()));
+
+		// read any errors from the attempted command
+
+		while ((line = stdError.readLine()) != null) {
+			bw.write(line + "\n");
+		}
+	}
+
+	private static void writeDiffFile(Process process, BufferedWriter bw)
+			throws IOException {
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+				process.getInputStream()));
+		
+		// read the output from the command
+		String line = "";
+		while ((line = stdInput.readLine()) != null) {
+			bw.write(line + "\n");
+		}
+	}
+
+	private static BufferedWriter createDiffFile(String diffFilePath)
+			throws IOException {
+		File file = new File(diffFilePath);
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		return bw;
+	}
+
+	public static Path loadDiffFile(String diffFilePath,
+			String currentCommitHash) throws IOException {
+		return Paths.get(diffFilePath);
 	}
 }
 // #endif
