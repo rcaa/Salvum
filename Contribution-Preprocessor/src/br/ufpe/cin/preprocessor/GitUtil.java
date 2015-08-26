@@ -22,13 +22,13 @@ public class GitUtil {
 				Tag.GIT_DIR + targetPathDirectory + ".git diff "
 						+ parentCommitHash + " " + currentCommitHash };
 		Process process = rt.exec(gitDiffCommands);
-		
+
 		BufferedWriter bw = createDiffFile(diffFilePath);
-		
+
 		writeDiffFile(process, bw);
 
 		writeErrorsDiffFile(process, bw);
-		
+
 		bw.close();
 	}
 
@@ -70,11 +70,27 @@ public class GitUtil {
 	public static void checkoutCommitHash(String targetPathDirectory,
 			String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
-		rt.exec(Tag.GIT_DIR + targetPathDirectory
-				+ ".git checkout-index -a -f --prefix=" + targetPathDirectory
-				+ " " + currentCommitHash);
+
+		String exect = Tag.GIT_DIR + targetPathDirectory + ".git "
+				+ "--work-tree=" + targetPathDirectory + " checkout "
+				+ currentCommitHash + " --";
+		Process process = rt.exec(exect);
+
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+				process.getInputStream()));
+		String line = "";
+		while ((line = stdInput.readLine()) != null) {
+			System.out.println(line);
+		}
+
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(
+				process.getErrorStream()));
+		String line2 = "";
+		while ((line2 = stdError.readLine()) != null) {
+			System.out.println(line2);
+		}
 	}
-	
+
 	private static void writeErrorsDiffFile(Process process, BufferedWriter bw)
 			throws IOException {
 		String line = "";
@@ -92,7 +108,7 @@ public class GitUtil {
 			throws IOException {
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));
-		
+
 		// read the output from the command
 		String line = "";
 		while ((line = stdInput.readLine()) != null) {
