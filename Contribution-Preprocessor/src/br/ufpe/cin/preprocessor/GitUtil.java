@@ -89,16 +89,10 @@ public class GitUtil {
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(
 				process.getErrorStream()));
 		String line2 = "";
-		String errorOutput = "";
 		while ((line2 = stdError.readLine()) != null) {
-			errorOutput = errorOutput + line2 + "/n";
-		}
-		System.out.println(errorOutput);
-		if (!errorOutput.isEmpty()) {
-			throw new IOException("checkout problem");
+			System.out.println(line2);
 		}
 		stdError.close();
-
 	}
 
 	private static void writeErrorsDiffFile(Process process, BufferedWriter bw)
