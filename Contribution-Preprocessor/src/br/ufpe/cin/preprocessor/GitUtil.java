@@ -52,6 +52,7 @@ public class GitUtil {
 		// read the output from the command
 		String s = stdInput.readLine();
 		if (s != null) {
+			stdInput.close();
 			return s.split(" ")[1];
 		}
 
@@ -62,9 +63,10 @@ public class GitUtil {
 
 		s = stdError.readLine();
 		if (s != null) {
+			stdError.close();
 			return s;
 		}
-		return null;
+		throw new IOException("wrong diff file entries");
 	}
 
 	public static void checkoutCommitHash(String targetPathDirectory,
@@ -82,13 +84,21 @@ public class GitUtil {
 		while ((line = stdInput.readLine()) != null) {
 			System.out.println(line);
 		}
+		stdInput.close();
 
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(
 				process.getErrorStream()));
 		String line2 = "";
+		String errorOutput = "";
 		while ((line2 = stdError.readLine()) != null) {
-			System.out.println(line2);
+			errorOutput = errorOutput + line2 + "/n";
 		}
+		System.out.println(errorOutput);
+		if (!errorOutput.isEmpty()) {
+			throw new IOException("checkout problem");
+		}
+		stdError.close();
+
 	}
 
 	private static void writeErrorsDiffFile(Process process, BufferedWriter bw)
@@ -102,6 +112,7 @@ public class GitUtil {
 		while ((line = stdError.readLine()) != null) {
 			bw.write(line + "\n");
 		}
+		stdError.close();
 	}
 
 	private static void writeDiffFile(Process process, BufferedWriter bw)
@@ -114,6 +125,7 @@ public class GitUtil {
 		while ((line = stdInput.readLine()) != null) {
 			bw.write(line + "\n");
 		}
+		stdInput.close();
 	}
 
 	private static BufferedWriter createDiffFile(String diffFilePath)
