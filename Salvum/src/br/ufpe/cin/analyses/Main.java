@@ -24,6 +24,7 @@ import br.ufpe.cin.policy.Policy;
 //#if CONTRIBUTION
 import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
+import br.ufpe.cin.preprocessor.GitUtil;
 //#endif
 
 import com.ibm.wala.util.CancelException;
@@ -46,10 +47,10 @@ public class Main {
 
 		Properties p = new Properties();
 
-//		 String propertiesPath =
-//		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
-//		 "/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
-		String propertiesPath = args[0];
+		 String propertiesPath =
+		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
+		 "/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
+	//	String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -163,6 +164,7 @@ public class Main {
 
 			System.out.println(resultByProgramPart);
 		}
+		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"), "-");
 	}
 
 	private void setOutput(Properties p, Policy policy)

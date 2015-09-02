@@ -33,6 +33,7 @@ public class Policy {
 				Set<String> classElements = retreiveProgramElements(temp[1]);
 				this.getClazzAndElements().put(clazz, classElements);
 			}
+			this.operator = "noflow";
 			
 //			String[] elements = policy.split(" ");
 //			this.clazz = elements[0];
