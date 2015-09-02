@@ -139,11 +139,18 @@ public class LabelConfig {
 			Policy policy, List<SDGProgramPart> sources,
 			List<SDGProgramPart> sinks) {
 		for (SDGClass sdgClass : classes) {
-			if (mapClassesLineNumbers.containsKey(sdgClass.toString()) || sdgClass.toString().contains(policy.getClazz())) {
-				iterateOverAttributes(policy, sources, sinks, sdgClass);
+			// foreach class da policy
+			
+			Map<String, Set<String>> elements = policy.getClazzAndElements();
+			Set<String> clazzes = elements.keySet();
+			for (String clazz : clazzes) {
+				if (mapClassesLineNumbers.containsKey(sdgClass.toString()) 
+						|| sdgClass.toString().contains(clazz)) {
+					iterateOverAttributes(policy, sources, sinks, sdgClass, clazz);
 
-				iterateOverMethods(mapClassesLineNumbers, policy, sources, sinks,
-						sdgClass);
+					iterateOverMethods(mapClassesLineNumbers, policy, sources, sinks,
+							sdgClass);
+				}
 			}
 		}
 	}
@@ -178,11 +185,11 @@ public class LabelConfig {
 
 	private void iterateOverAttributes(Policy policy,
 			List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
-			SDGClass sdgClass) {
+			SDGClass sdgClass, String clazz) {
 		// por enquanto so marca atributo como source
 		for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
 			
-			Set<String> sensitiveResources = policy.getSensitiveResources();
+			Set<String> sensitiveResources = policy.getSensitiveResources(clazz);
 			for (String sensitiveResource : sensitiveResources) {
 				if (sdgAttribute.toString().equals(sensitiveResource)) {
 					if (policy.getOperator().equals("noflow")) {
