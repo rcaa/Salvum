@@ -26,7 +26,7 @@ public class Policy {
 			
 			String[] elements = policy.split("noflow");
 			String firstPart = elements[0];
-			String[] classAndElements = firstPart.split("}, ");
+			String[] classAndElements = firstPart.split(", ");
 			for (String string : classAndElements) {
 				String[] temp = string.split(" ");
 				String clazz = temp[0];
