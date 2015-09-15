@@ -1,2 +1,2 @@
 others.C {x} noflow DangerousTask
-	where DangerousTask = {c | c.message.contains("problem")}
+	where DangerousTask = {c | c.message.contains("adding problem")}

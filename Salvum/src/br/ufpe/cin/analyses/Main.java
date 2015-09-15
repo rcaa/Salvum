@@ -43,10 +43,10 @@ public class Main {
 
 		Properties p = new Properties();
 
-		 String propertiesPath =
-		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
-		 "/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
-		//String propertiesPath = args[0];
+		 //String propertiesPath =
+		 //"/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
+		 //"/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
+		String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -189,7 +189,7 @@ public class Main {
 //		GitUtil.createOutputCommandLine(process);
 		
 		Project project = new Project();
-		project.setProperty("java.home", "/Library/Java/JavaVirtualMachines/jdk1.7.0_67.jdk/Contents/Home/");
+		project.setProperty("java.home", p.getProperty("javahome"));
         File buildFile = new File(p.getProperty("targetPathDirectory") + "build.xml");
         project.setUserProperty("ant.file", buildFile.getAbsolutePath());
         project.init();
