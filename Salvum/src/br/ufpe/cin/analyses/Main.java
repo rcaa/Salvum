@@ -1,5 +1,6 @@
 package br.ufpe.cin.analyses;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,19 +14,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-//#if FEATURE
-//@import java.util.Set;
-//@
-//@import br.ufpe.cin.feature.preprocessor.ContextManager;
-//@import br.ufpe.cin.feature.preprocessor.FeaturePreprocessor;
-//@import br.ufpe.cin.feature.preprocessor.PreprocessorException;
-//#endif
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+
 import br.ufpe.cin.policy.Policy;
-//#if CONTRIBUTION
 import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 import br.ufpe.cin.preprocessor.GitUtil;
-//#endif
 
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -50,7 +46,7 @@ public class Main {
 		 String propertiesPath =
 		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
 		 "/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
-	//	String propertiesPath = args[0];
+		//String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -120,6 +116,11 @@ public class Main {
 					.getContext();
 			Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
 					.getMapClassesLineNumbers();
+			
+			// compilacao tem que vir aqui
+			// javac -d bin -sourcepath src -cp lib/lib1.jar;lib/lib2.jar src/com/example/Application.java
+			compileProject(p);
+			
 			// #endif
 			// Segundo passo logico
 
@@ -164,7 +165,38 @@ public class Main {
 
 			System.out.println(resultByProgramPart);
 		}
-		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"), "-");
+		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"), "master");
+	}
+
+	private void compileProject(Properties p)
+			throws IOException {
+//		Set<String> classesTemp = mapClassesLineNumbers.keySet();
+//		Runtime rt = Runtime.getRuntime();
+//		for (String clazz : classesTemp) {
+//			String compileCommand = "javac -d " + p.getProperty("classpath") 
+//					+ " -sourcepath " + p.getProperty("targetPathDirectory") + "src "
+//					+ "-cp " + p.getProperty("thirdPartyLibsPath") + " " 
+//					+ p.getProperty("targetPathDirectory") + "/src/" 
+//					+ clazz.replace('.', '/') + ".java";
+//			Process process = rt.exec(compileCommand);
+//			GitUtil.createOutputCommandLine(process);
+//		}
+		
+		// chamar o build.xml via ant
+//		Runtime rt = Runtime.getRuntime();
+//		String compileCommand = "ant -f " + p.getProperty("targetPathDirectory") + "build.xml";
+//		Process process = rt.exec(compileCommand);
+//		GitUtil.createOutputCommandLine(process);
+		
+		Project project = new Project();
+		project.setProperty("java.home", "/Library/Java/JavaVirtualMachines/jdk1.7.0_67.jdk/Contents/Home/");
+        File buildFile = new File(p.getProperty("targetPathDirectory") + "build.xml");
+        project.setUserProperty("ant.file", buildFile.getAbsolutePath());
+        project.init();
+        ProjectHelper helper = ProjectHelper.getProjectHelper();
+        project.addReference("ant.projectHelper", helper);
+        helper.parse(project, buildFile);
+        project.executeTarget(project.getDefaultTarget());
 	}
 
 	private void setOutput(Properties p, Policy policy)

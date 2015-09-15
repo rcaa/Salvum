@@ -78,6 +78,11 @@ public class GitUtil {
 				+ currentCommitHash + " --";
 		Process process = rt.exec(exect);
 
+		createOutputCommandLine(process);
+	}
+
+	public static void createOutputCommandLine(Process process)
+			throws IOException {
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));
 		String line = "";

@@ -27,6 +27,7 @@ public class GitIntegration {
 		Runtime rt = Runtime.getRuntime();
 		String[] command = new String[] { "git", "--git-dir",
 				targetPathDirectory + ".git", "log", "--author=" + author };
+		// --committer
 		iterateLog(commitHashes, rt, command);
 		return commitHashes;
 	}

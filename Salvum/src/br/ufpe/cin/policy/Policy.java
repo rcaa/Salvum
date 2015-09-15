@@ -73,7 +73,7 @@ public class Policy {
 			throws IOException {
 		String term = policy.substring(policy.indexOf('"') + 1,
 				policy.lastIndexOf('"'));
-		if (policy.contains("c | !c.message.contains")) {
+		if (policy.contains("c | c.message.contains")) {
 			return GitIntegration.searchCommitHashesFromMessages(
 					targetPathDirectory, term);
 		} else if (policy.contains("c | c.author")) {
