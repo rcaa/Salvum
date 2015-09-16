@@ -196,7 +196,7 @@ public class Main {
         ProjectHelper helper = ProjectHelper.getProjectHelper();
         project.addReference("ant.projectHelper", helper);
         helper.parse(project, buildFile);
-        project.executeTarget(project.getDefaultTarget());
+        //project.executeTarget(project.getDefaultTarget());
 	}
 
 	private void setOutput(Properties p, Policy policy)
