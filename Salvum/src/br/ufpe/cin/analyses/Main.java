@@ -1,6 +1,5 @@
 package br.ufpe.cin.analyses;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
+import org.eclipse.core.runtime.CoreException;
 
+import br.ufpe.cin.ant.ProjectBuilder;
 import br.ufpe.cin.policy.Policy;
 import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
@@ -43,9 +42,8 @@ public class Main {
 
 		Properties p = new Properties();
 
-		 //String propertiesPath =
-		 //"/Users/rodrigoandrade/Documents/workspaces/Doutorado" +
-		 //"/joana/Salvum/configFiles/simpleContributionExamplePaulo.properties";
+//		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+//				+ "/joana/Salvum/configFiles/gitblitLocal.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -74,7 +72,7 @@ public class Main {
 
 	private void run(Properties p) throws WalaException,
 			IllegalArgumentException, IOException, UnsoundGraphException,
-			CancelException {
+			CancelException, CoreException {
 
 		// obtenho a policy
 		Path path = FileSystems.getDefault().getPath(
@@ -83,7 +81,7 @@ public class Main {
 		List<String> hashes = Policy.findHashes(policyText,
 				p.getProperty("targetPathDirectory"));
 		System.out.println(hashes);
-		
+
 		if (hashes == null || hashes.isEmpty()) {
 			throw new IOException("could not find hashes");
 		}
@@ -98,7 +96,7 @@ public class Main {
 			// @ try {
 			// @ String sourceDirectory = p.getProperty("sourceDirectory");
 			// @ FeaturePreprocessor pp = new
-//@			// FeaturePreprocessor(sourceDirectory);
+			// @ // FeaturePreprocessor(sourceDirectory);
 			// @ pp.execute();
 			// @ } catch (PreprocessorException e) {
 			// @ e.printStackTrace();
@@ -106,7 +104,7 @@ public class Main {
 			// @ // mapeamento de features e linhas
 			// @ ContextManager context = ContextManager.getContext();
 			// @ Map<String, Map<String, Set<Integer>>> mapClassFeatures =
-//@			// context
+			// @ // context
 			// @ .getMapClassFeatures();
 			// #elif CONTRIBUTION
 			ContributionPreprocessor cp = new ContributionPreprocessor(p,
@@ -116,11 +114,13 @@ public class Main {
 					.getContext();
 			Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
 					.getMapClassesLineNumbers();
-			
+
 			// compilacao tem que vir aqui
-			// javac -d bin -sourcepath src -cp lib/lib1.jar;lib/lib2.jar src/com/example/Application.java
-			compileProject(p);
-			
+			// javac -d bin -sourcepath src -cp lib/lib1.jar;lib/lib2.jar
+			// src/com/example/Application.java
+			ProjectBuilder pb = new ProjectBuilder();
+			pb.compileProject(p);
+
 			// #endif
 			// Segundo passo logico
 
@@ -149,7 +149,7 @@ public class Main {
 
 			// #if FEATURE
 			// @ lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures,
-//@			// policy,
+			// @ // policy,
 			// @ sources, sinks);
 			// #elif CONTRIBUTION
 			lconfig.prepareListsOfSourceAndSinksContribution(classes,
@@ -165,38 +165,8 @@ public class Main {
 
 			System.out.println(resultByProgramPart);
 		}
-		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"), "master");
-	}
-
-	private void compileProject(Properties p)
-			throws IOException {
-//		Set<String> classesTemp = mapClassesLineNumbers.keySet();
-//		Runtime rt = Runtime.getRuntime();
-//		for (String clazz : classesTemp) {
-//			String compileCommand = "javac -d " + p.getProperty("classpath") 
-//					+ " -sourcepath " + p.getProperty("targetPathDirectory") + "src "
-//					+ "-cp " + p.getProperty("thirdPartyLibsPath") + " " 
-//					+ p.getProperty("targetPathDirectory") + "/src/" 
-//					+ clazz.replace('.', '/') + ".java";
-//			Process process = rt.exec(compileCommand);
-//			GitUtil.createOutputCommandLine(process);
-//		}
-		
-		// chamar o build.xml via ant
-//		Runtime rt = Runtime.getRuntime();
-//		String compileCommand = "ant -f " + p.getProperty("targetPathDirectory") + "build.xml";
-//		Process process = rt.exec(compileCommand);
-//		GitUtil.createOutputCommandLine(process);
-		
-		Project project = new Project();
-		project.setProperty("java.home", p.getProperty("javahome"));
-        File buildFile = new File(p.getProperty("targetPathDirectory") + "build.xml");
-        project.setUserProperty("ant.file", buildFile.getAbsolutePath());
-        project.init();
-        ProjectHelper helper = ProjectHelper.getProjectHelper();
-        project.addReference("ant.projectHelper", helper);
-        helper.parse(project, buildFile);
-        //project.executeTarget(project.getDefaultTarget());
+		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"),
+				"master");
 	}
 
 	private void setOutput(Properties p, Policy policy)
@@ -204,7 +174,7 @@ public class Main {
 		String outputPath = p.getProperty("output")
 		// #if FEATURE
 		// @ +policy.getFeature();
-				// #elif CONTRIBUTION
+		// #elif CONTRIBUTION
 				+ policy.getHash().substring(0, 8);
 		// #endif
 		PrintStream out = new PrintStream(new FileOutputStream(outputPath
