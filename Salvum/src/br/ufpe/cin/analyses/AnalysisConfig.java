@@ -1,6 +1,9 @@
 package br.ufpe.cin.analyses;
 
+import java.io.File;
 import java.io.IOException;
+
+import br.ufpe.cin.util.LibFilterUtil;
 
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
@@ -16,14 +19,15 @@ import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
 import edu.kit.joana.wala.core.SDGBuilder.PointsToPrecision;
 
 public class AnalysisConfig {
-	
+
 	public SDGProgram retrieveSDG(String path) throws IOException {
 		return new SDGProgram(SDG.readFrom(path));
 	}
 
 	public SDGProgram buildSDG(String classPath,
-			JavaMethodSignature entryMethod, String thirdPartyLibsPath) throws ClassHierarchyException,
-			IOException, UnsoundGraphException, CancelException {
+			JavaMethodSignature entryMethod, String thirdPartyLibsPath)
+			throws ClassHierarchyException, IOException, UnsoundGraphException,
+			CancelException {
 		/**
 		 * the class path is either a directory or a jar containing all the
 		 * classes of the program which you want to analyze
@@ -68,9 +72,11 @@ public class AnalysisConfig {
 		 * cannot happen
 		 */
 		config.setExceptionAnalysis(ExceptionAnalysis.INTERPROC);
-		
-		config.setThirdPartyLibsPath(thirdPartyLibsPath);
-		
+
+		String libsPath = prepareLibsPath(thirdPartyLibsPath);
+
+		config.setThirdPartyLibsPath(libsPath);
+
 		/** build the PDG */
 		SDGProgram program = SDGProgram.createSDGProgram(config, System.out,
 				new NullProgressMonitor());
@@ -79,5 +85,21 @@ public class AnalysisConfig {
 		// SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
 		// "/Users/rodrigoandrade/Dropbox/Temp/SDGDirect.pdg"));
 		return program;
+	}
+
+	private String prepareLibsPath(String thirdPartyLibsPath)
+			throws IOException {
+		String libsPath = "";
+		File[] files = new File(thirdPartyLibsPath)
+				.listFiles(new LibFilterUtil());
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (i == (files.length - 1)) {
+				libsPath += file.getCanonicalPath();
+			} else {
+				libsPath += file.getCanonicalPath() + ":";
+			}
+		}
+		return libsPath;
 	}
 }
