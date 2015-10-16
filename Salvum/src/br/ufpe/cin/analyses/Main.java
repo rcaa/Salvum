@@ -42,9 +42,9 @@ public class Main {
 
 		Properties p = new Properties();
 
-		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-				+ "/joana/Salvum/configFiles/gitblitLocal.properties";
-		//String propertiesPath = args[0];
+//		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+//				+ "/joana/Salvum/configFiles/gitblitLocal.properties";
+		String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -119,7 +119,7 @@ public class Main {
 			// javac -d bin -sourcepath src -cp lib/lib1.jar;lib/lib2.jar
 			// src/com/example/Application.java
 			ProjectBuilder pb = new ProjectBuilder();
-			pb.compileProject(p);
+			pb.compileProject(p, hash);
 
 			// #endif
 			// Segundo passo logico

@@ -9,7 +9,8 @@ import br.ufpe.cin.util.ZipUtil;
 
 public class ProjectBuilder {
 
-	public void compileProject(Properties p) throws IOException, CoreException {
+	public void compileProject(Properties p, String commitHash)
+			throws IOException, CoreException {
 
 		// Project project = new Project();
 		// File buildFile = new File(p.getProperty("targetPathDirectory")
@@ -24,8 +25,7 @@ public class ProjectBuilder {
 		// project.executeTarget(target);
 
 		ZipUtil zu = new ZipUtil();
-		zu.unzip(
-				"/Users/rodrigoandrade/Desktop/bins-gitblit/Archive-75ebd391b8888.zip",
+		zu.unzip(p.getProperty("zips") + "Archive-" + commitHash + ".zip",
 				p.getProperty("targetPathDirectory"));
 	}
 
