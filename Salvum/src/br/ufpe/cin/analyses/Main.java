@@ -118,8 +118,15 @@ public class Main {
 			// compilacao tem que vir aqui
 			// javac -d bin -sourcepath src -cp lib/lib1.jar;lib/lib2.jar
 			// src/com/example/Application.java
-			ProjectBuilder pb = new ProjectBuilder();
-			pb.compileProject(p, hash);
+			
+			try {
+				ProjectBuilder pb = new ProjectBuilder();
+				pb.compileProject(p, hash);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				continue;
+			}
+			
 
 			// #endif
 			// Segundo passo logico
@@ -162,6 +169,8 @@ public class Main {
 			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 			TObjectIntMap<IViolation<SDGProgramPart>> resultByProgramPart = ifc
 					.groupByPPPart(result);
+			
+			program = null;
 
 			System.out.println(resultByProgramPart);
 		}
