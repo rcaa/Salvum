@@ -171,6 +171,8 @@ public class Main {
 					.groupByPPPart(result);
 			
 			program = null;
+			ifc = null;
+			classes = null;
 
 			System.out.println(resultByProgramPart);
 		}
