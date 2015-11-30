@@ -43,7 +43,7 @@ public class Main {
 		Properties p = new Properties();
 
 //		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-//				+ "/joana/Salvum/configFiles/gitblitLocal.properties";
+//				+ "/joana/Salvum/configFiles/innerClassExample.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;

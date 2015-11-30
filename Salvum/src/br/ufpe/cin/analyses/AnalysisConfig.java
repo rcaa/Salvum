@@ -90,14 +90,16 @@ public class AnalysisConfig {
 	private String prepareLibsPath(String thirdPartyLibsPath)
 			throws IOException {
 		String libsPath = "";
-		File[] files = new File(thirdPartyLibsPath)
-				.listFiles(new LibFilterUtil());
-		for (int i = 0; i < files.length; i++) {
-			File file = files[i];
-			if (i == (files.length - 1)) {
-				libsPath += file.getCanonicalPath();
-			} else {
-				libsPath += file.getCanonicalPath() + ":";
+		if (thirdPartyLibsPath != null && !thirdPartyLibsPath.isEmpty() ) {
+			File[] files = new File(thirdPartyLibsPath)
+					.listFiles(new LibFilterUtil());
+			for (int i = 0; i < files.length; i++) {
+				File file = files[i];
+				if (i == (files.length - 1)) {
+					libsPath += file.getCanonicalPath();
+				} else {
+					libsPath += file.getCanonicalPath() + ":";
+				}
 			}
 		}
 		return libsPath;
