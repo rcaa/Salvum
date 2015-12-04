@@ -39,17 +39,18 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Properties p = CommandLine.parse(args);
-
 		Properties p = new Properties();
-
-//		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-//				+ "/joana/Salvum/configFiles/innerClassExample.properties";
+		
+		// String propertiesPath =
+		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+		// + "/joana/Salvum/configFiles/innerClassExample.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(propertiesPath);
 			p.load(in);
+			Main.setOutput(p, null);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} finally {
@@ -118,7 +119,7 @@ public class Main {
 			// compilacao tem que vir aqui
 			// javac -d bin -sourcepath src -cp lib/lib1.jar;lib/lib2.jar
 			// src/com/example/Application.java
-			
+
 			try {
 				ProjectBuilder pb = new ProjectBuilder();
 				pb.compileProject(p, hash);
@@ -126,7 +127,6 @@ public class Main {
 				System.out.println(e.getMessage());
 				continue;
 			}
-			
 
 			// #endif
 			// Segundo passo logico
@@ -136,10 +136,11 @@ public class Main {
 			// montar o SDG graph
 			AnalysisConfig ana = new AnalysisConfig();
 
-			JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-					.getProperty("main"));
 			// JavaMethodSignature entryMethod =
-			// JavaMethodSignature.mainMethodOfClass(p.getProperty("main"));
+			// JavaMethodSignature.fromString(p
+			// .getProperty("main"));
+			JavaMethodSignature entryMethod = JavaMethodSignature
+					.mainMethodOfClass(p.getProperty("main"));
 			SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
 					entryMethod, p.getProperty("thirdPartyLibsPath"));
 
@@ -169,7 +170,7 @@ public class Main {
 			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 			TObjectIntMap<IViolation<SDGProgramPart>> resultByProgramPart = ifc
 					.groupByPPPart(result);
-			
+
 			program = null;
 			ifc = null;
 			classes = null;
@@ -180,19 +181,23 @@ public class Main {
 				"master");
 	}
 
-	private void setOutput(Properties p, Policy policy)
+	private static void setOutput(Properties p, Policy policy)
 			throws FileNotFoundException {
-		String outputPath = p.getProperty("output")
-		// #if FEATURE
-		// @ +policy.getFeature();
-		// #elif CONTRIBUTION
-				+ policy.getHash().substring(0, 8);
-		// #endif
-		PrintStream out = new PrintStream(new FileOutputStream(outputPath
-				+ "-output.txt"));
-		PrintStream outST = new PrintStream(new FileOutputStream(outputPath
-				+ "-outputerror.txt"));
-		System.setOut(out);
-		System.setErr(outST);
+		
+			String outputPath = p.getProperty("output");
+			
+			// #if FEATURE
+			// @ +policy.getFeature();
+			// #elif CONTRIBUTION
+			if (policy != null) {
+				outputPath = outputPath	+ policy.getHash().substring(0, 8);
+			}
+			// #endif
+			PrintStream out = new PrintStream(new FileOutputStream(outputPath
+					+ "-output.txt"));
+			PrintStream outST = new PrintStream(new FileOutputStream(outputPath
+					+ "-outputerror.txt"));
+			System.setOut(out);
+			System.setErr(outST);
 	}
 }

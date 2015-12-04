@@ -8,8 +8,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.eclipse.core.runtime.CoreException;
 
-import br.ufpe.cin.util.ZipUtil;
-
 public class ProjectBuilder {
 
 	public void compileProject(Properties p, String commitHash)
@@ -17,7 +15,8 @@ public class ProjectBuilder {
 
 		 Project project = new Project();
 		 File buildFile = new File(p.getProperty("targetPathDirectory")
-		 + "build.xml");
+		 + "base/trunk/build.xml");
+		// "build.xml");
 		 project.setUserProperty("ant.file", buildFile.getAbsolutePath());
 		 project.setProperty("java.home", p.getProperty("javahome"));
 		 project.init();
@@ -33,5 +32,4 @@ public class ProjectBuilder {
 //		zu.unzip(p.getProperty("zips") + "Archive-" + commitHash + ".zip",
 //				p.getProperty("targetPathDirectory"));
 	}
-
 }
