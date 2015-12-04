@@ -20,7 +20,7 @@ public class GitUtil {
 				"bash",
 				"-c",
 				Tag.GIT_DIR + targetPathDirectory + ".git diff "
-						+ parentCommitHash + " " + currentCommitHash };
+						+ parentCommitHash + " " + currentCommitHash + " -- '*.java'"};
 		Process process = rt.exec(gitDiffCommands);
 
 		BufferedWriter bw = createDiffFile(diffFilePath);
