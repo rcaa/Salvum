@@ -13,29 +13,35 @@ public class ContributionPreprocessor {
 	private String diffFilePath;
 
 	public ContributionPreprocessor(String sourceDirectory,
-			String parentCommitHash, String currentCommitHash, String diffFilePath) {
+			String parentCommitHash, String currentCommitHash,
+			String diffFilePath) {
 		this.targetPathDirectory = sourceDirectory;
 		this.parentCommitHash = parentCommitHash;
 		this.currentCommitHash = currentCommitHash;
 		this.diffFilePath = setDiffFilePath(currentCommitHash, diffFilePath);
 	}
-	
-	public ContributionPreprocessor(Properties p, String currentCommitHash) throws IOException {
+
+	public ContributionPreprocessor(Properties p, String currentCommitHash)
+			throws IOException {
 		this.targetPathDirectory = p.getProperty("targetPathDirectory");
 		this.currentCommitHash = currentCommitHash;
-		this.parentCommitHash = GitUtil.runParents(targetPathDirectory, currentCommitHash);
-		this.diffFilePath = setDiffFilePath(currentCommitHash, p.getProperty("diffFilePath"));
+		this.parentCommitHash = GitUtil.runParents(targetPathDirectory,
+				currentCommitHash);
+		this.diffFilePath = setDiffFilePath(currentCommitHash,
+				p.getProperty("diffFilePath"));
 	}
 
 	public void preprocess() throws IOException {
-		
-		GitUtil.runDiffCommand(this.targetPathDirectory,
-				this.parentCommitHash, this.currentCommitHash, this.diffFilePath);
-		Path targetProjPath = GitUtil.loadDiffFile(this.diffFilePath, this.currentCommitHash);
+
+		GitUtil.runDiffCommand(this.targetPathDirectory, this.parentCommitHash,
+				this.currentCommitHash, this.diffFilePath);
+		Path targetProjPath = GitUtil.loadDiffFile(this.diffFilePath,
+				this.currentCommitHash);
 
 		Scanner scanner = new Scanner(targetProjPath);
 
-		ContextManagerContribution manager = ContextManagerContribution.getContext();
+		ContextManagerContribution manager = ContextManagerContribution
+				.getContext();
 
 		String className = "";
 
@@ -86,8 +92,9 @@ public class ContributionPreprocessor {
 			}
 		}
 
-		GitUtil.checkoutCommitHash(this.targetPathDirectory, this.currentCommitHash);
-		
+		GitUtil.checkoutCommitHash(this.targetPathDirectory,
+				this.currentCommitHash);
+
 		System.out.println(manager.getMapClassesLineNumbers().toString());
 
 	}
@@ -95,9 +102,10 @@ public class ContributionPreprocessor {
 	private String formatClassName(String nextLine) {
 		String className = null;
 		// significa que comeca o diff de um novo arquivo
-		if (nextLine.contains(".java") && nextLine.contains("/src")) {
+		if (nextLine != null && nextLine.contains(".java")
+				&& nextLine.contains("/src")) {
 			className = nextLine.substring(nextLine.indexOf("/src"),
-					nextLine.indexOf("."));
+					nextLine.indexOf(".java"));
 			className = className.replace("/", ".");
 			className = className.replace(".src.", "");
 		}
@@ -116,8 +124,9 @@ public class ContributionPreprocessor {
 		String[] lines = substring.split(",");
 		return lines;
 	}
-	
-	private static String setDiffFilePath(String currentCommitHash, String diffFilePath) {
+
+	private static String setDiffFilePath(String currentCommitHash,
+			String diffFilePath) {
 		return diffFilePath + currentCommitHash.substring(0, 8) + ".txt";
 	}
 

@@ -15,8 +15,7 @@ public class ProjectBuilder {
 
 		 Project project = new Project();
 		 File buildFile = new File(p.getProperty("targetPathDirectory")
-		 + "base/trunk/build.xml");
-		// "build.xml");
+		 + p.getProperty("buildScriptPath"));
 		 project.setUserProperty("ant.file", buildFile.getAbsolutePath());
 		 project.setProperty("java.home", p.getProperty("javahome"));
 		 project.init();

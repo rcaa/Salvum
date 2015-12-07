@@ -115,6 +115,10 @@ public class Main {
 					.getContext();
 			Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
 					.getMapClassesLineNumbers();
+			if (mapClassesLineNumbers.isEmpty()) {
+				// significa que nao tem classes java alteradas
+				continue;
+			}
 
 			// compilacao tem que vir aqui
 			// javac -d bin -sourcepath src -cp lib/lib1.jar;lib/lib2.jar
