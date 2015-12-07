@@ -74,8 +74,7 @@ public class GitUtil {
 		Runtime rt = Runtime.getRuntime();
 
 		String exect = Tag.GIT_DIR + targetPathDirectory + ".git "
-				+ "--work-tree=" + targetPathDirectory + " checkout "
-				+ currentCommitHash + " --";
+				+ "checkout -f " + currentCommitHash;
 		Process process = rt.exec(exect);
 
 		createOutputCommandLine(process);
