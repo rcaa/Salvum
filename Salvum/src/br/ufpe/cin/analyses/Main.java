@@ -31,19 +31,18 @@ import edu.kit.joana.api.sdg.SDGClass;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.api.sdg.SDGProgramPart;
 import edu.kit.joana.ifc.sdg.core.SecurityNode;
+import edu.kit.joana.ifc.sdg.core.violations.ClassifiedViolation;
 import edu.kit.joana.ifc.sdg.core.violations.IViolation;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
-import gnu.trove.map.TObjectIntMap;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
-		
-		// String propertiesPath =
-		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		// + "/joana/Salvum/configFiles/innerClassExample.properties";
+
+		//String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+		//		+ "/joana/Salvum/configFiles/simpleContributionExample.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -172,14 +171,25 @@ public class Main {
 			IFCAnalysis ifc = new IFCAnalysis(program);
 			lconfig.labellingElements(sources, sinks, program, ifc);
 			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
-			TObjectIntMap<IViolation<SDGProgramPart>> resultByProgramPart = ifc
-					.groupByPPPart(result);
+			for (IViolation<SecurityNode> iViolation : result) {
+				ClassifiedViolation sn = (ClassifiedViolation) iViolation;
+				SecurityNode source = sn.getSource();
+				SecurityNode sink = sn.getSink();
+				if (sn != null && sn.getSink() != null
+						&& sink.getBytecodeIndex() >= 0) {
+					System.out.println("Illegal flow from "
+							+ source.getBytecodeName() + " to "
+							+ sink.getBytecodeName() + " at line "
+							// usar o mapeamento aqui pra pegar linha de codigo
+							+ sink.getBytecodeIndex() + " in commit "
+							+ hash);
+				}
+			}
 
 			program = null;
 			ifc = null;
 			classes = null;
 
-			System.out.println(resultByProgramPart);
 		}
 		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"),
 				"master");
@@ -187,21 +197,21 @@ public class Main {
 
 	private static void setOutput(Properties p, Policy policy)
 			throws FileNotFoundException {
-		
-			String outputPath = p.getProperty("output");
-			
-			// #if FEATURE
-			// @ +policy.getFeature();
-			// #elif CONTRIBUTION
-			if (policy != null) {
-				outputPath = outputPath	+ policy.getHash().substring(0, 8);
-			}
-			// #endif
-			PrintStream out = new PrintStream(new FileOutputStream(outputPath
-					+ "-output.txt"));
-			PrintStream outST = new PrintStream(new FileOutputStream(outputPath
-					+ "-outputerror.txt"));
-			System.setOut(out);
-			System.setErr(outST);
+
+		String outputPath = p.getProperty("output");
+
+		// #if FEATURE
+		// @ +policy.getFeature();
+		// #elif CONTRIBUTION
+		if (policy != null) {
+			outputPath = outputPath + policy.getHash().substring(0, 8);
+		}
+		// #endif
+		PrintStream out = new PrintStream(new FileOutputStream(outputPath
+				+ "-output.txt"));
+		PrintStream outST = new PrintStream(new FileOutputStream(outputPath
+				+ "-outputerror.txt"));
+		System.setOut(out);
+		System.setErr(outST);
 	}
 }

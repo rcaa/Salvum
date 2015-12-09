@@ -161,7 +161,6 @@ public class LabelConfig {
 			SDGClass sdgClass) {
 		// por enquanto so marca instrucao de metodo como sink
 		for (SDGMethod sdgMethod : sdgClass.getMethods()) {
-			System.out.println(sdgMethod);
 			IMethod meth = sdgMethod.getMethod();
 			List<SDGInstruction> methodInstructions = sdgMethod
 					.getInstructions();
