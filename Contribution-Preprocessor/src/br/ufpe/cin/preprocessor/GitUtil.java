@@ -20,7 +20,8 @@ public class GitUtil {
 				"bash",
 				"-c",
 				Tag.GIT_DIR + targetPathDirectory + ".git diff "
-						+ parentCommitHash + " " + currentCommitHash + " -- '*.java'"};
+						+ parentCommitHash + " " + currentCommitHash
+						+ " -- '*.java'" };
 		Process process = rt.exec(gitDiffCommands);
 
 		BufferedWriter bw = createDiffFile(diffFilePath);
@@ -73,8 +74,8 @@ public class GitUtil {
 			String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 
-		String exect = Tag.GIT_DIR + targetPathDirectory + ".git "
-				+ "checkout -f " + currentCommitHash;
+		String exect = Tag.GIT_DIR + targetPathDirectory + ".git --work-tree="
+				+ targetPathDirectory + " checkout -f " + currentCommitHash;
 		Process process = rt.exec(exect);
 
 		createOutputCommandLine(process);

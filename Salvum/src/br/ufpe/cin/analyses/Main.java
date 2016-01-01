@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,8 +42,9 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		//String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		//		+ "/joana/Salvum/configFiles/simpleContributionExample.properties";
+		// String propertiesPath =
+		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+		// + "/joana/Salvum/configFiles/simpleContributionExample.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -116,6 +118,23 @@ public class Main {
 					.getMapClassesLineNumbers();
 			if (mapClassesLineNumbers.isEmpty()) {
 				// significa que nao tem classes java alteradas
+
+				// remover diff file e outputs
+				Path diffFiles = FileSystems.getDefault().getPath(
+						ContributionPreprocessor.setDiffFilePath(hash,
+								p.getProperty("diffFilePath")));
+				System.out.println(diffFiles);
+				String output = p.getProperty("output")
+						+ policy.getHash().substring(0, 8);
+				Path deletedOutput = FileSystems.getDefault().getPath(
+						output + "-output.txt");
+				System.out.println(deletedOutput);
+				Path deletedOutputError = FileSystems.getDefault().getPath(
+						output + "-outputerror.txt");
+				System.out.println(deletedOutputError);
+				Files.deleteIfExists(diffFiles);
+				Files.deleteIfExists(deletedOutput);
+				Files.deleteIfExists(deletedOutputError);
 				continue;
 			}
 
@@ -124,6 +143,14 @@ public class Main {
 			// src/com/example/Application.java
 
 			try {
+				// copiar arquivos
+				String sourceFiles = p.getProperty("nonexistentSourceFiles");
+				String targetFiles = p.getProperty("nonexistentTargetFiles");
+				if (sourceFiles != null && !sourceFiles.isEmpty()
+						&& targetFiles != null && !targetFiles.isEmpty()) {
+					copyFiles(sourceFiles, targetFiles);
+				}
+
 				ProjectBuilder pb = new ProjectBuilder();
 				pb.compileProject(p, hash);
 			} catch (Exception e) {
@@ -181,8 +208,7 @@ public class Main {
 							+ source.getBytecodeName() + " to "
 							+ sink.getBytecodeName() + " at line "
 							// usar o mapeamento aqui pra pegar linha de codigo
-							+ sink.getBytecodeIndex() + " in commit "
-							+ hash);
+							+ sink.getBytecodeIndex() + " in commit " + hash);
 				}
 			}
 
@@ -193,6 +219,19 @@ public class Main {
 		}
 		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"),
 				"master");
+	}
+
+	private void copyFiles(String srcFiles, String tgtFiles) throws IOException {
+		String[] sourceFiles = srcFiles.split(":");
+		String[] targetFiles = tgtFiles.split(":");
+		int i = 0;
+
+		while (i < sourceFiles.length && i < sourceFiles.length) {
+			Path source = FileSystems.getDefault().getPath(sourceFiles[i]);
+			Path dest = FileSystems.getDefault().getPath(targetFiles[i]);
+			Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
+			i++;
+		}
 	}
 
 	private static void setOutput(Properties p, Policy policy)

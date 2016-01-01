@@ -125,7 +125,7 @@ public class ContributionPreprocessor {
 		return lines;
 	}
 
-	private static String setDiffFilePath(String currentCommitHash,
+	public static String setDiffFilePath(String currentCommitHash,
 			String diffFilePath) {
 		return diffFilePath + currentCommitHash.substring(0, 8) + ".txt";
 	}
