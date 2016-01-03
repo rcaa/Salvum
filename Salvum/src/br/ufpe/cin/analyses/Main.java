@@ -1,14 +1,10 @@
 package br.ufpe.cin.analyses;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +18,7 @@ import br.ufpe.cin.policy.Policy;
 import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 import br.ufpe.cin.preprocessor.GitUtil;
+import br.ufpe.cin.util.FileUtil;
 
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -51,7 +48,7 @@ public class Main {
 		try {
 			in = new FileInputStream(propertiesPath);
 			p.load(in);
-			Main.setOutput(p, null);
+			FileUtil.setOutput(p, null);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} finally {
@@ -90,7 +87,7 @@ public class Main {
 
 		for (String hash : hashes) {
 			Policy policy = new Policy(policyText, hash);
-			setOutput(p, policy);
+			FileUtil.setOutput(p, policy);
 
 			// Primeiro passo logico
 
@@ -148,11 +145,10 @@ public class Main {
 				String targetFiles = p.getProperty("nonexistentTargetFiles");
 				if (sourceFiles != null && !sourceFiles.isEmpty()
 						&& targetFiles != null && !targetFiles.isEmpty()) {
-					copyFiles(sourceFiles, targetFiles);
+					FileUtil.copyFiles(sourceFiles, targetFiles);
 				}
 
-				ProjectBuilder pb = new ProjectBuilder();
-				pb.compileProject(p, hash);
+				ProjectBuilder.compileProject(p, hash);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				continue;
@@ -219,38 +215,5 @@ public class Main {
 		}
 		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"),
 				"master");
-	}
-
-	private void copyFiles(String srcFiles, String tgtFiles) throws IOException {
-		String[] sourceFiles = srcFiles.split(":");
-		String[] targetFiles = tgtFiles.split(":");
-		int i = 0;
-
-		while (i < sourceFiles.length && i < sourceFiles.length) {
-			Path source = FileSystems.getDefault().getPath(sourceFiles[i]);
-			Path dest = FileSystems.getDefault().getPath(targetFiles[i]);
-			Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
-			i++;
-		}
-	}
-
-	private static void setOutput(Properties p, Policy policy)
-			throws FileNotFoundException {
-
-		String outputPath = p.getProperty("output");
-
-		// #if FEATURE
-		// @ +policy.getFeature();
-		// #elif CONTRIBUTION
-		if (policy != null) {
-			outputPath = outputPath + policy.getHash().substring(0, 8);
-		}
-		// #endif
-		PrintStream out = new PrintStream(new FileOutputStream(outputPath
-				+ "-output.txt"));
-		PrintStream outST = new PrintStream(new FileOutputStream(outputPath
-				+ "-outputerror.txt"));
-		System.setOut(out);
-		System.setErr(outST);
 	}
 }

@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class ProjectBuilder {
 
-	public void compileProject(Properties p, String commitHash)
+	public static void compileProject(Properties p, String commitHash)
 			throws IOException, CoreException {
 
 		 Project project = new Project();
