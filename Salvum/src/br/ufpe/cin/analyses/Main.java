@@ -167,8 +167,17 @@ public class Main {
 			// .getProperty("main"));
 			JavaMethodSignature entryMethod = JavaMethodSignature
 					.mainMethodOfClass(p.getProperty("main"));
-			SDGProgram program = ana.buildSDG(p.getProperty("classpath"),
-					entryMethod, p.getProperty("thirdPartyLibsPath"));
+			SDGProgram program = null;
+			try {
+				program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
+						p.getProperty("thirdPartyLibsPath"));
+			} catch (IllegalStateException e) {
+				if (e.getMessage().contains("main([Ljava/lang/String")) {
+					System.out.println("Main method does not exist "
+							+ "in this project version");
+					continue;
+				}
+			}
 
 			// SDGProgram program =
 			// ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
