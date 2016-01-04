@@ -11,14 +11,16 @@ public class ResultAnalyzer {
 	 */
 	public static void main(String[] args) {
 
-		System.out.println("Illegal flow found: ");
+		ResultAnalyzer.diffAnalyzer();
+		System.out.println("\nIllegal flow found in these files: ");
 		ResultAnalyzer.checkResultProperties("Illegal flow from");
-		System.out.println("\nCompiled without error: ");
+		System.out.println("\nCompiled without error in these files: ");
 		ResultAnalyzer.checkResultProperties("Time needed:");
-		System.out.println("\nMain method does not exist: ");
+		System.out.println("\nMain method does not exist in these files: ");
 		ResultAnalyzer.checkResultProperties("Main method does not exist");
-		System.out.println("\nDid not compile: ");
-		ResultAnalyzer.checkResultProperties("Compile failed; see the compiler");
+		System.out.println("\nDid not compile in these files: ");
+		ResultAnalyzer
+				.checkResultProperties("Compile failed; see the compiler");
 	}
 
 	public static void checkResultProperties(String property) {
@@ -43,5 +45,20 @@ public class ResultAnalyzer {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public static void diffAnalyzer() {
+		File[] files = new File("/Users/rodrigoandrade/Desktop/diffFiles/")
+				.listFiles();
+		int i = 0;
+		int j = 0;
+		for (File file : files) {
+			if (file.length() > 0) {
+				i++;
+			} else {
+				j++;
+			} 
+		}
+		System.out.println("Number of diff files containing java changes: " + i);
+		System.out.println("Number of diff files not containing java changes: " + j);
+	}
 }
