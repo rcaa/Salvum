@@ -43,5 +43,9 @@ public class ContextManagerContribution {
 			mapClassesLineNumbers.put(className, listLineNumbers);
 		}
 	}
+	
+	public void clear() {
+		this.mapClassesLineNumbers.clear();
+	}
 
 }

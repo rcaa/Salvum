@@ -114,24 +114,24 @@ public class Main {
 			Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
 					.getMapClassesLineNumbers();
 			if (mapClassesLineNumbers.isEmpty()) {
-				// significa que nao tem classes java alteradas
-
-				// remover diff file e outputs
-				Path diffFiles = FileSystems.getDefault().getPath(
-						ContributionPreprocessor.setDiffFilePath(hash,
-								p.getProperty("diffFilePath")));
-				System.out.println(diffFiles);
-				String output = p.getProperty("output")
-						+ policy.getHash().substring(0, 8);
-				Path deletedOutput = FileSystems.getDefault().getPath(
-						output + "-output.txt");
-				System.out.println(deletedOutput);
-				Path deletedOutputError = FileSystems.getDefault().getPath(
-						output + "-outputerror.txt");
-				System.out.println(deletedOutputError);
-				Files.deleteIfExists(diffFiles);
-				Files.deleteIfExists(deletedOutput);
-				Files.deleteIfExists(deletedOutputError);
+//				// significa que nao tem classes java alteradas
+//
+//				// remover diff file e outputs
+//				Path diffFiles = FileSystems.getDefault().getPath(
+//						ContributionPreprocessor.setDiffFilePath(hash,
+//								p.getProperty("diffFilePath")));
+//				System.out.println(diffFiles);
+//				String output = p.getProperty("output")
+//						+ policy.getHash().substring(0, 8);
+//				Path deletedOutput = FileSystems.getDefault().getPath(
+//						output + "-output.txt");
+//				System.out.println(deletedOutput);
+//				Path deletedOutputError = FileSystems.getDefault().getPath(
+//						output + "-outputerror.txt");
+//				System.out.println(deletedOutputError);
+//				Files.deleteIfExists(diffFiles);
+//				Files.deleteIfExists(deletedOutput);
+//				Files.deleteIfExists(deletedOutputError);
 				continue;
 			}
 
@@ -218,8 +218,11 @@ public class Main {
 
 			program = null;
 			ifc = null;
-			classes = null;
-
+			classes.clear();
+			contextContribution.clear();
+			mapClassesLineNumbers.clear();
+			sources.clear();
+			sinks.clear();
 		}
 		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"),
 				"master");

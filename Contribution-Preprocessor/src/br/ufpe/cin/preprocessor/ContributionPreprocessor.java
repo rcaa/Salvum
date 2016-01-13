@@ -1,7 +1,10 @@
 package br.ufpe.cin.preprocessor;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -95,8 +98,6 @@ public class ContributionPreprocessor {
 		GitUtil.checkoutCommitHash(this.targetPathDirectory,
 				this.currentCommitHash);
 
-		System.out.println(manager.getMapClassesLineNumbers().toString());
-
 	}
 
 	private String formatClassName(String nextLine) {
@@ -138,17 +139,45 @@ public class ContributionPreprocessor {
 	 *            diff file path
 	 */
 	public static void main(String[] args) {
-		// test purposes with gitblit
-		String projectPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/SimpleContributionExample/";
-		String parentCommit = "cd05cb8fba6621b64799735da179e6794c810bb3";
-		String currentCommitHash = "d61da68d24a09d308ef1a5ab020219de65d029a3";
-		String diffFile = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/Contribution-Preprocessor/diffFiles/";
-
 		try {
-			// test purposes with gitblit
-			ContributionPreprocessor cp = new ContributionPreprocessor(
-					projectPath, parentCommit, currentCommitHash, diffFile);
-			cp.preprocess();
+			// test purposes
+			Properties p = new Properties();
+			FileInputStream in = new FileInputStream(
+					"/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana"
+							+ "/Salvum/configFiles/openrefinelocal.properties");
+			p.load(in);
+
+			String[] hashes = { "533e7ba0dc83391e24ea77b5c4312fa0d364a659",
+					"35b01fb33bd58760253f3c6c0524cdc50c81adc0",
+					"1a6649e4f38334411003517fef020341c45ff399",
+					"82ab9c28caeec3682c6850123f6ee0c5fc6c8a6b",
+					"175f4a5319f082b9182908a13c1f775781a3ddde",
+					"20220f7294ab6d18b1fe6575e49955fb0d1e48aa",
+					"94e219042edf2b7cda5785f7c87af04e40d0672c",
+					"85ffce60d2958c561f1e75982a618ea88980b30b",
+					"9b2a506caada4ea6d580d2140184fef8caa7566c",
+					"b3aae19568204e683dfea1ed0c1cbc7e766a0976",
+					"cdda1edcf08976871f7455e6f7d869fe6aa9cdee",
+					"f2c4e3ab486207412ff9ac8678f0237e3828d2ca" };
+			
+			System.out.println("Starting tests: ");
+			for (String hash : hashes) {
+				ContributionPreprocessor cp = new ContributionPreprocessor(p,
+						hash);
+				cp.preprocess();
+				ContextManagerContribution contextContribution = ContextManagerContribution
+						.getContext();
+				Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
+						.getMapClassesLineNumbers();
+				cp.preprocess();
+				System.out.println("-----------------------------------------------------------");
+				System.out.println("Starting new mapping for hash " + hash);
+				System.out.println();
+				System.out.println(mapClassesLineNumbers);
+				System.out.println();
+				System.out.println("-----------------------------------------------------------");
+				contextContribution.clear();
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

@@ -16,7 +16,7 @@ public class ResultAnalyzer {
 		ResultAnalyzer.checkResultProperties("Illegal flow from");
 		System.out.println("\nCompiled without error in these files: ");
 		ResultAnalyzer.checkResultProperties("Time needed:");
-		System.out.println("\nMain method does not exist in these files: ");
+		System.out.println("\nEntry point does not exist in these files: ");
 		ResultAnalyzer.checkResultProperties("Main method does not exist");
 		System.out.println("\nDid not compile in these files: ");
 		ResultAnalyzer
@@ -25,7 +25,7 @@ public class ResultAnalyzer {
 
 	public static void checkResultProperties(String property) {
 		try {
-			File[] files = new File("/Users/rodrigoandrade/Desktop/output/")
+			File[] files = new File("/Users/rodrigoandrade/Desktop/openrefine/")
 					.listFiles();
 			int i = 0;
 			for (File file : files) {
