@@ -13,9 +13,11 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import edu.kit.joana.api.sdg.SDGConfig;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.ifc.sdg.graph.SDG;
+import edu.kit.joana.ifc.sdg.mhpoptimization.MHPType;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 import edu.kit.joana.util.Stubs;
 import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
+import edu.kit.joana.wala.core.SDGBuilder.FieldPropagation;
 import edu.kit.joana.wala.core.SDGBuilder.PointsToPrecision;
 
 public class AnalysisConfig {
@@ -59,7 +61,7 @@ public class AnalysisConfig {
 		 * additional MHP analysis to prune interference edges (does not matter
 		 * for programs without multiple threads)
 		 */
-		// config.setMhpType(MHPType.PRECISE);
+		config.setMhpType(MHPType.NONE);
 
 		/**
 		 * precision of the used points-to analysis - INSTANCE_BASED is a good
@@ -72,6 +74,8 @@ public class AnalysisConfig {
 		 * cannot happen
 		 */
 		config.setExceptionAnalysis(ExceptionAnalysis.INTERPROC);
+
+		config.setFieldPropagation(FieldPropagation.OBJ_GRAPH);
 
 		String libsPath = prepareLibsPath(thirdPartyLibsPath);
 
@@ -90,16 +94,34 @@ public class AnalysisConfig {
 	private String prepareLibsPath(String thirdPartyLibsPath)
 			throws IOException {
 		String libsPath = "";
-		if (thirdPartyLibsPath != null && !thirdPartyLibsPath.isEmpty() ) {
-			File[] files = new File(thirdPartyLibsPath)
-					.listFiles(new LibFilterUtil());
-			for (int i = 0; i < files.length; i++) {
-				File file = files[i];
-				if (i == (files.length - 1)) {
-					libsPath += file.getCanonicalPath();
-				} else {
-					libsPath += file.getCanonicalPath() + ":";
+		if (thirdPartyLibsPath != null && !thirdPartyLibsPath.isEmpty()) {
+			if (thirdPartyLibsPath.contains("%")) {
+				String[] paths = thirdPartyLibsPath.split("%");
+				for (int i = 0; i < paths.length; i++) {
+					String temp = paths[i];
+					if (i == (paths.length - 1)) {
+						libsPath += iterateFiles(temp, libsPath);
+					} else {
+						libsPath += iterateFiles(temp, libsPath) + ":";
+					}
 				}
+			} else {
+				libsPath = iterateFiles(thirdPartyLibsPath, libsPath);
+			}
+		}
+		return libsPath;
+	}
+
+	private String iterateFiles(String thirdPartyLibsPath, String libsPath)
+			throws IOException {
+		File[] files = new File(thirdPartyLibsPath)
+				.listFiles(new LibFilterUtil());
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (i == (files.length - 1)) {
+				libsPath += file.getCanonicalPath();
+			} else {
+				libsPath += file.getCanonicalPath() + ":";
 			}
 		}
 		return libsPath;

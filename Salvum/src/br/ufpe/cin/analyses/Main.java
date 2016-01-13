@@ -162,11 +162,10 @@ public class Main {
 			// montar o SDG graph
 			AnalysisConfig ana = new AnalysisConfig();
 
-			// JavaMethodSignature entryMethod =
-			// JavaMethodSignature.fromString(p
-			// .getProperty("main"));
-			JavaMethodSignature entryMethod = JavaMethodSignature
-					.mainMethodOfClass(p.getProperty("main"));
+			JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+					.getProperty("main"));
+			// JavaMethodSignature entryMethod = JavaMethodSignature
+			// .mainMethodOfClass(p.getProperty("main"));
 			SDGProgram program = null;
 			try {
 				program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
