@@ -14,13 +14,15 @@ public class ResultAnalyzer {
 		ResultAnalyzer.diffAnalyzer();
 		System.out.println("\nIllegal flow found in these files: ");
 		ResultAnalyzer.checkResultProperties("Illegal flow from");
-		System.out.println("\nCompiled without error in these files: ");
+		System.out.println("\nIFC executed: ");
 		ResultAnalyzer.checkResultProperties("Time needed:");
 		System.out.println("\nEntry point does not exist in these files: ");
 		ResultAnalyzer.checkResultProperties("Main method does not exist");
 		System.out.println("\nDid not compile in these files: ");
 		ResultAnalyzer
 				.checkResultProperties("Compile failed; see the compiler");
+		System.out.println("\nNullPointerException has occured: ");
+		ResultAnalyzer.checkResultProperties("java.lang.NullPointerException");
 	}
 
 	public static void checkResultProperties(String property) {
@@ -56,9 +58,11 @@ public class ResultAnalyzer {
 				i++;
 			} else {
 				j++;
-			} 
+			}
 		}
-		System.out.println("Number of diff files containing java changes: " + i);
-		System.out.println("Number of diff files not containing java changes: " + j);
+		System.out
+				.println("Number of diff files containing java changes: " + i);
+		System.out.println("Number of diff files not containing java changes: "
+				+ j);
 	}
 }

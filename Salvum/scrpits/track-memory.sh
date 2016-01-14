@@ -1,0 +1,1 @@
+while true; do top -u rcaa2 >> memory.log; sleep 1; done
