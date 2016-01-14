@@ -98,6 +98,7 @@ public class ContributionPreprocessor {
 		GitUtil.checkoutCommitHash(this.targetPathDirectory,
 				this.currentCommitHash);
 
+		System.out.println(manager.getMapClassesLineNumbers().toString());
 	}
 
 	private String formatClassName(String nextLine) {

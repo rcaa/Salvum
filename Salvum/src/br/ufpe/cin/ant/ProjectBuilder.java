@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.eclipse.core.runtime.CoreException;
@@ -16,7 +15,7 @@ public class ProjectBuilder {
 
 		// para OpenRefine
 		removeOldFiles(p);
-		
+
 		Project project = new Project();
 		File buildFile = new File(p.getProperty("targetPathDirectory")
 				+ p.getProperty("buildScriptPath"));
@@ -37,6 +36,15 @@ public class ProjectBuilder {
 
 	private static void removeOldFiles(Properties p) throws IOException {
 		File buildDirectory = new File(p.getProperty("classpath"));
-		FileUtils.cleanDirectory(buildDirectory);
+		purgeDirectory(buildDirectory);
+	}
+
+	private static void purgeDirectory(File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				purgeDirectory(file);
+			}
+			file.delete();
+		}
 	}
 }
