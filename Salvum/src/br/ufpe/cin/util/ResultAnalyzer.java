@@ -27,7 +27,7 @@ public class ResultAnalyzer {
 
 	public static void checkResultProperties(String property) {
 		try {
-			File[] files = new File("/Users/rodrigoandrade/Desktop/openrefine/")
+			File[] files = new File("/Users/rodrigoandrade/Desktop/hsqldb/output/")
 					.listFiles();
 			int i = 0;
 			for (File file : files) {
@@ -49,7 +49,7 @@ public class ResultAnalyzer {
 	}
 
 	public static void diffAnalyzer() {
-		File[] files = new File("/Users/rodrigoandrade/Desktop/diffFiles/")
+		File[] files = new File("/Users/rodrigoandrade/Desktop/hsqldb/diff/")
 				.listFiles();
 		int i = 0;
 		int j = 0;
