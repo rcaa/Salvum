@@ -39,9 +39,8 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		// String propertiesPath =
-		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		// + "/joana/Salvum/configFiles/simpleContributionExample.properties";
+		//String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+		//		+ "/joana/Salvum/configFiles/shriramExample.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -92,19 +91,17 @@ public class Main {
 			// Primeiro passo logico
 
 			// #if FEATURE
-			// @ try {
-			// @ String sourceDirectory = p.getProperty("sourceDirectory");
-			// @ FeaturePreprocessor pp = new
-			// @ // FeaturePreprocessor(sourceDirectory);
-			// @ pp.execute();
-			// @ } catch (PreprocessorException e) {
-			// @ e.printStackTrace();
-			// @ }
-			// @ // mapeamento de features e linhas
-			// @ ContextManager context = ContextManager.getContext();
-			// @ Map<String, Map<String, Set<Integer>>> mapClassFeatures =
-			// @ // context
-			// @ .getMapClassFeatures();
+//@			 try {
+//@				 String sourceDirectory = p.getProperty("sourceDirectory");
+//@				 FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory);
+//@				 pp.execute();
+//@			 } catch (PreprocessorException e) {
+//@				 e.printStackTrace();
+//@			 }
+//@			 // mapeamento de features e linhas
+//@			 ContextManager context = ContextManager.getContext();
+//@			 Map<String, Map<String, Set<Integer>>> mapClassFeatures = context
+//@			 .getMapClassFeatures();
 			// #elif CONTRIBUTION
 			ContributionPreprocessor cp = new ContributionPreprocessor(p,
 					policy.getHash());
@@ -114,24 +111,24 @@ public class Main {
 			Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
 					.getMapClassesLineNumbers();
 			if (mapClassesLineNumbers.isEmpty()) {
-//				// significa que nao tem classes java alteradas
-//
-//				// remover diff file e outputs
-//				Path diffFiles = FileSystems.getDefault().getPath(
-//						ContributionPreprocessor.setDiffFilePath(hash,
-//								p.getProperty("diffFilePath")));
-//				System.out.println(diffFiles);
-//				String output = p.getProperty("output")
-//						+ policy.getHash().substring(0, 8);
-//				Path deletedOutput = FileSystems.getDefault().getPath(
-//						output + "-output.txt");
-//				System.out.println(deletedOutput);
-//				Path deletedOutputError = FileSystems.getDefault().getPath(
-//						output + "-outputerror.txt");
-//				System.out.println(deletedOutputError);
-//				Files.deleteIfExists(diffFiles);
-//				Files.deleteIfExists(deletedOutput);
-//				Files.deleteIfExists(deletedOutputError);
+				// // significa que nao tem classes java alteradas
+				//
+				// // remover diff file e outputs
+				// Path diffFiles = FileSystems.getDefault().getPath(
+				// ContributionPreprocessor.setDiffFilePath(hash,
+				// p.getProperty("diffFilePath")));
+				// System.out.println(diffFiles);
+				// String output = p.getProperty("output")
+				// + policy.getHash().substring(0, 8);
+				// Path deletedOutput = FileSystems.getDefault().getPath(
+				// output + "-output.txt");
+				// System.out.println(deletedOutput);
+				// Path deletedOutputError = FileSystems.getDefault().getPath(
+				// output + "-outputerror.txt");
+				// System.out.println(deletedOutputError);
+				// Files.deleteIfExists(diffFiles);
+				// Files.deleteIfExists(deletedOutput);
+				// Files.deleteIfExists(deletedOutputError);
 				continue;
 			}
 
@@ -164,8 +161,8 @@ public class Main {
 
 			JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
 					.getProperty("main"));
-			// JavaMethodSignature entryMethod = JavaMethodSignature
-			// .mainMethodOfClass(p.getProperty("main"));
+//			JavaMethodSignature entryMethod = JavaMethodSignature
+//			.mainMethodOfClass(p.getProperty("main"));
 			SDGProgram program = null;
 			try {
 				program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
@@ -174,8 +171,10 @@ public class Main {
 				if (e.getMessage().contains("main([Ljava/lang/String")) {
 					System.out.println("Main method does not exist "
 							+ "in this project version");
-					continue;
+				} else {
+					System.out.println(e.getMessage());
 				}
+				continue;
 			}
 
 			// SDGProgram program =
@@ -190,9 +189,9 @@ public class Main {
 			LabelConfig lconfig = new LabelConfig();
 
 			// #if FEATURE
-			// @ lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures,
-			// @ // policy,
-			// @ sources, sinks);
+//@			 lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures,
+//@			  policy,
+//@			 sources, sinks);
 			// #elif CONTRIBUTION
 			lconfig.prepareListsOfSourceAndSinksContribution(classes,
 					mapClassesLineNumbers, policy, sources, sinks);
@@ -212,7 +211,7 @@ public class Main {
 							+ source.getBytecodeName() + " to "
 							+ sink.getBytecodeName() + " at line "
 							// usar o mapeamento aqui pra pegar linha de codigo
-							+ sink.getBytecodeIndex() + " in commit " + hash);
+							+ sink.getEr() + " in commit " + hash);
 				}
 			}
 
