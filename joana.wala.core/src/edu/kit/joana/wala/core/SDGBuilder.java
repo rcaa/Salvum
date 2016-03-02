@@ -32,13 +32,13 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.SubtypesEntrypoint;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.pruned.ApplicationLoaderPolicy;
 import com.ibm.wala.ipa.callgraph.pruned.CallGraphPruning;
 import com.ibm.wala.ipa.callgraph.pruned.PrunedCallGraph;
@@ -354,7 +354,6 @@ public class SDGBuilder implements CallGraphFilter {
 				computeSummaryEdges(cfg.out, pack, sdg, progress);
 			}
 		}
-
 		return sdg;
 	}
 
@@ -520,9 +519,6 @@ public class SDGBuilder implements CallGraphFilter {
 
 		cfg.out.println(cg.vertexSet().size() + " nodes and " + cg.edgeSet().size() + " edges");
 		
-		//MODIFICATION
-		cfg.out.print("\nTempo de termino do call graph: " + System.currentTimeMillis() + "\n");
-
 		if (cfg.exceptions == ExceptionAnalysis.INTERPROC) {
 			cfg.out.print("\tinterproc exception analysis... ");
             progress.beginTask("interproc exception analysis... ", IProgressMonitor.UNKNOWN);
