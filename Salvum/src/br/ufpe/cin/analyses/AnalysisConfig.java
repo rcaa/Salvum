@@ -55,19 +55,19 @@ public class AnalysisConfig {
 		 * compute interference edges to model dependencies between threads (set
 		 * to false if your program does not use threads)
 		 */
-		config.setComputeInterferences(false);
+		config.setComputeInterferences(true);
 
 		/**
 		 * additional MHP analysis to prune interference edges (does not matter
 		 * for programs without multiple threads)
 		 */
-		config.setMhpType(MHPType.NONE);
+		config.setMhpType(MHPType.SIMPLE);
 
 		/**
 		 * precision of the used points-to analysis - INSTANCE_BASED is a good
 		 * value for simple examples
 		 */
-		config.setPointsToPrecision(PointsToPrecision.INSTANCE_BASED);
+		config.setPointsToPrecision(PointsToPrecision.OBJECT_SENSITIVE);
 
 		/**
 		 * exception analysis is used to detect exceptional control-flow which
