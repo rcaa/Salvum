@@ -32,14 +32,15 @@ public class GitIntegration {
 		return commitHashes;
 	}
 
-	public static List<String> searchCommitHashesFromFile(
-			String targetPathDirectory, String file) throws IOException {
+	public static List<String> searchCommitHashesFromPackage(
+			String targetPathDirectory, String pckage) throws IOException {
 
 		List<String> commitHashes = new ArrayList<>();
 
 		Runtime rt = Runtime.getRuntime();
-		String[] command = new String[] {"git", "--git-dir",
-				targetPathDirectory + ".git", "log", "-i", "--", file };
+		String[] command = new String[] { "git", "--git-dir",
+				targetPathDirectory + ".git", "log", "--", ".",
+				"\":(exclude)" + pckage, "\"" };
 		iterateLog(commitHashes, rt, command);
 		return commitHashes;
 	}
@@ -72,10 +73,10 @@ public class GitIntegration {
 	public static void main(String[] args) {
 		try {
 			List<String> hashes = GitIntegration
-					.searchCommitHashesFromAuthor(
+					.searchCommitHashesFromPackage(
 							"/Users/rodrigoandrade/Documents/workspaces"
-									+ "/Doutorado/opensource/SimpleContributionExample/",
-							"rodrigo_cardoso@hotmail.it");
+									+ "/Doutorado/opensource/gitblit/",
+							"/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/src/main/java/com/gitblit/auth");
 			for (String hash : hashes) {
 				System.out.println(hash);
 			}
