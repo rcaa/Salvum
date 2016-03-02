@@ -10,7 +10,7 @@ import java.util.Set;
 public class Policy {
 
 	// #if FEATURE
-	// @ private String feature;
+//@	 private String feature;
 	// #elif CONTRIBUTION
 	private String hash;
 	private String taskName;
@@ -40,7 +40,7 @@ public class Policy {
 //			retreiveProgramElements(elements[1]);
 //			this.setOperator(elements[2]);
 			// #if FEATURE
-			// @ this.feature = elements[3];
+//@			 this.feature = elements[3];
 			// #elif CONTRIBUTION
 		//	this.taskName = elements[3].substring(0, elements[3].indexOf("\n"));
 			this.hash = hash;
@@ -48,7 +48,7 @@ public class Policy {
 		} else if (policy.contains("noset")) {
 		//	String[] elements = policy.split(" ");
 			// #if FEATURE
-			// @ this.feature = elements[0];
+//@	//		 this.feature = elements[0];
 			// #elif CONTRIBUTION
 //			this.taskName = elements[0].substring(0, elements[0].indexOf("\n"));
 //			this.hash = hash;
@@ -79,21 +79,21 @@ public class Policy {
 		} else if (policy.contains("c | c.author")) {
 			return GitIntegration.searchCommitHashesFromAuthor(
 					targetPathDirectory, term);
-		} else if (policy.contains("p | p.files")) {
-			return GitIntegration.searchCommitHashesFromFile(
+		} else if (policy.contains("c | !c.package")) {
+			return GitIntegration.searchCommitHashesFromPackage(
 					targetPathDirectory, term);
 		}
 		return null;
 	}
 
 	// #if FEATURE
-	// @ public String getFeature() {
-	// @ return feature;
-	// @ }
-	// @
-	// @ public void setFeature(String feature) {
-	// @ this.feature = feature;
-	// @ }
+//@	 public String getFeature() {
+//@	 return feature;
+//@	 }
+//@	
+//@	 public void setFeature(String feature) {
+//@	 this.feature = feature;
+//@	 }
 	// #elif CONTRIBUTION
 	public String getHash() {
 		return hash;
