@@ -28,10 +28,6 @@ public class LabelConfig {
 		annotateSources(sources, program, ana);
 
 		annotateSinks(sinks, program, ana);
-		// ana.addSourceAnnotation(program.getPart("model.User.passwordHash"),
-		// BuiltinLattices.STD_SECLEVEL_HIGH);
-		// ana.addSinkAnnotation(program.getMethod("util.Log.loggingAction(Ljava/lang/Object;)V"),
-		// BuiltinLattices.STD_SECLEVEL_LOW);
 	}
 
 	private void annotateSources(List<SDGProgramPart> sources,

@@ -25,6 +25,7 @@ public class ProjectBuilder {
 		ProjectHelper helper = ProjectHelper.getProjectHelper();
 		project.addReference("ant.projectHelper", helper);
 		helper.parse(project, buildFile);
+		
 		String target = project.getDefaultTarget();
 		project.executeTarget(target);
 
