@@ -1,2 +1,2 @@
-text.Notepad {textPane,actions} noflow Find
+Find noset text.Notepad {textPane,actions}
 	where Find = {}

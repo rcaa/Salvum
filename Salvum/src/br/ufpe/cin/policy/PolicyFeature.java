@@ -28,6 +28,18 @@ public class PolicyFeature {
 			this.operator = "noflow";
 			this.featureName = elements[1].substring(1,
 					elements[1].indexOf("\n"));
+		} else if (constraint.contains("noset")) {
+			String[] elements = constraint.split("noset");
+			this.featureName = elements[0].trim();
+			String[] classAndElements = elements[1].split(", ");
+			for (String string : classAndElements) {
+				String[] temp = string.trim().split(" ");
+				String clazz = temp[0];
+				Set<String> classElements = retreiveProgramElements(temp[1]
+						.substring(0, temp[1].indexOf('\n')));
+				this.clazzAndElements.put(clazz, classElements);
+			}
+			this.operator = "noset";
 		}
 	}
 
@@ -57,7 +69,7 @@ public class PolicyFeature {
 	public String getOperator() {
 		return operator;
 	}
-	
+
 	public Map<String, Set<String>> getClazzAndElements() {
 		return clazzAndElements;
 	}

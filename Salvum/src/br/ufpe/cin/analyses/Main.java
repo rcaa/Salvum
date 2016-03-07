@@ -48,10 +48,9 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		String propertiesPath =
-		"/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		+ "/joana/Salvum/configFiles/shriramExample.properties";
-		//String propertiesPath = args[0];
+		String propertiesPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+				+ "/joana/Salvum/configFiles/shriramExample.properties";
+		// String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -111,7 +110,8 @@ public class Main {
 		// #if FEATURE
 		try {
 			String sourceDirectory = p.getProperty("targetPathDirectory");
-			FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory, policy.getFeatureName());
+			FeaturePreprocessor pp = new FeaturePreprocessor(sourceDirectory,
+					policy.getFeatureName());
 			pp.execute();
 		} catch (PreprocessorException e) {
 			e.printStackTrace();
@@ -153,10 +153,10 @@ public class Main {
 		// Segundo passo logico
 		AnalysisConfig ana = new AnalysisConfig();
 
-		//JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-		//		.getProperty("main"));
-		 JavaMethodSignature entryMethod = JavaMethodSignature
-		 .mainMethodOfClass(p.getProperty("main"));
+		// JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+		// .getProperty("main"));
+		JavaMethodSignature entryMethod = JavaMethodSignature
+				.mainMethodOfClass(p.getProperty("main"));
 		SDGProgram program = null;
 		try {
 			program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
@@ -199,16 +199,26 @@ public class Main {
 			ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 			SecurityNode source = sn.getSource();
 			SecurityNode sink = sn.getSink();
-			if (sn != null && sn.getSink() != null
-					&& sink.getBytecodeIndex() >= 0) {
-				System.out.println("Illegal flow from "
-						+ source.getBytecodeName() + " to "
-						+ sink.getBytecodeName() + " at line " + sink.getEr()
-				// #if FEATURE
-						);
-				// #elif CONTRIBUTION
-				// @ + " in commit " + hash);
-				// #endif
+			if (policy.getOperator().equals("noflow")) {
+				if (sn != null && sink != null && source != null
+						&& sink.getBytecodeIndex() >= 0) {
+					System.out.println("Illegal flow from "
+							+ source.getBytecodeName() + " to "
+							+ sink.getBytecodeName() + " at line "
+							+ sink.getEr()
+					// #if FEATURE
+							);
+					// #elif CONTRIBUTION
+					// @ + " in commit " + hash);
+					// #endif
+				}
+			} else if (policy.getOperator().equals("noset")) {
+				if (sn != null && source != null
+						&& source.getBytecodeIndex() >= 0) {
+					System.out.println("Illegal set on "
+							+ source.getBytecodeName() + " at line "
+							+ source.getEr());
+				}
 			}
 		}
 
