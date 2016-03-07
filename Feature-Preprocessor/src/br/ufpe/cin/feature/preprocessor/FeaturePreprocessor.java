@@ -16,10 +16,11 @@ import java.util.regex.Pattern;
 
 public class FeaturePreprocessor {
 
-	private String defs = ""; // defs are the features (e.g. DEBUG, LOGGING,
+	private String featureName = ""; // defs are the features (e.g. DEBUG, LOGGING,
 								// etc)
 
-	public FeaturePreprocessor(String sourceDirectory) {
+	public FeaturePreprocessor(String sourceDirectory, String featureName) {
+		this.featureName = featureName;
 		try {
 			File[] files = new File(sourceDirectory).listFiles();
 			// preeche uma lista com todos os arquivos Java do diretorio
@@ -63,7 +64,7 @@ public class FeaturePreprocessor {
 			 * Gets the defined features, split them by "," and, finally, remove
 			 * all duplicate white spaces
 			 */
-			Set<String> set = new HashSet<String>(Arrays.asList(defs
+			Set<String> set = new HashSet<String>(Arrays.asList(featureName
 					.replaceAll("\\s+", "").split(",")));
 
 			// Compiles the regex then sets the pattern for tags
@@ -175,7 +176,7 @@ public class FeaturePreprocessor {
 		context.addDirective(dir + " " + param.replaceAll("\\s", ""));
 
 		// verifies if the feature was defined
-		if (defs.replaceAll("\\s+", "").length() > 0) {
+		if (featureName.replaceAll("\\s+", "").length() > 0) {
 			skip = !set.contains(param);
 		} else {
 			skip = false;

@@ -1,2 +1,2 @@
-text.Notepad {textPane,actions} noflow UndoTask
-	where UndoTask = {c | c.message.contains("Undo")}
+text.Notepad {textPane,actions} noflow Find
+	where Find = {}

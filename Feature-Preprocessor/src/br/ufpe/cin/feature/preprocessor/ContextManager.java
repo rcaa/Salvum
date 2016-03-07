@@ -81,6 +81,8 @@ public class ContextManager {
 	public void clearAll() {
 		mapFeatures.clear();
 		stackDirectives.clear();
+		mapLineNumberFeature.clear();
+	//	mapClassFeatures.clear();
 	}
 
 	public Map<String, Map<String, Set<Integer>>> getMapClassFeatures() {
