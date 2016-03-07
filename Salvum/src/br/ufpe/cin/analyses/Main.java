@@ -213,9 +213,11 @@ public class Main {
 					// #endif
 				}
 			} else if (policy.getOperator().equals("noset")) {
-				if (sn != null && source != null
+				if (sn != null && source != null && sink != null
 						&& source.getBytecodeIndex() >= 0) {
-					System.out.println("Illegal set on "
+					System.out.println("Illegal set from feature "
+							+ policy.getFeatureName() + " on "
+							+ sink.getBytecodeName() + " at "
 							+ source.getBytecodeName() + " at line "
 							+ source.getEr());
 				}
