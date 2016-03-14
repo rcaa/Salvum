@@ -17,7 +17,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.sdg.graph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.sdg.mhpoptimization"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.sdg.util"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.wala.sdpn"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.ifc.wala.console"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.wala.core"/>
@@ -30,5 +29,6 @@
 	<classpathentry kind="lib" path="lib/ant.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipseWALA/plugins/org.eclipse.ant.core_3.2.302.v20120110-1739.jar"/>
 	<classpathentry kind="lib" path="lib/tools.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Class-Preprocessor"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

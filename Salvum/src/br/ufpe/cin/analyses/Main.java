@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 //#if FEATURE
 //@import java.util.Set;
 //#endif
@@ -21,12 +22,17 @@ import org.eclipse.core.runtime.CoreException;
 //@import br.ufpe.cin.feature.preprocessor.PreprocessorException;
 //@import br.ufpe.cin.policy.PolicyFeature;
 //#elif CONTRIBUTION
-import br.ufpe.cin.preprocessor.ContextManagerContribution;
-import br.ufpe.cin.preprocessor.ContributionPreprocessor;
-import br.ufpe.cin.preprocessor.GitUtil;
-import br.ufpe.cin.ant.ProjectBuilder;
-import br.ufpe.cin.policy.Policy;
-import br.ufpe.cin.util.FileUtil;
+//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
+//@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
+//@import br.ufpe.cin.preprocessor.GitUtil;
+//@import br.ufpe.cin.ant.ProjectBuilder;
+//@import br.ufpe.cin.policy.Policy;
+//@import br.ufpe.cin.util.FileUtil;
+//#elif CLAZZ
+import br.ufpe.cin.clazz.preprocessor.ClazzContextManager;
+import br.ufpe.cin.clazz.preprocessor.ClazzPreprocessor;
+import br.ufpe.cin.clazz.preprocessor.PreprocessorException;
+import br.ufpe.cin.policy.PolicyClazz;
 //#endif
 
 import com.ibm.wala.util.CancelException;
@@ -60,7 +66,9 @@ public class Main {
 			// #if FEATURE
 			// @
 			// #elif CONTRIBUTION
-			FileUtil.setOutput(p, null);
+			// @ FileUtil.setOutput(p, null);
+			// #elif CLAZZ
+
 			// #endif
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -91,161 +99,180 @@ public class Main {
 				p.getProperty("policyDirectory"));
 		String policyText = new String(Files.readAllBytes(path));
 		// #if CONTRIBUTION
-		List<String> hashes = Policy.findHashes(policyText,
-				p.getProperty("targetPathDirectory"));
-		System.out.println(hashes);
+		// @ List<String> hashes = Policy.findHashes(policyText,
+		// @ p.getProperty("targetPathDirectory"));
+		// @ System.out.println(hashes);
+		// @
+		// @ if (hashes == null || hashes.isEmpty()) {
+		// @ throw new IOException("could not find hashes");
+		// @ }
+		// @
+		// @ for (String hash : hashes) {
+		// @ Policy policy = new Policy(policyText, hash);
+		// @ FileUtil.setOutput(p, policy);
+		// #endif
 
-		if (hashes == null || hashes.isEmpty()) {
-			throw new IOException("could not find hashes");
+		// Primeiro passo logico
+
+		// #if FEATURE
+		// @ PolicyFeature policy = new PolicyFeature(policyText);
+		// @ try {
+		// @ String sourceDirectory = p.getProperty("targetPathDirectory");
+		// @ FeaturePreprocessor pp = new
+		// @ // FeaturePreprocessor(sourceDirectory,
+		// @ policy.getFeatureName());
+		// @ pp.execute();
+		// @ } catch (PreprocessorException e) {
+		// @ e.printStackTrace();
+		// @ }
+		// @ // mapeamento de features e linhas
+		// @ ContextManager contextFeature = ContextManager.getContext();
+		// @ Map<String, Map<String, Set<Integer>>> mapClassFeatures =
+		// @ // contextFeature
+		// @ .getMapClassFeatures();
+		// #elif CONTRIBUTION
+		// @ ContributionPreprocessor cp = new ContributionPreprocessor(p,
+		// @ policy.getHash());
+		// @ cp.preprocess();
+		// @ ContextManagerContribution contextContribution =
+//@		// ContextManagerContribution
+		// @ .getContext();
+		// @ Map<String, List<Integer>> mapClassesLineNumbers =
+//@		// contextContribution
+		// @ .getMapClassesLineNumbers();
+		// @ if (mapClassesLineNumbers.isEmpty()) {
+		// @ continue;
+		// @ }
+		// @
+		// @ try {
+		// @ // copiar arquivos
+		// @ String sourceFiles = p.getProperty("nonexistentSourceFiles");
+		// @ String targetFiles = p.getProperty("nonexistentTargetFiles");
+		// @ if (sourceFiles != null && !sourceFiles.isEmpty()
+		// @ && targetFiles != null && !targetFiles.isEmpty()) {
+		// @ FileUtil.copyFiles(sourceFiles, targetFiles);
+		// @ }
+		// @
+		// @ ProjectBuilder.compileProject(p);
+		// @ } catch (Exception e) {
+		// @ System.out.println(e.getMessage());
+		// @ continue;
+		// @ }
+		// @
+		// #elif CLAZZ
+		PolicyClazz policy = new PolicyClazz(policyText);
+		String sourceDirectory = p.getProperty("targetPathDirectory");
+		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory,
+				"logger.error");
+		try {
+			cp.execute();
+		} catch (PreprocessorException e1) {
+			e1.printStackTrace();
 		}
+		ClazzContextManager context = ClazzContextManager.getInstance();
+		Map<String, Set<Integer>> mapClassLines = context.getMapClassLines();
+		// #endif
+		// Segundo passo logico
+		AnalysisConfig ana = new AnalysisConfig();
 
-		for (String hash : hashes) {
-			Policy policy = new Policy(policyText, hash);
-			FileUtil.setOutput(p, policy);
-			// #endif
-
-			// Primeiro passo logico
-
-			// #if FEATURE
-			// @ PolicyFeature policy = new PolicyFeature(policyText);
-			// @ try {
-			// @ String sourceDirectory = p.getProperty("targetPathDirectory");
-			// @ FeaturePreprocessor pp = new
-			// @ // FeaturePreprocessor(sourceDirectory,
-			// @ policy.getFeatureName());
-			// @ pp.execute();
-			// @ } catch (PreprocessorException e) {
-			// @ e.printStackTrace();
-			// @ }
-			// @ // mapeamento de features e linhas
-			// @ ContextManager contextFeature = ContextManager.getContext();
-			// @ Map<String, Map<String, Set<Integer>>> mapClassFeatures =
-			// @ // contextFeature
-			// @ .getMapClassFeatures();
-			// #elif CONTRIBUTION
-			ContributionPreprocessor cp = new ContributionPreprocessor(p,
-					policy.getHash());
-			cp.preprocess();
-			ContextManagerContribution contextContribution = ContextManagerContribution
-					.getContext();
-			Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
-					.getMapClassesLineNumbers();
-			if (mapClassesLineNumbers.isEmpty()) {
-				continue;
-			}
-
-			try {
-				// copiar arquivos
-				String sourceFiles = p.getProperty("nonexistentSourceFiles");
-				String targetFiles = p.getProperty("nonexistentTargetFiles");
-				if (sourceFiles != null && !sourceFiles.isEmpty()
-						&& targetFiles != null && !targetFiles.isEmpty()) {
-					FileUtil.copyFiles(sourceFiles, targetFiles);
-				}
-
-				ProjectBuilder.compileProject(p);
-			} catch (Exception e) {
+		JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+				.getProperty("main"));
+		// JavaMethodSignature entryMethod = JavaMethodSignature
+		// .mainMethodOfClass(p.getProperty("main"));
+		SDGProgram program = null;
+		try {
+			program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
+					p.getProperty("thirdPartyLibsPath"));
+		} catch (IllegalStateException e) {
+			if (e.getMessage().contains("main([Ljava/lang/String")) {
+				System.out.println("Main method does not exist "
+						+ "in this project version");
+			} else {
 				System.out.println(e.getMessage());
-				continue;
 			}
-
-			// #endif
-			// Segundo passo logico
-			AnalysisConfig ana = new AnalysisConfig();
-
-			JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-					.getProperty("main"));
-			// JavaMethodSignature entryMethod = JavaMethodSignature
-			// .mainMethodOfClass(p.getProperty("main"));
-			SDGProgram program = null;
-			try {
-				program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
-						p.getProperty("thirdPartyLibsPath"));
-			} catch (IllegalStateException e) {
-				if (e.getMessage().contains("main([Ljava/lang/String")) {
-					System.out.println("Main method does not exist "
-							+ "in this project version");
-				} else {
-					System.out.println(e.getMessage());
-				}
-				// #if CONTRIBUTION
-				continue;
-				// #endif
-			}
-
-			// SDGProgram program =
-			// ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
-
-			Collection<SDGClass> classes = program.getClasses();
-
-			// rotulo statements e expressions
-			List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
-			List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
-			LabelConfig lconfig = new LabelConfig();
-
-			// #if FEATURE
-			// @ lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures,
-			// @ // policy,
-			// @ sources, sinks);
-			// #elif CONTRIBUTION
-			lconfig.prepareListsOfSourceAndSinksContribution(classes,
-					mapClassesLineNumbers, policy, sources, sinks);
-			// #endif
-
-			// rodo as analises
-			IFCAnalysis ifc = new IFCAnalysis(program);
-			lconfig.labellingElements(sources, sinks, program, ifc);
-			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
-			for (IViolation<SecurityNode> iViolation : result) {
-				ClassifiedViolation sn = (ClassifiedViolation) iViolation;
-				SecurityNode source = sn.getSource();
-				SecurityNode sink = sn.getSink();
-				if (policy.getOperator().equals("noflow")) {
-					if (sn != null && sink != null && source != null
-							&& sink.getBytecodeIndex() >= 0) {
-						System.out.println("Illegal flow from "
-								+ source.getBytecodeName() + " to "
-								+ sink.getBytecodeName() + " at line "
-								+ sink.getEr()
-								// #if FEATURE
-								// @ );
-								// #elif CONTRIBUTION
-								+ " in commit " + hash);
-						// #endif
-					}
-				} else if (policy.getOperator().equals("noset")) {
-					if (sn != null && source != null && sink != null
-							&& source.getBytecodeIndex() >= 0) {
-						System.out.println("Illegal set "
-								// #if FEATURE
-								// @ + "from feature " + policy.getFeatureName()
-								// @ // + " on "
-								// #endif
-								+ sink.getBytecodeName() + " at "
-								+ source.getBytecodeName() + " at line "
-								+ source.getEr());
-					}
-				}
-			}
-
-			program = null;
-			ifc = null;
-			classes.clear();
-
-			// #if FEATURE
-			// @ contextFeature.clearAll();
-			// @ contextFeature.getMapClassFeatures().clear();
-			// #elif CONTRIBUTION
-			contextContribution.clear();
-			mapClassesLineNumbers.clear();
-			// #endif
-			sources.clear();
-			sinks.clear();
-
 			// #if CONTRIBUTION
+			// @ continue;
+			// #endif
 		}
-		GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"),
-				"master");
+
+		// SDGProgram program =
+		// ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
+
+		Collection<SDGClass> classes = program.getClasses();
+
+		// rotulo statements e expressions
+		List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
+		List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
+		LabelConfig lconfig = new LabelConfig();
+
+		// #if FEATURE
+		// @ lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures,
+		// @ // policy,
+		// @ sources, sinks);
+		// #elif CONTRIBUTION
+		// @ lconfig.prepareListsOfSourceAndSinksContribution(classes,
+		// @ mapClassesLineNumbers, policy, sources, sinks);
+		// #elif CLAZZ
+		lconfig.prepareListsOfSourceAndSinks(classes, mapClassLines, policy,
+				sources, sinks);
+		// #endif
+
+		// rodo as analises
+		IFCAnalysis ifc = new IFCAnalysis(program);
+		lconfig.labellingElements(sources, sinks, program, ifc);
+		Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
+		for (IViolation<SecurityNode> iViolation : result) {
+			ClassifiedViolation sn = (ClassifiedViolation) iViolation;
+			SecurityNode source = sn.getSource();
+			SecurityNode sink = sn.getSink();
+			if (policy.getOperator().equals("noflow")) {
+				if (sn != null && sink != null && source != null
+						&& sink.getBytecodeIndex() >= 0) {
+					System.out.println("Illegal flow from "
+							+ source.getBytecodeName() + " to "
+							+ sink.getBytecodeName() + " at line "
+							+ sink.getEr()
+					// #if FEATURE || CLAZZ
+							);
+					// #elif CONTRIBUTION
+					// @ + " in commit " + hash);
+					// #endif
+				}
+			} else if (policy.getOperator().equals("noset")) {
+				if (sn != null && source != null && sink != null
+						&& source.getBytecodeIndex() >= 0) {
+					System.out.println("Illegal set "
+							// #if FEATURE
+							// @ + "from feature " + policy.getFeatureName()
+							// @ // + " on "
+							// #endif
+							+ sink.getBytecodeName() + " at "
+							+ source.getBytecodeName() + " at line "
+							+ source.getEr());
+				}
+			}
+		}
+
+		program = null;
+		ifc = null;
+		classes.clear();
+
+		// #if FEATURE
+		// @ contextFeature.clearAll();
+		// @ contextFeature.getMapClassFeatures().clear();
+		// #elif CONTRIBUTION
+		// @ contextContribution.clear();
+		// @ mapClassesLineNumbers.clear();
+		// #elif CLAZZ
+		context.clearMapping();
+		// #endif
+		sources.clear();
+		sinks.clear();
+
+		// #if CONTRIBUTION
+		// @ }
+		// @ GitUtil.checkoutCommitHash(p.getProperty("targetPathDirectory"),
+		// @ "master");
 		// #endif
 	}
 }

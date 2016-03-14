@@ -8,7 +8,9 @@ import java.util.Set;
 //#if FEATURE
 //@import br.ufpe.cin.policy.PolicyFeature;
 //#elif CONTRIBUTION
-import br.ufpe.cin.policy.Policy;
+//@import br.ufpe.cin.policy.Policy;
+//#elif CLAZZ
+import br.ufpe.cin.policy.PolicyClazz;
 //#endif
 
 import com.ibm.wala.classLoader.IMethod;
@@ -139,76 +141,130 @@ public class LabelConfig {
 	// @ }
 	// @ }
 	// #elif CONTRIBUTION
-	public void prepareListsOfSourceAndSinksContribution(
-			Collection<SDGClass> classes,
-			Map<String, List<Integer>> mapClassesLineNumbers, Policy policy,
+	// @ public void prepareListsOfSourceAndSinksContribution(
+	// @ Collection<SDGClass> classes,
+	// @ Map<String, List<Integer>> mapClassesLineNumbers, Policy policy,
+	// @ List<SDGProgramPart> sources, List<SDGProgramPart> sinks) {
+	// @ for (SDGClass sdgClass : classes) {
+	// @ // foreach class da policy
+	// @
+	// @ Map<String, Set<String>> elements = policy.getClazzAndElements();
+	// @ Set<String> clazzes = elements.keySet();
+	// @ for (String clazz : clazzes) {
+	// @ if (mapClassesLineNumbers.containsKey(sdgClass.toString())
+	// @ || sdgClass.toString().contains(clazz)) {
+	// @ iterateOverAttributes(policy, sources, sinks, sdgClass,
+	// @ clazz);
+	// @
+	// @ iterateOverMethods(mapClassesLineNumbers, policy, sources,
+	// @ sinks, sdgClass);
+	// @ }
+	// @ }
+	// @ }
+	// @ }
+	// @
+	// @ private void iterateOverMethods(
+	// @ Map<String, List<Integer>> mapClassesLineNumbers, Policy policy,
+	// @ List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
+	// @ SDGClass sdgClass) {
+	// @ // por enquanto so marca instrucao de metodo como sink
+	// @ for (SDGMethod sdgMethod : sdgClass.getMethods()) {
+	// @ IMethod meth = sdgMethod.getMethod();
+	// @ List<SDGInstruction> methodInstructions = sdgMethod
+	// @ .getInstructions();
+	// @ for (SDGInstruction sdgInstruction : methodInstructions) {
+	// @ List<Integer> lineNumbers = mapClassesLineNumbers.get(sdgClass
+	// @ .toString());
+	// @
+	// @ Integer sourceLine = meth.getLineNumber(sdgInstruction
+	// @ .getBytecodeIndex());
+	// @
+	// @ if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
+	// @ if (policy.getOperator().equals("noflow")) {
+	// @ sinks.add(sdgInstruction);
+	// @ } else if (policy.getOperator().equals("noset")) {
+	// @ sources.add(sdgInstruction);
+	// @ }
+	// @
+	// @ }
+	// @ }
+	// @ }
+	// @ }
+	// @
+	// @ private void iterateOverAttributes(Policy policy,
+	// @ List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
+	// @ SDGClass sdgClass, String clazz) {
+	// @ // por enquanto so marca atributo como source
+	// @ for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
+	// @
+	// @ Set<String> sensitiveResources = policy
+	// @ .getSensitiveResources(clazz);
+	// @ for (String sensitiveResource : sensitiveResources) {
+	// @ if (sdgAttribute.toString().equals(sensitiveResource)) {
+	// @ if (policy.getOperator().equals("noflow")) {
+	// @ sources.add(sdgAttribute);
+	// @ } else if (policy.getOperator().equals("noset")) {
+	// @ sinks.add(sdgAttribute);
+	// @ }
+	// @ }
+	// @ }
+	// @
+	// @ }
+	// @ }
+	// @
+	// @
+	// #elif CLAZZ
+	public void prepareListsOfSourceAndSinks(Collection<SDGClass> classes,
+			Map<String, Set<Integer>> mapClassLines, PolicyClazz policy,
 			List<SDGProgramPart> sources, List<SDGProgramPart> sinks) {
 		for (SDGClass sdgClass : classes) {
-			// foreach class da policy
+			if (!mapClassLines.containsKey(sdgClass.toString())) {
+				continue;
+			}
 
 			Map<String, Set<String>> elements = policy.getClazzAndElements();
 			Set<String> clazzes = elements.keySet();
 			for (String clazz : clazzes) {
-				if (mapClassesLineNumbers.containsKey(sdgClass.toString())
-						|| sdgClass.toString().contains(clazz)) {
-					iterateOverAttributes(policy, sources, sinks, sdgClass,
-							clazz);
 
-					iterateOverMethods(mapClassesLineNumbers, policy, sources,
-							sinks, sdgClass);
-				}
-			}
-		}
-	}
-
-	private void iterateOverMethods(
-			Map<String, List<Integer>> mapClassesLineNumbers, Policy policy,
-			List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
-			SDGClass sdgClass) {
-		// por enquanto so marca instrucao de metodo como sink
-		for (SDGMethod sdgMethod : sdgClass.getMethods()) {
-			IMethod meth = sdgMethod.getMethod();
-			List<SDGInstruction> methodInstructions = sdgMethod
-					.getInstructions();
-			for (SDGInstruction sdgInstruction : methodInstructions) {
-				List<Integer> lineNumbers = mapClassesLineNumbers.get(sdgClass
-						.toString());
-
-				Integer sourceLine = meth.getLineNumber(sdgInstruction
-						.getBytecodeIndex());
-
-				if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
-					if (policy.getOperator().equals("noflow")) {
-						sinks.add(sdgInstruction);
-					} else if (policy.getOperator().equals("noset")) {
-						sources.add(sdgInstruction);
-					}
-
-				}
-			}
-		}
-	}
-
-	private void iterateOverAttributes(Policy policy,
-			List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
-			SDGClass sdgClass, String clazz) {
-		// por enquanto so marca atributo como source
-		for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
-
-			Set<String> sensitiveResources = policy
-					.getSensitiveResources(clazz);
-			for (String sensitiveResource : sensitiveResources) {
-				if (sdgAttribute.toString().equals(sensitiveResource)) {
-					if (policy.getOperator().equals("noflow")) {
-						sources.add(sdgAttribute);
-					} else if (policy.getOperator().equals("noset")) {
-						sinks.add(sdgAttribute);
+				// por enquanto so marca atributo como source
+				for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
+					Set<String> sensitiveResources = policy
+							.getSensitiveResources(clazz);
+					for (String sensitiveResource : sensitiveResources) {
+						if (sdgAttribute.toString().equals(sensitiveResource)) {
+							if (policy.getOperator().equals("noflow")) {
+								sources.add(sdgAttribute);
+							} else if (policy.getOperator().equals("noset")) {
+								sinks.add(sdgAttribute);
+							}
+						}
 					}
 				}
 			}
 
+			// por enquanto so marca instrucao de metodo como sink
+			for (SDGMethod sdgMethod : sdgClass.getMethods()) {
+				IMethod meth = sdgMethod.getMethod();
+				List<SDGInstruction> methodInstructions = sdgMethod
+						.getInstructions();
+				for (SDGInstruction sdgInstruction : methodInstructions) {
+					Set<Integer> lineNumbers = mapClassLines.get(sdgClass
+							.toString());
+
+					Integer sourceLine = meth.getLineNumber(sdgInstruction
+							.getBytecodeIndex());
+
+					if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
+						if (policy.getOperator().equals("noflow")) {
+							sinks.add(sdgInstruction);
+						} else if (policy.getOperator().equals("noset")) {
+							sources.add(sdgInstruction);
+						}
+
+					}
+				}
+			}
 		}
 	}
-
 	// #endif
 }
