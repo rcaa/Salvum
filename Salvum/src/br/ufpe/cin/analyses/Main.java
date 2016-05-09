@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import br.ufpe.cin.clazz.preprocessor.ClazzContextManager;
 import br.ufpe.cin.clazz.preprocessor.ClazzPreprocessor;
 import br.ufpe.cin.clazz.preprocessor.PreprocessorException;
+import br.ufpe.cin.policy.GitIntegration;
 import br.ufpe.cin.policy.PolicyClazz;
 //#endif
 
@@ -54,10 +55,10 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		// String propertiesPath =
-		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		// + "/joana/Salvum/configFiles/shriramExample.properties";
-		String propertiesPath = args[0];
+		 String propertiesPath =
+		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+		 + "/joana/Salvum/configFiles/simpleContributionExampleSyso.properties";
+		//String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -163,7 +164,7 @@ public class Main {
 		PolicyClazz policy = new PolicyClazz(policyText);
 		String sourceDirectory = p.getProperty("targetPathDirectory");
 		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory,
-				"logger.error");
+				"System.out.println(");
 		try {
 			cp.execute();
 		} catch (PreprocessorException e1) {
@@ -171,14 +172,15 @@ public class Main {
 		}
 		ClazzContextManager context = ClazzContextManager.getInstance();
 		Map<String, Set<Integer>> mapClassLines = context.getMapClassLines();
+		System.out.println(mapClassLines);
 		// #endif
 		// Segundo passo logico
 		AnalysisConfig ana = new AnalysisConfig();
 
-		JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-				.getProperty("main"));
-		// JavaMethodSignature entryMethod = JavaMethodSignature
-		// .mainMethodOfClass(p.getProperty("main"));
+		//JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+		//		.getProperty("main"));
+		JavaMethodSignature entryMethod = JavaMethodSignature
+		.mainMethodOfClass(p.getProperty("main"));
 		SDGProgram program = null;
 		try {
 			program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
@@ -228,12 +230,18 @@ public class Main {
 			if (policy.getOperator().equals("noflow")) {
 				if (sn != null && sink != null && source != null
 						&& sink.getBytecodeIndex() >= 0) {
+					String filePath = "src/" + sink.getSource();
+					System.out.println(filePath);
 					System.out.println("Illegal flow from "
 							+ source.getBytecodeName() + " to "
 							+ sink.getBytecodeName() + " at line "
 							+ sink.getEr()
-					// #if FEATURE || CLAZZ
-							);
+					// #if FEATURE
+//@							);
+					// #elif CLAZZ
+						// tenho que colocar o path do arquivo aqui, ao inves de sink.getBytecodeName
+						+ GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
+						);
 					// #elif CONTRIBUTION
 					// @ + " in commit " + hash);
 					// #endif

@@ -23,9 +23,9 @@ public enum Stubs {
 	NO_STUBS("NONE", null), JRE_14("JRE_14", "jSDG-stubs-jre1.4.jar"), JRE_15("JRE_15", "jSDG-stubs-jre1.5.jar");
 
 	// #if HOME
-//@	private static final String PROPERTIES = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/project.properties";
+	private static final String PROPERTIES = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/project.properties";
 	// #else
-	private static final String PROPERTIES = "/home/local/CIN/rcaa2/contributionExperiments/joana/project.properties";
+//@	private static final String PROPERTIES = "/home/local/CIN/rcaa2/contributionExperiments/joana/project.properties";
 	// #endif
 
 	private String name;

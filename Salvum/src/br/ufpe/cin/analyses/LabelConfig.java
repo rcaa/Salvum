@@ -233,6 +233,7 @@ public class LabelConfig {
 					for (String sensitiveResource : sensitiveResources) {
 						if (sdgAttribute.toString().equals(sensitiveResource)) {
 							if (policy.getOperator().equals("noflow")) {
+								System.out.println(sdgAttribute);
 								sources.add(sdgAttribute);
 							} else if (policy.getOperator().equals("noset")) {
 								sinks.add(sdgAttribute);
@@ -256,6 +257,7 @@ public class LabelConfig {
 
 					if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
 						if (policy.getOperator().equals("noflow")) {
+							System.out.println(sdgInstruction);
 							sinks.add(sdgInstruction);
 						} else if (policy.getOperator().equals("noset")) {
 							sources.add(sdgInstruction);
