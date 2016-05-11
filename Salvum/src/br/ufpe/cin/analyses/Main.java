@@ -164,7 +164,7 @@ public class Main {
 		PolicyClazz policy = new PolicyClazz(policyText);
 		String sourceDirectory = p.getProperty("targetPathDirectory");
 		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory,
-				"System.out.println(");
+				policy.getMethod());
 		try {
 			cp.execute();
 		} catch (PreprocessorException e1) {

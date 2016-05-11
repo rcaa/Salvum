@@ -10,7 +10,10 @@ import java.util.regex.Pattern;
 
 public class ClazzPreprocessor {
 
+	private String meth;
+	
 	public ClazzPreprocessor(String sourceDirectory, String meth) {
+		this.meth = meth;
 		File[] files = new File(sourceDirectory).listFiles();
 		try {
 			ClazzSrcManager.getSrcManager().fillClassDirectories(files);
@@ -33,11 +36,12 @@ public class ClazzPreprocessor {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 		List<String> srcFiles = manager.getSrcFiles();
 		BufferedReader br = null;
-
+		String methRegex = ".*" + (this.meth.replaceAll("\\.", 
+				Matcher.quoteReplacement("\\."))) + ".*";
+		
 		for (String srcFile : srcFiles) {
 			br = new BufferedReader(new FileReader(srcFile));
-
-			Pattern pattern = Pattern.compile(MethPattern.regex,
+			Pattern pattern = Pattern.compile(methRegex.toString(),
 					Pattern.CASE_INSENSITIVE);
 
 			int lineNumber = 0; // for counting the line number

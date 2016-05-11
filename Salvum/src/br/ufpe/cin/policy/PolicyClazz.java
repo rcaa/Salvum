@@ -9,9 +9,11 @@ public class PolicyClazz {
 
 	private Map<String, Set<String>> clazzAndElements;
 	private String operator;
+	private String method;
 
 	public PolicyClazz(String constraint) {
-		// X509Utils {CA_Config} noflow Log where Log = {logger.error(..)}
+		// X509Utils {CA_Config} noflow Log 
+		// where Log = {logger.error(..)}
 		this.clazzAndElements = new HashMap<String, Set<String>>();
 		if (constraint.contains("noflow")) {
 			String[] elements = constraint.split("noflow");
@@ -24,6 +26,8 @@ public class PolicyClazz {
 				this.clazzAndElements.put(clazz, classElements);
 			}
 			this.operator = "noflow";
+			String secondPart = elements[1];
+			this.setMethod(secondPart.split("\\{")[1].replace("}", ""));
 		} else if (constraint.contains("noset")) {
 		}
 	}
@@ -53,5 +57,13 @@ public class PolicyClazz {
 
 	public Map<String, Set<String>> getClazzAndElements() {
 		return clazzAndElements;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 }
