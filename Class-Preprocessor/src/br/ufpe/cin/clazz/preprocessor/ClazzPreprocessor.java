@@ -36,16 +36,16 @@ public class ClazzPreprocessor {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 		List<String> srcFiles = manager.getSrcFiles();
 		BufferedReader br = null;
-		String methRegex = ".*" + (this.meth.replaceAll("\\.", 
+		String methRegex = "(?m)^[\t]*" + (this.meth.trim().replaceAll("\\.", 
 				Matcher.quoteReplacement("\\."))) + ".*";
 		
 		for (String srcFile : srcFiles) {
-			br = new BufferedReader(new FileReader(srcFile));
-			Pattern pattern = Pattern.compile(methRegex.toString(),
-					Pattern.CASE_INSENSITIVE);
+				br = new BufferedReader(new FileReader(srcFile));
+				Pattern pattern = Pattern.compile(methRegex.toString(),
+						Pattern.CASE_INSENSITIVE);
 
-			int lineNumber = 0; // for counting the line number
-			iteratingOverSrcLines(br, pattern, lineNumber, srcFile);
+				int lineNumber = 0; // for counting the line number
+				iteratingOverSrcLines(br, pattern, lineNumber, srcFile);
 		}
 		if (br != null) {
 			br.close();
@@ -61,7 +61,6 @@ public class ClazzPreprocessor {
 		// reading line-by-line from input file
 		while ((line = br.readLine()) != null) {
 			lineNumber++;
-
 			/**
 			 * Creates a matcher that will match the given input against this
 			 * pattern.

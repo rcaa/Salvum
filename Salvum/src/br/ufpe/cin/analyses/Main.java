@@ -55,10 +55,10 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		 String propertiesPath =
-		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		 + "/joana/Salvum/configFiles/simpleContributionExampleSyso.properties";
-		//String propertiesPath = args[0];
+//		 String propertiesPath =
+//		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+//		 + "/joana/Salvum/configFiles/gitblitLocalSyso.properties";
+		String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
@@ -177,10 +177,10 @@ public class Main {
 		// Segundo passo logico
 		AnalysisConfig ana = new AnalysisConfig();
 
-		//JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-		//		.getProperty("main"));
-		JavaMethodSignature entryMethod = JavaMethodSignature
-		.mainMethodOfClass(p.getProperty("main"));
+		JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+				.getProperty("main"));
+//		JavaMethodSignature entryMethod = JavaMethodSignature
+//		.mainMethodOfClass(p.getProperty("main"));
 		SDGProgram program = null;
 		try {
 			program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
@@ -231,7 +231,6 @@ public class Main {
 				if (sn != null && sink != null && source != null
 						&& sink.getBytecodeIndex() >= 0) {
 					String filePath = "src/" + sink.getSource();
-					System.out.println(filePath);
 					System.out.println("Illegal flow from "
 							+ source.getBytecodeName() + " to "
 							+ sink.getBytecodeName() + " at line "
