@@ -1,6 +1,7 @@
 package br.ufpe.cin.analyses;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -47,6 +48,7 @@ import edu.kit.joana.api.sdg.SDGProgramPart;
 import edu.kit.joana.ifc.sdg.core.SecurityNode;
 import edu.kit.joana.ifc.sdg.core.violations.ClassifiedViolation;
 import edu.kit.joana.ifc.sdg.core.violations.IViolation;
+import edu.kit.joana.ifc.sdg.graph.SDGSerializer;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 
 public class Main {
@@ -197,8 +199,13 @@ public class Main {
 			// #endif
 		}
 
-		// SDGProgram program =
-		// ana.retrieveSDG("/Users/rodrigoandrade/Desktop/Saida_TYPE_BASED/SDGInformationFlow.pdg");
+		// get sdg
+		//SDGProgram program = 
+		//ana.retrieveSDG("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg");
+		
+		//save sdg
+		SDGSerializer.toPDGFormat(program.getSDG(), 
+				new FileOutputStream("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg"));
 
 		Collection<SDGClass> classes = program.getClasses();
 
