@@ -36,8 +36,8 @@ public class ClazzPreprocessor {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 		List<String> srcFiles = manager.getSrcFiles();
 		BufferedReader br = null;
-		String methRegex = "(?m)^[\t]*" + (this.meth.trim().replaceAll("\\.", 
-				Matcher.quoteReplacement("\\."))) + ".*";
+		String methRegex = "(.*)" + (this.meth.trim().replaceAll("\\.", 
+				Matcher.quoteReplacement("\\."))) + "(.*)";
 		
 		for (String srcFile : srcFiles) {
 				br = new BufferedReader(new FileReader(srcFile));
@@ -65,6 +65,10 @@ public class ClazzPreprocessor {
 			 * Creates a matcher that will match the given input against this
 			 * pattern.
 			 */
+			if (clazzName.contains("Credentials") && lineNumber == 75) {
+				System.out.println();
+			}
+			
 			Matcher matcher = pattern.matcher(line);
 
 			/**

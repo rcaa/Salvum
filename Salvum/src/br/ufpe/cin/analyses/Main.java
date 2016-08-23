@@ -57,9 +57,9 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-//		 String propertiesPath =
-//		 "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-//		 + "/joana/Salvum/configFiles/gitblitLocalSyso.properties";
+		// String propertiesPath =
+		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+		// + "/joana/Salvum/configFiles/openrefineSecretLocal.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
