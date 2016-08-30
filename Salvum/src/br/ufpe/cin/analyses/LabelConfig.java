@@ -257,7 +257,6 @@ public class LabelConfig {
 
 					if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
 						if (policy.getOperator().equals("noflow")) {
-							System.out.println(sdgInstruction);
 							sinks.add(sdgInstruction);
 						} else if (policy.getOperator().equals("noset")) {
 							sources.add(sdgInstruction);

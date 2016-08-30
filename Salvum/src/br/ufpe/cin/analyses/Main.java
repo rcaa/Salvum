@@ -57,9 +57,9 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		// String propertiesPath =
-		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		// + "/joana/Salvum/configFiles/openrefineSecretLocal.properties";
+		//String propertiesPath =
+		//"/Users/rodrigoandrade/Documents/workspaces/Doutorado"
+		//+ "/joana/Salvum/configFiles/simpleContributionExampleSyso.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -179,8 +179,6 @@ public class Main {
 		// Segundo passo logico
 		AnalysisConfig ana = new AnalysisConfig();
 
-		//main=com.google.refine.RefineServlet.service(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
-		
 		String[] entries = p.getProperty("main").split(":");
 		List<String> entryMethods = new ArrayList<String>();
 		for (String meth : entries) {
@@ -212,8 +210,8 @@ public class Main {
 		//ana.retrieveSDG("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg");
 		
 		//save sdg
-		SDGSerializer.toPDGFormat(program.getSDG(), 
-				new FileOutputStream("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg"));
+//		SDGSerializer.toPDGFormat(program.getSDG(), 
+//				new FileOutputStream("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg"));
 
 		Collection<SDGClass> classes = program.getClasses();
 
@@ -254,7 +252,7 @@ public class Main {
 //@							);
 					// #elif CLAZZ
 						// tenho que colocar o path do arquivo aqui, ao inves de sink.getBytecodeName
-						+ GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
+						+ " " + GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
 						);
 					// #elif CONTRIBUTION
 					// @ + " in commit " + hash);

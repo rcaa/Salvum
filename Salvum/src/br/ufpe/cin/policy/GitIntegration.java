@@ -76,25 +76,39 @@ public class GitIntegration {
 		String[] command = new String[] { "git", "--git-dir",
 				targetPathDirectory + ".git", "--work-tree=" + targetPathDirectory,
 				"blame", "-L",
-				lineNumber + "," + lineNumber, filePath };
+				lineNumber + "," + lineNumber, "-p", filePath };
 		Process process = rt.exec(command);
 		Scanner scanner = new Scanner(new InputStreamReader(
 				process.getInputStream()));
+		
+		/* 2c910df5b67e2fabba5e03c1426c5b16867c26dd 12 13 1
+		author Rodrigo Andrade
+		author-mail <rodrigo_cardoso@hotmail.it>
+		author-time 1462468511
+		author-tz -0300
+		committer Rodrigo Andrade
+		committer-mail <rodrigo_cardoso@hotmail.it>
+		committer-time 1462846462
+		committer-tz -0300
+		summary adding syso example
+		filename src/clazz/SysoExample.java */
+		String hash = "";
+		String committer = "";
+		int i = 0;
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			if (!line.isEmpty()) {
-				String[] elements = line.split(" ");
-				// 2625a31c (Rodrigo Andrade 2016-05-05 14:15:11 -0300 12) 		System.out.println(this.password);
-				String output = " through " + elements[0] 
-						+ " and commited by " + elements[1].substring(1);
-				int i = 2;
-				while (!(elements[i].matches("\\d{4}-\\d{2}-\\d{2}") 
-						&& elements[i].length() == 10)) {
-					output += elements[i];
-					i++;
+				if (i == 0) {
+					String[] firstLine = line.split(" ");
+					hash = firstLine[0];
+				} else if (line.contains("committer ")) {
+					committer = line.substring(10);
 				}
-				return output;
 			}
+			i++;
+		}
+		if (!hash.isEmpty() && !committer.isEmpty()) {
+			return "through " + hash + " and commited by " + committer;
 		}
 		iterateOnError(process);
 		
