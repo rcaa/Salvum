@@ -16,6 +16,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -248,14 +249,41 @@ public final class SDGBuildPreparation {
 
 	    out.print("Setting up entrypoint " + cfg.entryMethod + "... ");
 
-
-	    // Methode in der Klassenhierarchie suchen
-		final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, cfg.entryMethod);
-		
-		IMethod m = cha.resolveMethod(mr);
-		if (m == null) {
-			fail("could not resolve " + mr);
+	    //MODIFICATION
+	    if (cfg.extern != null) {
+	    	cfg.extern.setClassHierarchy(cha);
+	    }
+	    IMethod m = null;
+	    List<IMethod> ms = null;
+	    if (cfg.entryMethods != null && cfg.entryMethods.size() > 0) {
+	    	out.print("Setting up entrypoints... ");
+	    	System.out.print("Setting up entrypoints... ");
+	    	ms = new ArrayList<IMethod>();
+	    	for (String entryMethod : cfg.entryMethods) {
+	    		out.print("Setting up entrypoint " + entryMethod + "... ");
+	    	 	System.out.print("Setting up entrypoint " + entryMethod + "... ");
+	    	 
+	    	 	// Methode in der Klassenhierarchie suchen
+	    	 	final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, entryMethod);
+	    	 
+	    	 	IMethod meth = cha.resolveMethod(mr);
+	    	 	if (meth == null) {
+	    	 		fail("could not resolve " + mr);
+	    	 	}
+	    	 	ms.add(meth);
+	    	}
+	    } else if (cfg.entryMethod != null) {
+	    	out.print("Setting up entrypoint " + cfg.entryMethod + "... ");
+	     	System.out.print("Setting up entrypoint " + cfg.entryMethod + "... ");
+	    	 
+	     	// Methode in der Klassenhierarchie suchen
+	     	final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, cfg.entryMethod);
+	     	m = cha.resolveMethod(mr);
+	     	if (m == null) {
+	     		fail("could not resolve " + mr);
+	     	}
 		}
+	    //
 
 		out.println("done.");
 
@@ -299,6 +327,8 @@ public final class SDGBuildPreparation {
 		scfg.cache = cache;
 		scfg.cha = cha;
 		scfg.entry = m;
+		//MODIFICATION
+		scfg.entries = ms;
 		scfg.ext = chk;
 		scfg.immutableNoOut = IMMUTABLE_NO_OUT;
 		scfg.immutableStubs = IMMUTABLE_STUBS;
@@ -382,6 +412,7 @@ public final class SDGBuildPreparation {
 	public static class Config {
 		public String name;
 		public String entryMethod;
+		public List<String> entryMethods;
 		public String classpath;
 		public String thirdPartyLibPath;
 		public String exclusions;

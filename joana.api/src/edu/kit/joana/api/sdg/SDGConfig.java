@@ -7,6 +7,8 @@
  */
 package edu.kit.joana.api.sdg;
 
+import java.util.List;
+
 import com.ibm.wala.cfg.exc.intra.MethodState;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.pruned.ApplicationLoaderPolicy;
@@ -27,6 +29,8 @@ public class SDGConfig {
 	private String classPath;
 	private String thirdPartyLibsPath;
 	private String entryMethod;
+	//MODIFICATION
+	private List<String> entryMethods;
 	private Stubs stubsPath;
 	private String exclusions = SDGBuildPreparation.STD_EXCLUSION_REG_EXP;
 	private ExceptionAnalysis exceptionAnalysis;
@@ -318,5 +322,13 @@ public class SDGConfig {
 	 */
 	public void setNotifier(ConstructionNotifier notifier) {
 		this.notifier = notifier;
+	}
+
+	public List<String> getEntryMethods() {
+		return entryMethods;
+	}
+
+	public void setEntryMethods(List<String> entryMethods) {
+		this.entryMethods = entryMethods;
 	}
 }

@@ -2,6 +2,7 @@ package br.ufpe.cin.analyses;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import br.ufpe.cin.util.LibFilterUtil;
 
@@ -14,7 +15,6 @@ import edu.kit.joana.api.sdg.SDGConfig;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.ifc.sdg.graph.SDG;
 import edu.kit.joana.ifc.sdg.mhpoptimization.MHPType;
-import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 import edu.kit.joana.util.Stubs;
 import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
 import edu.kit.joana.wala.core.SDGBuilder.FieldPropagation;
@@ -27,7 +27,7 @@ public class AnalysisConfig {
 	}
 
 	public SDGProgram buildSDG(String classPath,
-			JavaMethodSignature entryMethod, String thirdPartyLibsPath)
+			List<String> entryMethods, String thirdPartyLibsPath)
 			throws ClassHierarchyException, IOException, UnsoundGraphException,
 			CancelException {
 		/**
@@ -48,8 +48,13 @@ public class AnalysisConfig {
 		 * For multi-threaded programs, it is currently necessary to use the jdk
 		 * 1.4 stubs
 		 */
-		SDGConfig config = new SDGConfig(classPath, entryMethod.toBCString(),
+		SDGConfig config = new SDGConfig(classPath, null,
 				Stubs.JRE_14);
+		
+		/**
+		 * add multiple entry methods
+		 */
+		config.setEntryMethods(entryMethods);
 
 		/**
 		 * compute interference edges to model dependencies between threads (set

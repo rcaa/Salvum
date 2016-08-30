@@ -179,13 +179,21 @@ public class Main {
 		// Segundo passo logico
 		AnalysisConfig ana = new AnalysisConfig();
 
-		JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-				.getProperty("main"));
+		//main=com.google.refine.RefineServlet.service(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+		
+		String[] entries = p.getProperty("main").split(":");
+		List<String> entryMethods = new ArrayList<String>();
+		for (String meth : entries) {
+			JavaMethodSignature entryMethod = JavaMethodSignature.fromString(meth);
+			entryMethods.add(entryMethod.toBCString());
+		}
+		//JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+		//		.getProperty("main"));
 //		JavaMethodSignature entryMethod = JavaMethodSignature
 //		.mainMethodOfClass(p.getProperty("main"));
 		SDGProgram program = null;
 		try {
-			program = ana.buildSDG(p.getProperty("classpath"), entryMethod,
+			program = ana.buildSDG(p.getProperty("classpath"), entryMethods,
 					p.getProperty("thirdPartyLibsPath"));
 		} catch (IllegalStateException e) {
 			if (e.getMessage().contains("main([Ljava/lang/String")) {

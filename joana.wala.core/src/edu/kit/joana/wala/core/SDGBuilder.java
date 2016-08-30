@@ -855,8 +855,17 @@ public class SDGBuilder implements CallGraphFilter {
 	public CGResult buildCallgraph(final IProgressMonitor progress) throws IllegalArgumentException,
 			CallGraphBuilderCancelException {
 		final List<Entrypoint> entries = new LinkedList<Entrypoint>();
-		final Entrypoint ep = new SubtypesEntrypoint(cfg.entry, cfg.cha);
-		entries.add(ep);
+		//MODIFICATION
+		if (cfg.entries != null) {
+			for(IMethod meth : cfg.entries) {
+			 	final Entrypoint ep = new SubtypesEntrypoint(meth, cfg.cha);
+			 	entries.add(ep);
+			}
+		} else {
+			final Entrypoint ep = new SubtypesEntrypoint(cfg.entry, cfg.cha);
+			entries.add(ep);
+		}
+		//
 		final ExtendedAnalysisOptions options = new ExtendedAnalysisOptions(cfg.objSensFilter, cfg.scope, entries);
 		if (cfg.ext.resolveReflection()) {
 			options.setReflectionOptions(ReflectionOptions.NO_STRING_CONSTANTS);
@@ -1450,6 +1459,8 @@ public class SDGBuilder implements CallGraphFilter {
 		public transient AnalysisCache cache = null;
 		public transient IClassHierarchy cha = null;
 		public IMethod entry = null;
+		//MODIFICATION
+		public List<IMethod> entries = null;
 		public ExternalCallCheck ext = null;
 		public String[] immutableNoOut = Main.IMMUTABLE_NO_OUT;
 		public String[] immutableStubs = Main.IMMUTABLE_STUBS;
