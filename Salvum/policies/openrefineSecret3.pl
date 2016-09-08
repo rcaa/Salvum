@@ -1,0 +1,2 @@
+com.google.refine.oauth.Credentials {token,secret}, com.google.refine.oauth.Provider {oauthProvider}, com.google.refine.extension.gdata.GDataImportingController {token} noflow WriteOperation
+	where WriteOperation = {copy}

@@ -1,2 +1,2 @@
 clazz.SysoExample {password} noflow Log
-	where Log = {System.out.print}
+	where Log = {System.out.print,log}

@@ -1,7 +1,9 @@
 package br.ufpe.cin.policy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,12 +11,13 @@ public class PolicyClazz {
 
 	private Map<String, Set<String>> clazzAndElements;
 	private String operator;
-	private String method;
+	private List<String> methods;
 
 	public PolicyClazz(String constraint) {
-		// X509Utils {CA_Config} noflow Log 
+		// X509Utils {CA_Config} noflow Log
 		// where Log = {logger.error(..)}
 		this.clazzAndElements = new HashMap<String, Set<String>>();
+		this.methods = new ArrayList<String>();
 		if (constraint.contains("noflow")) {
 			String[] elements = constraint.split("noflow");
 			String firstPart = elements[0];
@@ -27,7 +30,12 @@ public class PolicyClazz {
 			}
 			this.operator = "noflow";
 			String secondPart = elements[1];
-			this.setMethod(secondPart.split("\\{")[1].replace("}", ""));
+			String methodsStr = secondPart.substring(secondPart.indexOf("{") + 1,
+					secondPart.indexOf("}"));
+			String[] methods = methodsStr.split(",");
+			for (String meth : methods) {
+				this.methods.add(meth);
+			}
 		} else if (constraint.contains("noset")) {
 		}
 	}
@@ -59,11 +67,7 @@ public class PolicyClazz {
 		return clazzAndElements;
 	}
 
-	public String getMethod() {
-		return method;
-	}
-
-	public void setMethod(String method) {
-		this.method = method;
+	public List<String> getMethods() {
+		return methods;
 	}
 }

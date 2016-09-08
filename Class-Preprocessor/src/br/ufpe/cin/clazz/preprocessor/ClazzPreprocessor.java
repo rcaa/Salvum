@@ -4,16 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClazzPreprocessor {
 
-	private String meth;
-	
-	public ClazzPreprocessor(String sourceDirectory, String meth) {
-		this.meth = meth;
+	private List<String> meths;
+
+	public ClazzPreprocessor(String sourceDirectory, List<String> meths) {
+		this.meths = meths;
 		File[] files = new File(sourceDirectory).listFiles();
 		try {
 			ClazzSrcManager.getSrcManager().fillClassDirectories(files);
@@ -36,16 +37,19 @@ public class ClazzPreprocessor {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 		List<String> srcFiles = manager.getSrcFiles();
 		BufferedReader br = null;
-		String methRegex = "(.*)" + (this.meth.trim().replaceAll("\\.", 
-				Matcher.quoteReplacement("\\."))) + "(.*)";
-		
-		for (String srcFile : srcFiles) {
+		for (String meth : meths) {
+			String methRegex = "(.*)"
+					+ (meth.trim().replaceAll("\\.",
+							Matcher.quoteReplacement("\\."))) + "(.*)";
+
+			for (String srcFile : srcFiles) {
 				br = new BufferedReader(new FileReader(srcFile));
 				Pattern pattern = Pattern.compile(methRegex.toString(),
 						Pattern.CASE_INSENSITIVE);
 
 				int lineNumber = 0; // for counting the line number
 				iteratingOverSrcLines(br, pattern, lineNumber, srcFile);
+			}
 		}
 		if (br != null) {
 			br.close();
@@ -68,7 +72,7 @@ public class ClazzPreprocessor {
 			if (clazzName.contains("Credentials") && lineNumber == 75) {
 				System.out.println();
 			}
-			
+
 			Matcher matcher = pattern.matcher(line);
 
 			/**
@@ -94,9 +98,12 @@ public class ClazzPreprocessor {
 	}
 
 	public static void main(String[] args) {
+		List<String> meths = new ArrayList<String>();
+		meths.add("logger.error");
+		meths.add("cookie");
 		ClazzPreprocessor cp = new ClazzPreprocessor(
 				"/Users/rodrigoandrade/Documents/workspaces"
-						+ "/Doutorado/opensource/gitblit/", "logger.error(");
+						+ "/Doutorado/opensource/gitblit/", meths);
 		try {
 			cp.execute();
 		} catch (IOException e) {

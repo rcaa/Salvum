@@ -1,7 +1,6 @@
 package br.ufpe.cin.analyses;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -48,7 +47,6 @@ import edu.kit.joana.api.sdg.SDGProgramPart;
 import edu.kit.joana.ifc.sdg.core.SecurityNode;
 import edu.kit.joana.ifc.sdg.core.violations.ClassifiedViolation;
 import edu.kit.joana.ifc.sdg.core.violations.IViolation;
-import edu.kit.joana.ifc.sdg.graph.SDGSerializer;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 
 public class Main {
@@ -165,8 +163,8 @@ public class Main {
 		// #elif CLAZZ
 		PolicyClazz policy = new PolicyClazz(policyText);
 		String sourceDirectory = p.getProperty("targetPathDirectory");
-		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory,
-				policy.getMethod());
+		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory, 
+				policy.getMethods());
 		try {
 			cp.execute();
 		} catch (PreprocessorException e1) {
