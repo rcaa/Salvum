@@ -1,7 +1,9 @@
 package br.ufpe.cin.analyses;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import br.ufpe.cin.util.LibFilterUtil;
@@ -26,10 +28,9 @@ public class AnalysisConfig {
 		return new SDGProgram(SDG.readFrom(path));
 	}
 
-	public SDGProgram buildSDG(String classPath,
-			List<String> entryMethods, String thirdPartyLibsPath)
-			throws ClassHierarchyException, IOException, UnsoundGraphException,
-			CancelException {
+	public SDGProgram buildSDG(String classPath, List<String> entryMethods,
+			String thirdPartyLibsPath) throws ClassHierarchyException,
+			IOException, UnsoundGraphException, CancelException {
 		/**
 		 * the class path is either a directory or a jar containing all the
 		 * classes of the program which you want to analyze
@@ -48,9 +49,8 @@ public class AnalysisConfig {
 		 * For multi-threaded programs, it is currently necessary to use the jdk
 		 * 1.4 stubs
 		 */
-		SDGConfig config = new SDGConfig(classPath, null,
-				Stubs.JRE_14);
-		
+		SDGConfig config = new SDGConfig(classPath, null, Stubs.JRE_14);
+
 		/**
 		 * add multiple entry methods
 		 */
@@ -100,6 +100,7 @@ public class AnalysisConfig {
 			throws IOException {
 		String libsPath = "";
 		if (thirdPartyLibsPath != null && !thirdPartyLibsPath.isEmpty()) {
+			thirdPartyLibsPath = includeSubfolders(thirdPartyLibsPath);
 			if (thirdPartyLibsPath.contains("%")) {
 				String[] paths = thirdPartyLibsPath.split("%");
 				for (int i = 0; i < paths.length; i++) {
@@ -115,6 +116,28 @@ public class AnalysisConfig {
 			}
 		}
 		return libsPath;
+	}
+
+	private String includeSubfolders(String thirdPartyLibsPath) {
+		if (thirdPartyLibsPath.contains("*")) {
+			File file = new File(thirdPartyLibsPath.substring(0,
+					thirdPartyLibsPath.length() - 1));
+			String[] directories = file.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File current, String name) {
+					return new File(current, name).isDirectory();
+				}
+			});
+			thirdPartyLibsPath = "";
+			for (String path : directories) {
+				if (thirdPartyLibsPath.equals("")) {
+					thirdPartyLibsPath = path;
+				} else {
+					thirdPartyLibsPath = thirdPartyLibsPath + "%" + path;
+				}
+			}
+		}
+		return thirdPartyLibsPath;
 	}
 
 	private String iterateFiles(String thirdPartyLibsPath, String libsPath)
