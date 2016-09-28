@@ -1,0 +1,2 @@
+teammates.storage.entity.Account {email}, teammates.storage.entity.AdminEmail {addressReceiver,subject,content}, teammates.storage.entity.CourseStudent {registrationKey,email} noflow WriteOperation
+	where WriteOperation = {Log.severe,Log.warning,initUsingAppLogMessage,initAsFailure}
