@@ -69,10 +69,6 @@ public class ClazzPreprocessor {
 			 * Creates a matcher that will match the given input against this
 			 * pattern.
 			 */
-			if (clazzName.contains("Credentials") && lineNumber == 75) {
-				System.out.println();
-			}
-
 			Matcher matcher = pattern.matcher(line);
 
 			/**

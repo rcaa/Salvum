@@ -55,9 +55,8 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		//String propertiesPath =
-		//"/Users/rodrigoandrade/Documents/workspaces/Doutorado"
-		//+ "/joana/Salvum/configFiles/simpleContributionExampleSyso.properties";
+		//String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\" +
+		//		"teammatesLocal.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;

@@ -1,9 +1,8 @@
 package br.ufpe.cin.analyses;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpe.cin.util.LibFilterUtil;
@@ -108,7 +107,9 @@ public class AnalysisConfig {
 					if (i == (paths.length - 1)) {
 						libsPath += iterateFiles(temp, libsPath);
 					} else {
-						libsPath += iterateFiles(temp, libsPath) + ":";
+						String filePaths = iterateFiles(temp, libsPath);
+						libsPath += filePaths.isEmpty() ? ""
+								: (filePaths + ":");
 					}
 				}
 			} else {
@@ -118,26 +119,51 @@ public class AnalysisConfig {
 		return libsPath;
 	}
 
-	private String includeSubfolders(String thirdPartyLibsPath) {
+	private String includeSubfolders(String thirdPartyLibsPath)
+			throws IOException {
+		String thirdPartyLibsPathTobeUsed = "";
 		if (thirdPartyLibsPath.contains("*")) {
-			File file = new File(thirdPartyLibsPath.substring(0,
+			// using a collecting parameter
+			List<String> jarPathsList = new ArrayList<String>();
+			walk(jarPathsList, thirdPartyLibsPath.substring(0,
 					thirdPartyLibsPath.length() - 1));
-			String[] directories = file.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File current, String name) {
-					return new File(current, name).isDirectory();
-				}
-			});
-			thirdPartyLibsPath = "";
-			for (String path : directories) {
-				if (thirdPartyLibsPath.equals("")) {
-					thirdPartyLibsPath = path;
-				} else {
-					thirdPartyLibsPath = thirdPartyLibsPath + "%" + path;
+			thirdPartyLibsPathTobeUsed = createThirdLibsPath(
+					thirdPartyLibsPathTobeUsed, jarPathsList);
+		}
+		return thirdPartyLibsPathTobeUsed;
+	}
+
+	private String createThirdLibsPath(String thirdPartyLibsPathTobeUsed,
+			List<String> jarPathsList) {
+		for (String jar : jarPathsList) {
+			if (thirdPartyLibsPathTobeUsed.equals("")) {
+				thirdPartyLibsPathTobeUsed = jar;
+			} else {
+				thirdPartyLibsPathTobeUsed = thirdPartyLibsPathTobeUsed
+						+ "%" + jar;
+			}
+		}
+		return thirdPartyLibsPathTobeUsed;
+	}
+
+	private void walk(List<String> jarPathsList, String path)
+			throws IOException {
+		File root = new File(path);
+		File[] list = root.listFiles();
+
+		if (list == null) {
+			return;
+		}
+		for (File f : list) {
+			if (f.isDirectory()) {
+				walk(jarPathsList, f.getAbsolutePath());
+			} else {
+				String filePath = f.getCanonicalPath();
+				if (filePath.endsWith(".jar") || filePath.endsWith(".zip")) {
+					jarPathsList.add(filePath);
 				}
 			}
 		}
-		return thirdPartyLibsPath;
 	}
 
 	private String iterateFiles(String thirdPartyLibsPath, String libsPath)
