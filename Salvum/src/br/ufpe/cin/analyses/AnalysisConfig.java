@@ -124,13 +124,15 @@ public class AnalysisConfig {
 		String thirdPartyLibsPathTobeUsed = "";
 		if (thirdPartyLibsPath.contains("*")) {
 			// using a collecting parameter
-			List<String> jarPathsList = new ArrayList<String>();
-			walk(jarPathsList, thirdPartyLibsPath.substring(0,
+			List<String> jarPathsDirectories = new ArrayList<String>();
+			walk(jarPathsDirectories, thirdPartyLibsPath.substring(0,
 					thirdPartyLibsPath.length() - 1));
 			thirdPartyLibsPathTobeUsed = createThirdLibsPath(
-					thirdPartyLibsPathTobeUsed, jarPathsList);
+					thirdPartyLibsPathTobeUsed, jarPathsDirectories);
+			return thirdPartyLibsPathTobeUsed;
 		}
-		return thirdPartyLibsPathTobeUsed;
+		return thirdPartyLibsPath;
+
 	}
 
 	private String createThirdLibsPath(String thirdPartyLibsPathTobeUsed,
@@ -139,8 +141,8 @@ public class AnalysisConfig {
 			if (thirdPartyLibsPathTobeUsed.equals("")) {
 				thirdPartyLibsPathTobeUsed = jar;
 			} else {
-				thirdPartyLibsPathTobeUsed = thirdPartyLibsPathTobeUsed
-						+ "%" + jar;
+				thirdPartyLibsPathTobeUsed = thirdPartyLibsPathTobeUsed + "%"
+						+ jar;
 			}
 		}
 		return thirdPartyLibsPathTobeUsed;
@@ -156,12 +158,10 @@ public class AnalysisConfig {
 		}
 		for (File f : list) {
 			if (f.isDirectory()) {
-				walk(jarPathsList, f.getAbsolutePath());
-			} else {
-				String filePath = f.getCanonicalPath();
-				if (filePath.endsWith(".jar") || filePath.endsWith(".zip")) {
-					jarPathsList.add(filePath);
+				if (containsJar(f)) {
+					jarPathsList.add(f.getCanonicalPath());
 				}
+				walk(jarPathsList, f.getCanonicalPath());
 			}
 		}
 	}
@@ -179,5 +179,17 @@ public class AnalysisConfig {
 			}
 		}
 		return libsPath;
+	}
+
+	private boolean containsJar(File file) {
+		String[] listFiles = file.list();
+		if (listFiles != null) {
+			for (String f : listFiles) {
+				if (f.endsWith(".jar") || f.endsWith(".zip")) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
