@@ -3,7 +3,6 @@ package br.ufpe.cin.analyses;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,30 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-//#if FEATURE
-//@import java.util.Set;
-//#endif
+
 import org.eclipse.core.runtime.CoreException;
 
-//#if FEATURE
-//@import br.ufpe.cin.feature.preprocessor.ContextManager;
-//@import br.ufpe.cin.feature.preprocessor.FeaturePreprocessor;
-//@import br.ufpe.cin.feature.preprocessor.PreprocessorException;
-//@import br.ufpe.cin.policy.PolicyFeature;
-//#elif CONTRIBUTION
-//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
-//@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
-//@import br.ufpe.cin.preprocessor.GitUtil;
-//@import br.ufpe.cin.ant.ProjectBuilder;
-//@import br.ufpe.cin.policy.Policy;
-//@import br.ufpe.cin.util.FileUtil;
-//#elif CLAZZ
 import br.ufpe.cin.clazz.preprocessor.ClazzContextManager;
 import br.ufpe.cin.clazz.preprocessor.ClazzPreprocessor;
 import br.ufpe.cin.clazz.preprocessor.PreprocessorException;
 import br.ufpe.cin.policy.GitIntegration;
 import br.ufpe.cin.policy.PolicyClazz;
-//#endif
 
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -48,6 +31,23 @@ import edu.kit.joana.ifc.sdg.core.SecurityNode;
 import edu.kit.joana.ifc.sdg.core.violations.ClassifiedViolation;
 import edu.kit.joana.ifc.sdg.core.violations.IViolation;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
+//#if FEATURE
+//@import java.util.Set;
+//#endif
+//#if FEATURE
+//@import br.ufpe.cin.feature.preprocessor.ContextManager;
+//@import br.ufpe.cin.feature.preprocessor.FeaturePreprocessor;
+//@import br.ufpe.cin.feature.preprocessor.PreprocessorException;
+//@import br.ufpe.cin.policy.PolicyFeature;
+//#elif CONTRIBUTION
+//@import br.ufpe.cin.preprocessor.ContextManagerContribution;
+//@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
+//@import br.ufpe.cin.preprocessor.GitUtil;
+//@import br.ufpe.cin.ant.ProjectBuilder;
+//@import br.ufpe.cin.policy.Policy;
+//@import br.ufpe.cin.util.FileUtil;
+//#elif CLAZZ
+//#endif
 
 public class Main {
 
@@ -56,7 +56,7 @@ public class Main {
 		Properties p = new Properties();
 
 		String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\" +
-				"simpleContributionExampleSyso.properties";
+				"gitblitCookieLocal.properties";
 		//String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -97,7 +97,6 @@ public class Main {
 		// obtenho a policy
 		Path path = FileSystems.getDefault().getPath(
 				p.getProperty("policyDirectory"));
-		String policyText = new String(Files.readAllBytes(path));
 		// #if CONTRIBUTION
 		// @ List<String> hashes = Policy.findHashes(policyText,
 		// @ p.getProperty("targetPathDirectory"));
@@ -160,7 +159,7 @@ public class Main {
 		// @ }
 		// @
 		// #elif CLAZZ
-		PolicyClazz policy = new PolicyClazz(policyText);
+		PolicyClazz policy = new PolicyClazz(path);
 		String sourceDirectory = p.getProperty("targetPathDirectory");
 		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory, 
 				policy.getMethods());
