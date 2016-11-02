@@ -71,7 +71,7 @@ public class AnalysisConfig {
 		 * precision of the used points-to analysis - INSTANCE_BASED is a good
 		 * value for simple examples
 		 */
-		config.setPointsToPrecision(PointsToPrecision.INSTANCE_BASED);
+		config.setPointsToPrecision(PointsToPrecision.OBJECT_SENSITIVE);
 
 		/**
 		 * exception analysis is used to detect exceptional control-flow which

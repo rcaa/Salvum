@@ -1,0 +1,2 @@
+teammates.common.datatransfer.FeedbackResponseAttributes {giver,recipient}, teammates.common.datatransfer.FeedbackQuestionAttributes {creatorEmail} noflow WriteOperation
+	where WriteOperation = {severe,warning,initUsingAppLogMessage,initAsFailure,info}
