@@ -50,9 +50,6 @@ public class AnalysisConfig {
 		 */
 		SDGConfig config = new SDGConfig(classPath, null, Stubs.JRE_14);
 
-		/**
-		 * add multiple entry methods
-		 */
 		config.setEntryMethods(entryMethods);
 
 		/**
@@ -71,7 +68,7 @@ public class AnalysisConfig {
 		 * precision of the used points-to analysis - INSTANCE_BASED is a good
 		 * value for simple examples
 		 */
-		config.setPointsToPrecision(PointsToPrecision.OBJECT_SENSITIVE);
+		config.setPointsToPrecision(PointsToPrecision.INSTANCE_BASED);
 
 		/**
 		 * exception analysis is used to detect exceptional control-flow which

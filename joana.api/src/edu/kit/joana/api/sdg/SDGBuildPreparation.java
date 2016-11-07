@@ -75,41 +75,18 @@ public final class SDGBuildPreparation {
 		throw new UnsupportedOperationException();
 	}
 
-	public final static String STD_EXCLUSION_REG_EXP =
-		"sun\\/awt\\/.*\n"
-		+ "sun\\/swing\\/.*\n"
-		+ "com\\/sun\\/.*\n"
-		+ "sun\\/.*\n"
-		+ "apple\\/awt\\/.*\n"
-		+ "com\\/apple\\/.*\n"
-		+ "org\\/omg\\/.*\n";
+	public final static String STD_EXCLUSION_REG_EXP = "sun\\/awt\\/.*\n" + "sun\\/swing\\/.*\n" + "com\\/sun\\/.*\n"
+			+ "sun\\/.*\n" + "apple\\/awt\\/.*\n" + "com\\/apple\\/.*\n" + "org\\/omg\\/.*\n";
 
 	// these classes are modeled without specific fields
-	public final static String[] IMMUTABLE_STUBS = {
-		"Ljava/lang/String",
-		"Ljava/lang/Integer",
-		"Ljava/lang/Long",
-		"Ljava/lang/Character",
-		"Ljava/lang/Object",
-		"Ljava/lang/Throwable",
-		"Ljava/lang/Exception",
-	};
+	public final static String[] IMMUTABLE_STUBS = { "Ljava/lang/String", "Ljava/lang/Integer", "Ljava/lang/Long",
+			"Ljava/lang/Character", "Ljava/lang/Object", "Ljava/lang/Throwable", "Ljava/lang/Exception", };
 
-	public final static String[] IMMUTABLE_NO_OUT = {
-		"Ljava/lang/String",
-		"Ljava/lang/Integer",
-		"Ljava/lang/Long",
-		"Ljava/lang/Character",
-	};
+	public final static String[] IMMUTABLE_NO_OUT = { "Ljava/lang/String", "Ljava/lang/Integer", "Ljava/lang/Long",
+			"Ljava/lang/Character", };
 
-	public final static String[] IGNORE_STATIC_FIELDS = {
-		"Ljava/lang/Integer",
-		"Ljava/lang/Object",
-		"Ljava/lang/Long",
-		"Ljava/lang/Character",
-		"Ljava/lang/Throwable",
-		"Ljava/lang/Exception",
-	};
+	public final static String[] IGNORE_STATIC_FIELDS = { "Ljava/lang/Integer", "Ljava/lang/Object", "Ljava/lang/Long",
+			"Ljava/lang/Character", "Ljava/lang/Throwable", "Ljava/lang/Exception", };
 
 	public final static int DEFAULT_PRUNE_CG = 2;
 	public final static int DO_NOT_PRUNE_CG = SDGBuilder.DO_NOT_PRUNE;
@@ -120,19 +97,21 @@ public final class SDGBuildPreparation {
 
 	public final static boolean DEFAULT_ACCESS_PATH = false;
 
-	public static ClassHierarchy computeClassHierarchy(PrintStream out, Config cfg) throws IOException, ClassHierarchyException {
+	public static ClassHierarchy computeClassHierarchy(PrintStream out, Config cfg) throws IOException,
+			ClassHierarchyException {
 		AnalysisScope scope = setUpAnalysisScope(out, cfg);
-	    // Klassenhierarchie berechnen
+		// Klassenhierarchie berechnen
 		return ClassHierarchy.make(scope);
 	}
 
-
-	public static List<String> searchMainMethods(PrintStream out, Config cfg) throws IOException, ClassHierarchyException {
+	public static List<String> searchMainMethods(PrintStream out, Config cfg) throws IOException,
+			ClassHierarchyException {
 		final List<String> result = new LinkedList<String>();
 		out.println("Searching for main methods in '" + cfg.classpath + "'...");
 		ClassHierarchy cha = computeClassHierarchy(out, cfg);
 		for (final IClass cls : cha) {
-			if (!cls.isInterface() && !cls.isAbstract() && cls.getClassLoader().getName().equals(AnalysisScope.APPLICATION)) {
+			if (!cls.isInterface() && !cls.isAbstract()
+					&& cls.getClassLoader().getName().equals(AnalysisScope.APPLICATION)) {
 				for (final IMethod m : cls.getDeclaredMethods()) {
 					if (m.isStatic() && "main([Ljava/lang/String;)V".equals(m.getSelector().toString())) {
 						out.println("\tfound '" + m.getSignature() + "'");
@@ -147,7 +126,8 @@ public final class SDGBuildPreparation {
 		return result;
 	}
 
-	public static void run(PrintStream out, Config cfg) throws IOException, ClassHierarchyException, UnsoundGraphException, CancelException {
+	public static void run(PrintStream out, Config cfg) throws IOException, ClassHierarchyException,
+			UnsoundGraphException, CancelException {
 		final SDG sdg = compute(out, cfg);
 
 		if (sdg != null) {
@@ -162,7 +142,8 @@ public final class SDGBuildPreparation {
 	}
 
 	/**
-	 * Search file in filesystem. If not found, try to load from classloader (e.g. from inside the jarfile).
+	 * Search file in filesystem. If not found, try to load from classloader
+	 * (e.g. from inside the jarfile).
 	 */
 	private static Module findJarModule(final PrintStream out, final String path) throws IOException {
 		final File f = new File(path);
@@ -196,94 +177,79 @@ public final class SDGBuildPreparation {
 		}
 
 		// Nimmt unnoetige Klassen raus
-		
-		SetOfClasses exclusions =
-				new FileOfClasses(new ByteArrayInputStream(IOFactory.createUTF8Bytes(cfg.exclusions)));
+
+		SetOfClasses exclusions = new FileOfClasses(new ByteArrayInputStream(IOFactory.createUTF8Bytes(cfg.exclusions)));
 		scope.setExclusions(exclusions);
 
-	    ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
-	    AnalysisScopeReader.addClassPathToScope(cfg.classpath, scope, loader);
-	    if (cfg.thirdPartyLibPath != null) {
-	    	ClassLoaderReference extLoader = scope.getLoader(AnalysisScope.EXTENSION);
-	    	AnalysisScopeReader.addClassPathToScope(cfg.thirdPartyLibPath, scope, extLoader);
-	    }
-	    return scope;
+		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
+		AnalysisScopeReader.addClassPathToScope(cfg.classpath, scope, loader);
+		if (cfg.thirdPartyLibPath != null) {
+			ClassLoaderReference extLoader = scope.getLoader(AnalysisScope.EXTENSION);
+			AnalysisScopeReader.addClassPathToScope(cfg.thirdPartyLibPath, scope, extLoader);
+		}
+		return scope;
 	}
 
-	public static SDG compute(PrintStream out, Config cfg) throws ClassHierarchyException, IOException, UnsoundGraphException, CancelException {
+	public static SDG compute(PrintStream out, Config cfg) throws ClassHierarchyException, IOException,
+			UnsoundGraphException, CancelException {
 		return compute(out, cfg, NullProgressMonitor.INSTANCE);
 	}
 
-
-	public static SDG compute(PrintStream out, Config cfg, IProgressMonitor progress) throws IOException, ClassHierarchyException, UnsoundGraphException, CancelException {
+	public static SDG compute(PrintStream out, Config cfg, IProgressMonitor progress) throws IOException,
+			ClassHierarchyException, UnsoundGraphException, CancelException {
 		return compute(out, cfg, false, progress);
 	}
 
-	private static Pair<Long, SDGBuilder.SDGBuilderConfig> prepareBuild(PrintStream out, Config cfg, boolean computeInterference, IProgressMonitor progress) throws IOException, ClassHierarchyException {
+	private static Pair<Long, SDGBuilder.SDGBuilderConfig> prepareBuild(PrintStream out, Config cfg,
+			boolean computeInterference, IProgressMonitor progress) throws IOException, ClassHierarchyException {
 		if (!checkOrCreateOutputDir(cfg.outputDir)) {
-			out.println("Could not access/create diretory '" + cfg.outputDir +"'");
+			out.println("Could not access/create diretory '" + cfg.outputDir + "'");
 			return null;
 		}
 		final long startTime = System.currentTimeMillis();
-		
-		//MODIFICATION
+
+		// MODIFICATION
 		out.print("\nTempo de inicio da analise: " + startTime + "\n");
 
 		out.print("Setting up analysis scope... ");
 
 		AnalysisScope scope = setUpAnalysisScope(out, cfg);
 
-	    out.println("done.");
+		out.println("done.");
 
-	    out.print("Creating class hierarchy... ");
+		out.print("Creating class hierarchy... ");
 
-	    // Klassenhierarchie berechnen
+		// Klassenhierarchie berechnen
 		ClassHierarchy cha = ClassHierarchy.make(scope);
 
+		out.println("(" + cha.getNumberOfClasses() + " classes) done.");
 
-	    out.println("(" + cha.getNumberOfClasses() + " classes) done.");
-
-	    if (cfg.extern != null) {
-	    	cfg.extern.setClassHierarchy(cha);
-	    }
-
-	    out.print("Setting up entrypoint " + cfg.entryMethod + "... ");
-
-	    //MODIFICATION
-	    if (cfg.extern != null) {
-	    	cfg.extern.setClassHierarchy(cha);
-	    }
-	    IMethod m = null;
-	    List<IMethod> ms = null;
-	    if (cfg.entryMethods != null && cfg.entryMethods.size() > 0) {
-	    	out.print("Setting up entrypoints... ");
-	    	System.out.print("Setting up entrypoints... ");
-	    	ms = new ArrayList<IMethod>();
-	    	for (String entryMethod : cfg.entryMethods) {
-	    		out.print("Setting up entrypoint " + entryMethod + "... ");
-	    	 	System.out.print("Setting up entrypoint " + entryMethod + "... ");
-	    	 
-	    	 	// Methode in der Klassenhierarchie suchen
-	    	 	final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, entryMethod);
-	    	 
-	    	 	IMethod meth = cha.resolveMethod(mr);
-	    	 	if (meth == null) {
-	    	 		fail("could not resolve " + mr);
-	    	 	}
-	    	 	ms.add(meth);
-	    	}
-	    } else if (cfg.entryMethod != null) {
-	    	out.print("Setting up entrypoint " + cfg.entryMethod + "... ");
-	     	System.out.print("Setting up entrypoint " + cfg.entryMethod + "... ");
-	    	 
-	     	// Methode in der Klassenhierarchie suchen
-	     	final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, cfg.entryMethod);
-	     	m = cha.resolveMethod(mr);
-	     	if (m == null) {
-	     		fail("could not resolve " + mr);
-	     	}
+		if (cfg.extern != null) {
+			cfg.extern.setClassHierarchy(cha);
 		}
-	    //
+
+		// MODIFICATION
+		if (cfg.extern != null) {
+			cfg.extern.setClassHierarchy(cha);
+		}
+		IMethod m = null;
+		List<IMethod> ms = null;
+		if (cfg.entryMethods != null && cfg.entryMethods.size() > 0) {
+			ms = new ArrayList<IMethod>();
+			for (String entryMethod : cfg.entryMethods) {
+				out.print("Setting up entrypoint " + entryMethod + "... ");
+
+				// Methode in der Klassenhierarchie suchen
+				final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, entryMethod);
+
+				IMethod meth = cha.resolveMethod(mr);
+				if (meth == null) {
+					fail("could not resolve " + mr);
+				}
+				ms.add(meth);
+			}
+		}
+		//
 
 		out.println("done.");
 
@@ -327,7 +293,7 @@ public final class SDGBuildPreparation {
 		scfg.cache = cache;
 		scfg.cha = cha;
 		scfg.entry = m;
-		//MODIFICATION
+		// MODIFICATION
 		scfg.entries = ms;
 		scfg.ext = chk;
 		scfg.immutableNoOut = IMMUTABLE_NO_OUT;
@@ -362,29 +328,34 @@ public final class SDGBuildPreparation {
 				+ "M used.");
 	}
 
-	public static SDG compute(PrintStream out, Config cfg, boolean computeInterference, IProgressMonitor progress) throws IOException, ClassHierarchyException, UnsoundGraphException, CancelException {
+	public static SDG compute(PrintStream out, Config cfg, boolean computeInterference, IProgressMonitor progress)
+			throws IOException, ClassHierarchyException, UnsoundGraphException, CancelException {
 		Pair<Long, SDGBuilder.SDGBuilderConfig> p = prepareBuild(out, cfg, computeInterference, progress);
 		long startTime = p.fst;
 		SDGBuilder.SDGBuilderConfig scfg = p.snd;
 		final SDG sdg = SDGBuilder.build(scfg, progress);
 		postpareBuild(startTime, out);
-//		SDGVerifier.verify(sdg, false, true);
+		// SDGVerifier.verify(sdg, false, true);
 
 		return sdg;
 	}
 
-	public static Pair<SDG, SDGBuilder> computeAndKeepBuilder(PrintStream out, Config cfg, boolean computeInterference, IProgressMonitor progress) throws UnsoundGraphException, CancelException, IOException, ClassHierarchyException {
+	public static Pair<SDG, SDGBuilder> computeAndKeepBuilder(PrintStream out, Config cfg, boolean computeInterference,
+			IProgressMonitor progress) throws UnsoundGraphException, CancelException, IOException,
+			ClassHierarchyException {
 		Pair<Long, SDGBuilder.SDGBuilderConfig> p = prepareBuild(out, cfg, computeInterference, progress);
 		long startTime = p.fst;
 		SDGBuilder.SDGBuilderConfig scfg = p.snd;
 		final Pair<SDG, SDGBuilder> ret = SDGBuilder.buildAndKeepBuilder(scfg, progress);
 		postpareBuild(startTime, out);
-//		SDGVerifier.verify(sdg, false, true);
+		// SDGVerifier.verify(sdg, false, true);
 
 		return ret;
 	}
 
-	public static SDGBuilder createBuilder(PrintStream out, Config cfg, boolean computeInterference, IProgressMonitor progress) throws UnsoundGraphException, CancelException, ClassHierarchyException, IOException {
+	public static SDGBuilder createBuilder(PrintStream out, Config cfg, boolean computeInterference,
+			IProgressMonitor progress) throws UnsoundGraphException, CancelException, ClassHierarchyException,
+			IOException {
 		Pair<Long, SDGBuilder.SDGBuilderConfig> p = prepareBuild(out, cfg, computeInterference, progress);
 		return SDGBuilder.onlyCreate(p.snd);
 	}
@@ -434,6 +405,7 @@ public final class SDGBuildPreparation {
 		public boolean computeAllocationSites = false;
 		public CGConsumer cgConsumer = null;
 		public ContextSelector ctxSelector = null;
+
 		public Config(String name) {
 			this(name, "<no entry defined>", FieldPropagation.OBJ_GRAPH);
 		}
@@ -441,38 +413,44 @@ public final class SDGBuildPreparation {
 		public Config(String name, String entryMethod, FieldPropagation fieldPropagation) {
 			this(name, entryMethod, STD_CLASS_PATH, PointsToPrecision.INSTANCE_BASED, DEFAULT_EXCEPTION_ANALYSIS,
 					DEFAULT_ACCESS_PATH, STD_EXCLUSION_REG_EXP, JoanaConstants.DEFAULT_NATIVES_XML, /* stubs */null,
-					/*ext-call*/null, "./", fieldPropagation);
+					/* ext-call */null, "./", fieldPropagation);
 		}
 
 		public Config(String name, String entryMethod, String classpath, FieldPropagation fieldPropagation) {
 			this(name, entryMethod, classpath, PointsToPrecision.INSTANCE_BASED, DEFAULT_EXCEPTION_ANALYSIS,
 					DEFAULT_ACCESS_PATH, STD_EXCLUSION_REG_EXP, JoanaConstants.DEFAULT_NATIVES_XML, /* stubs */null,
-					/*ext-call*/null, "./", fieldPropagation);
+					/* ext-call */null, "./", fieldPropagation);
 		}
 
 		public Config(String name, String entryMethod, String classpath, PointsToPrecision pts,
 				FieldPropagation fieldPropagation) {
 			this(name, entryMethod, classpath, pts, DEFAULT_EXCEPTION_ANALYSIS, DEFAULT_ACCESS_PATH,
-					STD_EXCLUSION_REG_EXP, JoanaConstants.DEFAULT_NATIVES_XML, /* stubs */null, /*ext-call*/null,
-					"./", fieldPropagation);
+					STD_EXCLUSION_REG_EXP, JoanaConstants.DEFAULT_NATIVES_XML, /* stubs */null, /*
+																								 * ext
+																								 * -
+																								 * call
+																								 */null, "./",
+					fieldPropagation);
 		}
 
 		public Config(String name, String entryMethod, String classpath, String exclusions,
 				FieldPropagation fieldPropagation) {
 			this(name, entryMethod, classpath, PointsToPrecision.INSTANCE_BASED, DEFAULT_EXCEPTION_ANALYSIS,
 					DEFAULT_ACCESS_PATH, exclusions, JoanaConstants.DEFAULT_NATIVES_XML, /* stubs */null,
-					/*ext-call*/null, "./", fieldPropagation);
+					/* ext-call */null, "./", fieldPropagation);
 		}
 
 		public Config(String name, String entryMethod, String classpath, PointsToPrecision pts, String exclusions,
 				FieldPropagation fieldPropagation) {
 			this(name, entryMethod, classpath, pts, DEFAULT_EXCEPTION_ANALYSIS, DEFAULT_ACCESS_PATH, exclusions,
-					JoanaConstants.DEFAULT_NATIVES_XML, /* stubs */null, /*ext-call*/null, "./", fieldPropagation);
+					JoanaConstants.DEFAULT_NATIVES_XML, /* stubs */null, /*
+																		 * ext-call
+																		 */null, "./", fieldPropagation);
 		}
 
 		public Config(String name, String entryMethod, String classpath, PointsToPrecision pts,
 				ExceptionAnalysis exceptions, boolean accessPath, String exclusions, String nativesXML, String stubs,
-				ExternalCallCheck extern, String outputDir,	FieldPropagation fieldPropagation) {
+				ExternalCallCheck extern, String outputDir, FieldPropagation fieldPropagation) {
 			this.name = name;
 			this.pts = pts;
 			this.exceptions = exceptions;
@@ -498,6 +476,5 @@ public final class SDGBuildPreparation {
 			return LogUtil.attributesToString(this);
 		}
 	}
-
 
 }

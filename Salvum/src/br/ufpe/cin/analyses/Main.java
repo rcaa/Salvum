@@ -56,7 +56,7 @@ public class Main {
 		Properties p = new Properties();
 
 		//String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\" +
-		//		"gitblitCookieLocal.properties";
+		//		"simpleContributionExampleSysoWindows.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -248,7 +248,7 @@ public class Main {
 //@							);
 					// #elif CLAZZ
 						// tenho que colocar o path do arquivo aqui, ao inves de sink.getBytecodeName
-						+ " " + GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
+						//+ " " + GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
 						);
 					// #elif CONTRIBUTION
 					// @ + " in commit " + hash);

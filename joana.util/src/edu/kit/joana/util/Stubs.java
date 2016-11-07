@@ -24,6 +24,7 @@ public enum Stubs {
 
 	// #if HOME
 //@	private static final String PROPERTIES = "/mnt/c/Doutorado/workspace/Salvum/joana.api/project.properties";
+//@	//private static final String PROPERTIES = "C:\\Doutorado\\workspace\\Salvum\\joana.api\\project.properties";
 	// #else
 	private static final String PROPERTIES = "/home/local/CIN/rcaa2/contributionExperiments/joana/project.properties";
 	// #endif

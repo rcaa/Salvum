@@ -224,48 +224,59 @@ public class LabelConfig {
 
 			Map<String, Set<String>> elements = policy.getClazzAndElements();
 			Set<String> clazzes = elements.keySet();
-			for (String clazz : clazzes) {
-
-				// por enquanto so marca atributo como source
-				for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
-					Set<String> sensitiveResources = policy
-							.getSensitiveResources(clazz);
-					for (String sensitiveResource : sensitiveResources) {
-						if (sdgAttribute.toString().equals(sensitiveResource)) {
-							if (policy.getOperator().equals("noflow")) {
-								System.out.println(sdgAttribute);
-								sources.add(sdgAttribute);
-							} else if (policy.getOperator().equals("noset")) {
-								sinks.add(sdgAttribute);
-							}
-						}
-					}
-				}
-			}
+			labelSource(policy, sources, sinks, sdgClass, clazzes);
 
 			// por enquanto so marca instrucao de metodo como sink
-			for (SDGMethod sdgMethod : sdgClass.getMethods()) {
-				IMethod meth = sdgMethod.getMethod();
-				List<SDGInstruction> methodInstructions = sdgMethod
-						.getInstructions();
-				for (SDGInstruction sdgInstruction : methodInstructions) {
-					Set<Integer> lineNumbers = mapClassLines.get(sdgClass
-							.toString());
+			labelSink(mapClassLines, policy, sources, sinks, sdgClass);
+		}
+	}
+	// #endif
 
-					Integer sourceLine = meth.getLineNumber(sdgInstruction
-							.getBytecodeIndex());
+	private void labelSource(PolicyClazz policy, List<SDGProgramPart> sources,
+			List<SDGProgramPart> sinks, SDGClass sdgClass, Set<String> clazzes) {
+		for (String clazz : clazzes) {
 
-					if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
+			// por enquanto so marca atributo como source
+			for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
+				Set<String> sensitiveResources = policy
+						.getSensitiveResources(clazz);
+				for (String sensitiveResource : sensitiveResources) {
+					if (sdgAttribute.toString().equals(sensitiveResource)) {
 						if (policy.getOperator().equals("noflow")) {
-							sinks.add(sdgInstruction);
+							System.out.println(sdgAttribute);
+							sources.add(sdgAttribute);
 						} else if (policy.getOperator().equals("noset")) {
-							sources.add(sdgInstruction);
+							sinks.add(sdgAttribute);
 						}
-
 					}
 				}
 			}
 		}
 	}
-	// #endif
+	
+	private void labelSink(Map<String, Set<Integer>> mapClassLines,
+			PolicyClazz policy, List<SDGProgramPart> sources,
+			List<SDGProgramPart> sinks, SDGClass sdgClass) {
+		for (SDGMethod sdgMethod : sdgClass.getMethods()) {
+			IMethod meth = sdgMethod.getMethod();
+			List<SDGInstruction> methodInstructions = sdgMethod
+					.getInstructions();
+			for (SDGInstruction sdgInstruction : methodInstructions) {
+				Set<Integer> lineNumbers = mapClassLines.get(sdgClass
+						.toString());
+
+				Integer sourceLine = meth.getLineNumber(sdgInstruction
+						.getBytecodeIndex());
+
+				if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
+					if (policy.getOperator().equals("noflow")) {
+						sinks.add(sdgInstruction);
+					} else if (policy.getOperator().equals("noset")) {
+						sources.add(sdgInstruction);
+					}
+
+				}
+			}
+		}
+	}
 }

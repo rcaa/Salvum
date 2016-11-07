@@ -110,8 +110,8 @@ public class SDGBuilder implements CallGraphFilter {
 	// start at 2+1 == 3 because other ids are reserved.
 	public final static int PDG_START_ID = 3;
 	public final static int NO_PDG_ID = -1;
-	public final static boolean DATA_FLOW_FOR_GET_FROM_FIELD_NODE =
-			Config.getBool(Config.C_SDG_DATAFLOW_FOR_GET_FROM_FIELD, false);
+	public final static boolean DATA_FLOW_FOR_GET_FROM_FIELD_NODE = Config.getBool(
+			Config.C_SDG_DATAFLOW_FOR_GET_FROM_FIELD, false);
 
 	public final SDGBuilderConfig cfg;
 
@@ -123,13 +123,15 @@ public class SDGBuilder implements CallGraphFilter {
 		 */
 		IGNORE_ALL(true, "ignore all exceptions (may miss information flow)"),
 		/*
-		 * Assume each instruction that potentially can throw an exception may throw one. 
+		 * Assume each instruction that potentially can throw an exception may
+		 * throw one.
 		 */
 		ALL_NO_ANALYSIS(true, "integrate all exceptions without optimization"),
 		/*
-		 * Like ALL_NO_ANALYSIS but apply an intraprocedural analysis that detects instructions that definitely can not
-		 * throw an exception. E.g. access to this pointer, subsequent accesses to the same unchanged object,
-		 * if-guarded accesses, etc. 
+		 * Like ALL_NO_ANALYSIS but apply an intraprocedural analysis that
+		 * detects instructions that definitely can not throw an exception. E.g.
+		 * access to this pointer, subsequent accesses to the same unchanged
+		 * object, if-guarded accesses, etc.
 		 */
 		INTRAPROC(true, "integrate all exceptions, optimize intraprocedurally"),
 		/*
@@ -137,8 +139,10 @@ public class SDGBuilder implements CallGraphFilter {
 		 */
 		INTERPROC(true, "integrate all exceptions, optimize interprocedurally");
 
-		public final String desc;		  // short textual description of the option - can be used for gui
-		public final boolean recommended; // option can make sense aside for academic evaluation
+		public final String desc; // short textual description of the option -
+									// can be used for gui
+		public final boolean recommended; // option can make sense aside for
+											// academic evaluation
 
 		private ExceptionAnalysis(final boolean recommended, final String desc) {
 			this.recommended = recommended;
@@ -148,61 +152,62 @@ public class SDGBuilder implements CallGraphFilter {
 
 	public static enum PointsToPrecision {
 		/*
-		 * Rapid Type Analysis
-		 * Maybe UNSOUND - WALAs implementation looks suspicious.
-		 * Its also less precise and slower (blows up dynamic calls) as TYPE (0-CFA).
-		 * Its just here for academic purposes.
+		 * Rapid Type Analysis Maybe UNSOUND - WALAs implementation looks
+		 * suspicious. Its also less precise and slower (blows up dynamic calls)
+		 * as TYPE (0-CFA). Its just here for academic purposes.
 		 */
 		RTA(false, "rapid type analysis"),
 		/*
-		 * 0-CFA
-		 * Fastest option. Use this in case everything else is too slow aka the callgraph is getting too big.
+		 * 0-CFA Fastest option. Use this in case everything else is too slow
+		 * aka the callgraph is getting too big.
 		 */
 		TYPE_BASED(true, "type-based (0-CFA)"),
-		/* DEFAULT
-		 * 0-1-CFA
-		 * Best bang for buck. Use this in case you are not sure what to pick.
+		/*
+		 * DEFAULT 0-1-CFA Best bang for buck. Use this in case you are not sure
+		 * what to pick.
 		 */
 		INSTANCE_BASED(true, "instance-based (0-1-CFA)"),
 		/*
-		 * Object-sensitive (unlimited receiver object context for application code)
-		 * Very precise for OO heavy code - best option for really precise analysis.
-		 * Unlimited receiver context for application code, 1-level receiver context for library code. 
-		 * Uses n-CFA as fallback for static methods. Customizable: Provide objSensFilter to specify 'n' for fallback
-		 * n-CFA and filter for methods where object-sensitivity should be engaged. Default 'n = 1'.
+		 * Object-sensitive (unlimited receiver object context for application
+		 * code) Very precise for OO heavy code - best option for really precise
+		 * analysis. Unlimited receiver context for application code, 1-level
+		 * receiver context for library code. Uses n-CFA as fallback for static
+		 * methods. Customizable: Provide objSensFilter to specify 'n' for
+		 * fallback n-CFA and filter for methods where object-sensitivity should
+		 * be engaged. Default 'n = 1'.
 		 */
 		OBJECT_SENSITIVE(true, "object-sensitive + 1-level call-stack"),
 		/*
-		 * 1-level object-sensitive (1-level receiver object context)
-		 * Receiver context is limited to 1-level. 
-		 * Uses 1-CFA as fallback for static methods.
+		 * 1-level object-sensitive (1-level receiver object context) Receiver
+		 * context is limited to 1-level. Uses 1-CFA as fallback for static
+		 * methods.
 		 */
 		N1_OBJECT_SENSITIVE(true, "1-level object-sensitive + 1-level call-stack"),
 		/*
-		 * Object-sensitive (unlimited receiver object context)
-		 * Very precise for OO heavy code, but also very slow.
-		 * Unlimited receiver context for the whole code - application as well as library. 
-		 * Uses 1-CFA as fallback for static methods.
+		 * Object-sensitive (unlimited receiver object context) Very precise for
+		 * OO heavy code, but also very slow. Unlimited receiver context for the
+		 * whole code - application as well as library. Uses 1-CFA as fallback
+		 * for static methods.
 		 */
 		UNLIMITED_OBJECT_SENSITIVE(true, "unlimited object-sensitive + 1-level call-stack"),
 		/*
-		 * 1-CFA
-		 * Slower as 0-1-CFA, yet few precision improvements
+		 * 1-CFA Slower as 0-1-CFA, yet few precision improvements
 		 */
 		N1_CALL_STACK(true, "1-level call-stack (1-CFA)"),
 		/*
-		 * 2-CFA
- 		 * Slow, but precise
+		 * 2-CFA Slow, but precise
 		 */
 		N2_CALL_STACK(true, "2-level call-stack (2-CFA)"),
 		/*
-		 * 3-CFA
-		 * Very slow with little increased precision. Not much improvement over 2-CFA.
+		 * 3-CFA Very slow with little increased precision. Not much improvement
+		 * over 2-CFA.
 		 */
 		N3_CALL_STACK(true, "3-level call-stack (3-CFA)");
 
-		public final String desc;		  // short textual description of the option - can be used for gui
-		public final boolean recommended; // option can make sense aside for academic evaluation
+		public final String desc; // short textual description of the option -
+									// can be used for gui
+		public final boolean recommended; // option can make sense aside for
+											// academic evaluation
 
 		private PointsToPrecision(final boolean recommended, final String desc) {
 			this.recommended = recommended;
@@ -219,18 +224,21 @@ public class SDGBuilder implements CallGraphFilter {
 		 * Ignore static initializers
 		 */
 		NONE(true, "ignore static initialization"),
-		/* DEFAULT
-		 * Assume all static initializers are called once before the program starts. 
+		/*
+		 * DEFAULT Assume all static initializers are called once before the
+		 * program starts.
 		 */
 		SIMPLE(true, "simple approximation of static intialization"),
 		/*
-		 * NOT YET WORKING.
-		 * Place calls to static initializers where they may in fact occur.
+		 * NOT YET WORKING. Place calls to static initializers where they may in
+		 * fact occur.
 		 */
 		ACCURATE(false, "(unfinished - do not use for now) simple approximation of static intialization");
 
-		public final String desc;		  // short textual description of the option - can be used for gui
-		public final boolean recommended; // option can make sense aside for academic evaluation
+		public final String desc; // short textual description of the option -
+									// can be used for gui
+		public final boolean recommended; // option can make sense aside for
+											// academic evaluation
 
 		private StaticInitializationTreatment(final boolean recommended, final String desc) {
 			this.recommended = recommended;
@@ -240,19 +248,22 @@ public class SDGBuilder implements CallGraphFilter {
 
 	public static enum FieldPropagation {
 		/*
-		 * Very imprecise side-effect computation. Merges all effects/heap locations reachable through a methods
-		 * parameter to a single node.
-		 * Slow (could be optimized through caching) and imprecise. Do not use unless for academic evaluation purposes.
+		 * Very imprecise side-effect computation. Merges all effects/heap
+		 * locations reachable through a methods parameter to a single node.
+		 * Slow (could be optimized through caching) and imprecise. Do not use
+		 * unless for academic evaluation purposes.
 		 */
 		FLAT(true, "flat - merge all reachable locations in single root nodes"),
-		/* DEFAULT
-		 * A fine-grained side-effect computation. Scales well with precise and imprecise points-to analysis.
-		 * This is your best bet in case you don't know what to choose.
+		/*
+		 * DEFAULT A fine-grained side-effect computation. Scales well with
+		 * precise and imprecise points-to analysis. This is your best bet in
+		 * case you don't know what to choose.
 		 */
 		OBJ_GRAPH(true, "object-graph - precise and fast (default)"),
 		/*
-		 * Object graph algorithm without speed/space optimization. Does not merge nodes, when their number is getting
-		 * large. Does not merge accesses to the same field.
+		 * Object graph algorithm without speed/space optimization. Does not
+		 * merge nodes, when their number is getting large. Does not merge
+		 * accesses to the same field.
 		 */
 		OBJ_GRAPH_NO_FIELD_MERGE(false, "object-graph - no merge of nodes with same field name (internal use only)"),
 		/*
@@ -260,39 +271,47 @@ public class SDGBuilder implements CallGraphFilter {
 		 */
 		OBJ_GRAPH_NO_MERGE_AT_ALL(false, "object-graph - no merge at all (internal use only)"),
 		/*
-		 * Object graph algorithm with fixpoint propagation. Do not choose if you don't know what it does. It
-		 * exists for academic evaluation purposes.
+		 * Object graph algorithm with fixpoint propagation. Do not choose if
+		 * you don't know what it does. It exists for academic evaluation
+		 * purposes.
 		 */
 		OBJ_GRAPH_FIXPOINT_PROPAGATION(false, "object-graph - with fixpoint propagation (internal use only)"),
 		/*
-		 * Use object graph algorithm, but do not apply an escape analysis. This increases runtime and space needed,
-		 * while the precision is decreased. No sane person would choose this option. It exists only to evaluate the
-		 * effect of the integrated escape analysis.
+		 * Use object graph algorithm, but do not apply an escape analysis. This
+		 * increases runtime and space needed, while the precision is decreased.
+		 * No sane person would choose this option. It exists only to evaluate
+		 * the effect of the integrated escape analysis.
 		 */
 		OBJ_GRAPH_NO_ESCAPE(false, "object-graph - without escape analysis (internal use only)"),
 		/*
-		 * Run object graph algorithm without any optimizations. Again do not choose if you don't know what this means.
-		 * Only for evaluation.
+		 * Run object graph algorithm without any optimizations. Again do not
+		 * choose if you don't know what this means. Only for evaluation.
 		 */
 		OBJ_GRAPH_NO_OPTIMIZATION(false, "object-graph - without optimization (internal use only)"),
 		/*
-		 * Object graph algorithm with a simple propagation. Should be faster (and less precise) as the fixpoint
-		 * propagation. Do not choose if you don't know what it does. It exists for academic evaluation purposes.
+		 * Object graph algorithm with a simple propagation. Should be faster
+		 * (and less precise) as the fixpoint propagation. Do not choose if you
+		 * don't know what it does. It exists for academic evaluation purposes.
 		 */
 		OBJ_GRAPH_SIMPLE_PROPAGATION(false, "object-graph - with simple propagation (internal use only)"),
 		/*
-		 * Old deprecated object tree algorithm. The predecessor of the object graph. Scales less well for imprecise
-		 * points-to analysis, Is overall slower. Kept around for evaluation purposes. 
+		 * Old deprecated object tree algorithm. The predecessor of the object
+		 * graph. Scales less well for imprecise points-to analysis, Is overall
+		 * slower. Kept around for evaluation purposes.
 		 */
 		OBJ_TREE(false, "object-tree - old tree-based propagation (internal use only)"),
 		/*
-		 * A special variant of the object tree algorithm that allows multiple nodes for a single field. A little bit
-		 * more precise and even slower. Again kept around for evaluation purposes.
+		 * A special variant of the object tree algorithm that allows multiple
+		 * nodes for a single field. A little bit more precise and even slower.
+		 * Again kept around for evaluation purposes.
 		 */
-		OBJ_TREE_NO_FIELD_MERGE(false, "object-tree - old tree-based propagation without field merge (internal use only)");
+		OBJ_TREE_NO_FIELD_MERGE(false,
+				"object-tree - old tree-based propagation without field merge (internal use only)");
 
-		public final String desc;		  // short textual description of the option - can be used for gui
-		public final boolean recommended; // option can make sense aside for academic evaluation
+		public final String desc; // short textual description of the option -
+									// can be used for gui
+		public final boolean recommended; // option can make sense aside for
+											// academic evaluation
 
 		private FieldPropagation(final boolean recommended, final String desc) {
 			this.recommended = recommended;
@@ -304,8 +323,9 @@ public class SDGBuilder implements CallGraphFilter {
 		SDGBuilder builder = new SDGBuilder(cfg);
 		return builder;
 	}
+
 	public static SDGBuilder create(final SDGBuilderConfig cfg) throws UnsoundGraphException, CancelException {
-        IProgressMonitor progress = NullProgressMonitor.INSTANCE;
+		IProgressMonitor progress = NullProgressMonitor.INSTANCE;
 
 		SDGBuilder builder = new SDGBuilder(cfg);
 		builder.run(progress);
@@ -313,17 +333,17 @@ public class SDGBuilder implements CallGraphFilter {
 		return builder;
 	}
 
-	public static SDGBuilder create(final SDGBuilderConfig cfg, final IProgressMonitor progress) throws UnsoundGraphException, CancelException {
+	public static SDGBuilder create(final SDGBuilderConfig cfg, final IProgressMonitor progress)
+			throws UnsoundGraphException, CancelException {
 		SDGBuilder builder = new SDGBuilder(cfg);
 		builder.run(progress);
 
 		return builder;
 	}
-
 
 	public static SDGBuilder create(final SDGBuilderConfig cfg, final com.ibm.wala.ipa.callgraph.CallGraph walaCG,
 			final PointerAnalysis<InstanceKey> pts) throws UnsoundGraphException, CancelException {
-        IProgressMonitor progress = NullProgressMonitor.INSTANCE;
+		IProgressMonitor progress = NullProgressMonitor.INSTANCE;
 
 		SDGBuilder builder = new SDGBuilder(cfg);
 		builder.run(walaCG, pts, progress);
@@ -358,7 +378,8 @@ public class SDGBuilder implements CallGraphFilter {
 	}
 
 	public static SDGBuilder create(final SDGBuilderConfig cfg, final com.ibm.wala.ipa.callgraph.CallGraph walaCG,
-			final PointerAnalysis<InstanceKey> pts, IProgressMonitor progress) throws UnsoundGraphException, CancelException {
+			final PointerAnalysis<InstanceKey> pts, IProgressMonitor progress) throws UnsoundGraphException,
+			CancelException {
 
 		SDGBuilder builder = new SDGBuilder(cfg);
 		builder.run(walaCG, pts, progress);
@@ -366,8 +387,8 @@ public class SDGBuilder implements CallGraphFilter {
 		return builder;
 	}
 
-
-	public static SDG build(final SDGBuilderConfig cfg, IProgressMonitor progress) throws UnsoundGraphException, CancelException {
+	public static SDG build(final SDGBuilderConfig cfg, IProgressMonitor progress) throws UnsoundGraphException,
+			CancelException {
 		SDG sdg = null;
 		WorkPackage pack = null;
 
@@ -490,7 +511,7 @@ public class SDGBuilder implements CallGraphFilter {
 		}
 		cfg.out.print("\n\tcallgraph: ");
 		progress.beginTask("building call graph...", IProgressMonitor.UNKNOWN);
-		final CGResult walaCG = buildCallgraph(progress);	
+		final CGResult walaCG = buildCallgraph(progress);
 		progress.done();
 		if (cfg.cgConsumer != null) {
 			cfg.cgConsumer.consume(walaCG.cg, walaCG.pts);
@@ -518,21 +539,22 @@ public class SDGBuilder implements CallGraphFilter {
 		}
 
 		cfg.out.println(cg.vertexSet().size() + " nodes and " + cg.edgeSet().size() + " edges");
-		
+
 		if (cfg.exceptions == ExceptionAnalysis.INTERPROC) {
 			cfg.out.print("\tinterproc exception analysis... ");
-            progress.beginTask("interproc exception analysis... ", IProgressMonitor.UNKNOWN);
+			progress.beginTask("interproc exception analysis... ", IProgressMonitor.UNKNOWN);
 
 			try {
 				interprocExceptionResult = NullPointerAnalysis.computeInterprocAnalysis(
-						NullPointerAnalysis.DEFAULT_IGNORE_EXCEPTIONS, nonPrunedCG,	cfg.defaultExceptionMethodState,
+						NullPointerAnalysis.DEFAULT_IGNORE_EXCEPTIONS, nonPrunedCG, cfg.defaultExceptionMethodState,
 						progress);
 			} catch (WalaException e) {
 				throw new CancelException(e);
 			}
 
 			progress.done();
-			if (IS_DEBUG) debug.outln(interprocExceptionResult.toString());
+			if (IS_DEBUG)
+				debug.outln(interprocExceptionResult.toString());
 		}
 
 		pdgId = getMainId();
@@ -575,8 +597,8 @@ public class SDGBuilder implements CallGraphFilter {
 		}
 
 		cfg.out.print("calls");
-        progress.beginTask("interproc: connect call sites", pdgs.size());
-        currentNum = 0;
+		progress.beginTask("interproc: connect call sites", pdgs.size());
+		currentNum = 0;
 		// connect call sites
 		for (PDG pdg : pdgs) {
 			if (isImmutableStub(pdg.getMethod().getDeclaringClass().getReference())) {
@@ -594,12 +616,11 @@ public class SDGBuilder implements CallGraphFilter {
 				}
 			}
 
-            progress.worked(currentNum++);
+			progress.worked(currentNum++);
 		}
 
 		cfg.out.print(".");
 		progress.worked(1);
-
 
 		if (cfg.mergeFieldsOfPrunedCalls) {
 			cfg.out.print("mergeable");
@@ -614,8 +635,8 @@ public class SDGBuilder implements CallGraphFilter {
 
 		cfg.out.print(".");
 		progress.done();
-		
-        if (cfg.staticInitializers != StaticInitializationTreatment.NONE) {
+
+		if (cfg.staticInitializers != StaticInitializationTreatment.NONE) {
 			progress.beginTask("interproc: handling static initializers (clinit)...", IProgressMonitor.UNKNOWN);
 			cfg.out.print("clinit");
 			switch (cfg.staticInitializers) {
@@ -656,7 +677,7 @@ public class SDGBuilder implements CallGraphFilter {
 			cfg.out.print("killdef");
 			progress.beginTask("interproc: computing local killing defintions...", IProgressMonitor.UNKNOWN);
 			LocalKillingDefs.run(this, progress);
-            progress.done();
+			progress.done();
 			cfg.out.print(".");
 		}
 
@@ -665,7 +686,7 @@ public class SDGBuilder implements CallGraphFilter {
 			progress.beginTask("interproc: computing access path information...", IProgressMonitor.UNKNOWN);
 			// compute access path info
 			AccessPath.compute(this, getMainPDG());
-            progress.done();
+			progress.done();
 			cfg.out.print(".");
 		}
 
@@ -738,15 +759,17 @@ public class SDGBuilder implements CallGraphFilter {
 		}
 			break;
 		case INTERPROC: {
-			final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> npa =
-					(interprocExceptionResult != null ? interprocExceptionResult.getResult(n) : null);
+			final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> npa = (interprocExceptionResult != null ? interprocExceptionResult
+					.getResult(n) : null);
 
 			if (npa != null) {
 				npa.compute(progress);
 				ecfg = npa.getCFG();
 			} else {
-				// No result for this method or called at the wrong time. We do not keep the interprocedural analysis
-				// result during the whole computation due to memory usage. -> fallback intraproc analysis
+				// No result for this method or called at the wrong time. We do
+				// not keep the interprocedural analysis
+				// result during the whole computation due to memory usage. ->
+				// fallback intraproc analysis
 
 				ecfg = createIntraExceptionAnalyzedCFG(n, progress);
 			}
@@ -792,10 +815,13 @@ public class SDGBuilder implements CallGraphFilter {
 							pdg.addEdge(uniqueSucc, succOfCall, PDGEdge.Kind.CONTROL_FLOW);
 						}
 
-						// As a potential occurring exception controls iff the call exists normally,
+						// As a potential occurring exception controls iff the
+						// call exists normally,
 						// we add a control dependence to the call return node.
-						// This is a more natural and precise solution to the bug reported by benedikt (bug #16)
-						// We also move all control dependencies from call node to call return
+						// This is a more natural and precise solution to the
+						// bug reported by benedikt (bug #16)
+						// We also move all control dependencies from call node
+						// to call return
 						final PDGNode excRet = pdg.getExceptionOut(call);
 						pdg.addEdge(excRet, uniqueSucc, PDGEdge.Kind.CONTROL_DEP_EXPR);
 
@@ -816,7 +842,8 @@ public class SDGBuilder implements CallGraphFilter {
 					// add return edge
 					tgt.addVertex(uniqueSucc);
 					tgt.addEdge(exitOfCallee, uniqueSucc, PDGEdge.Kind.RETURN);
-					if (IS_DEBUG) debug.outln("Added return edge between " + exitOfCallee + " and " + uniqueSucc + ".");
+					if (IS_DEBUG)
+						debug.outln("Added return edge between " + exitOfCallee + " and " + uniqueSucc + ".");
 				}
 			}
 		}
@@ -855,15 +882,12 @@ public class SDGBuilder implements CallGraphFilter {
 	public CGResult buildCallgraph(final IProgressMonitor progress) throws IllegalArgumentException,
 			CallGraphBuilderCancelException {
 		final List<Entrypoint> entries = new LinkedList<Entrypoint>();
-		//MODIFICATION
-		if (cfg.entries != null) {
-			for(IMethod meth : cfg.entries) {
-			 	final Entrypoint ep = new SubtypesEntrypoint(meth, cfg.cha);
-			 	entries.add(ep);
+		// MODIFICATION
+		if (cfg.entries != null && cfg.entries.size() > 0) {
+			for (IMethod meth : cfg.entries) {
+				final Entrypoint ep = new SubtypesEntrypoint(meth, cfg.cha);
+				entries.add(ep);
 			}
-		} else {
-			final Entrypoint ep = new SubtypesEntrypoint(cfg.entry, cfg.cha);
-			entries.add(ep);
 		}
 		//
 		final ExtendedAnalysisOptions options = new ExtendedAnalysisOptions(cfg.objSensFilter, cfg.scope, entries);
@@ -872,15 +896,16 @@ public class SDGBuilder implements CallGraphFilter {
 		} else {
 			options.setReflectionOptions(ReflectionOptions.NONE);
 		}
-        if (cfg.methodTargetSelector != null) {
-            options.setSelector(cfg.methodTargetSelector);
-        }
+		if (cfg.methodTargetSelector != null) {
+			options.setSelector(cfg.methodTargetSelector);
+		}
 
 		CallGraphBuilder cgb = null;
 		switch (cfg.pts) {
 		case RTA: // Rapid Type Analysis
 			// Maybe UNSOUND - WALAs implementation looks suspicious.
-			// Its also less precise and slower (blows up dynamic calls) as TYPE (0-CFA).
+			// Its also less precise and slower (blows up dynamic calls) as TYPE
+			// (0-CFA).
 			// Its just here for academic purposes.
 			cgb = WalaPointsToUtil.makeRTA(options, cfg.cache, cfg.cha, cfg.scope);
 			break;
@@ -895,7 +920,7 @@ public class SDGBuilder implements CallGraphFilter {
 					cfg.additionalContextSelector, cfg.additionalContextInterpreter);
 			break;
 		case N1_OBJECT_SENSITIVE:
-			// Receiver context is limited to 1-level. 
+			// Receiver context is limited to 1-level.
 			// Uses 1-CFA as fallback for static methods.
 			options.filter = new ObjSensZeroXCFABuilder.DefaultMethodFilter() {
 				@Override
@@ -907,16 +932,21 @@ public class SDGBuilder implements CallGraphFilter {
 					cfg.additionalContextSelector, cfg.additionalContextInterpreter);
 			break;
 		case OBJECT_SENSITIVE:
-			// Very precise for OO heavy code - best option for really precise analysis.
-			// Unlimited receiver context for application code, 1-level receiver context for library code. 
-			// Uses n-CFA as fallback for static methods. Customizable: Provide objSensFilter to specify 'n' for fallback
-			// n-CFA and filter for methods where object-sensitivity should be engaged. Default 'n = 1'.
+			// Very precise for OO heavy code - best option for really precise
+			// analysis.
+			// Unlimited receiver context for application code, 1-level receiver
+			// context for library code.
+			// Uses n-CFA as fallback for static methods. Customizable: Provide
+			// objSensFilter to specify 'n' for fallback
+			// n-CFA and filter for methods where object-sensitivity should be
+			// engaged. Default 'n = 1'.
 			cgb = WalaPointsToUtil.makeObjectSens(options, cfg.cache, cfg.cha, cfg.scope,
 					cfg.additionalContextSelector, cfg.additionalContextInterpreter);
 			break;
 		case UNLIMITED_OBJECT_SENSITIVE:
 			// Very precise for OO heavy code, but also very slow.
-			// Unlimited receiver context for the whole code - application as well as library. 
+			// Unlimited receiver context for the whole code - application as
+			// well as library.
 			// Uses 1-CFA as fallback for static methods.
 			options.filter = new ObjSensZeroXCFABuilder.DefaultMethodFilter() {
 				@Override
@@ -938,7 +968,8 @@ public class SDGBuilder implements CallGraphFilter {
 					cfg.additionalContextSelector, cfg.additionalContextInterpreter);
 			break;
 		case N3_CALL_STACK: // 3-CFA
-			// Very slow and little bit more precise. Not much improvement over 2-CFA.
+			// Very slow and little bit more precise. Not much improvement over
+			// 2-CFA.
 			cgb = WalaPointsToUtil.makeNCallStackSens(3, options, cfg.cache, cfg.cha, cfg.scope,
 					cfg.additionalContextSelector, cfg.additionalContextInterpreter);
 			break;
@@ -953,7 +984,7 @@ public class SDGBuilder implements CallGraphFilter {
 
 		com.ibm.wala.ipa.callgraph.CallGraph curcg = walaCG.cg;
 
-        if (prune >= 0) {
+		if (prune >= 0) {
 			CallGraphPruning cgp = new CallGraphPruning(walaCG.cg);
 			Set<CGNode> appl = cgp.findNodes(prune, cfg.pruningPolicy);
 			PrunedCallGraph pcg = new PrunedCallGraph(walaCG.cg, appl);
@@ -1075,7 +1106,8 @@ public class SDGBuilder implements CallGraphFilter {
 							inParam.add(e.to);
 							break;
 						case EXIT:
-							if (pdg.isVoid()) break;
+							if (pdg.isVoid())
+								break;
 						case FORMAL_OUT:
 							outParam.add(e.to);
 							break;
@@ -1257,7 +1289,7 @@ public class SDGBuilder implements CallGraphFilter {
 	/**
 	 * Returns a mapping which maps the id of a pdg node to the index of the ssa
 	 * instruction it represents.
-	 *
+	 * 
 	 * @return a mapping which maps the id of a pdg node to the index of the ssa
 	 *         instruction it represents
 	 */
@@ -1279,7 +1311,7 @@ public class SDGBuilder implements CallGraphFilter {
 	/**
 	 * Returns a mapping between the entry nodes of the various pdgs to the id
 	 * of the corresponding call graph nodes.
-	 *
+	 * 
 	 * @return a mapping between the entry nodes of the various pdgs to the id
 	 *         of the corresponding call graph nodes
 	 */
@@ -1448,9 +1480,9 @@ public class SDGBuilder implements CallGraphFilter {
 
 	/**
 	 * Configuration of the SDG computation.
-	 *
+	 * 
 	 * @author Juergen Graf <juergen.graf@gmail.com>
-	 *
+	 * 
 	 */
 	public static class SDGBuilderConfig implements java.io.Serializable {
 		private static final long serialVersionUID = 237647794827893127L;
@@ -1459,7 +1491,7 @@ public class SDGBuilder implements CallGraphFilter {
 		public transient AnalysisCache cache = null;
 		public transient IClassHierarchy cha = null;
 		public IMethod entry = null;
-		//MODIFICATION
+		// MODIFICATION
 		public List<IMethod> entries = null;
 		public ExternalCallCheck ext = null;
 		public String[] immutableNoOut = Main.IMMUTABLE_NO_OUT;
@@ -1480,30 +1512,24 @@ public class SDGBuilder implements CallGraphFilter {
 		public FieldPropagation fieldPropagation = FieldPropagation.FLAT;
 		public boolean debugAccessPath = false;
 		/*
-		 * Turns off control dependency from field access operation to base-pointer node and moves
-		 * "nullpointer access exception" control dependency from instruction to basepointer node.
-		 * This way data written to the field is no longer connected to the possible exception that
-		 * may arise from the base pointer beeing null. This should improve precision.
-		 *
+		 * Turns off control dependency from field access operation to
+		 * base-pointer node and moves "nullpointer access exception" control
+		 * dependency from instruction to basepointer node. This way data
+		 * written to the field is no longer connected to the possible exception
+		 * that may arise from the base pointer beeing null. This should improve
+		 * precision.
+		 * 
 		 * v1.f = v2
-		 *
+		 * 
 		 * Old style:
-		 *
-		 * [v1] -(dd)-> [set f] <-(dd)- [v2]
-		 *   ^           | | |            ^
-		 *   \--(cd)-----/ | \-----(cd)---/
-		 *               (cd)
-		 *               / |
-		 *           [exc or normal]
-		 *
+		 * 
+		 * [v1] -(dd)-> [set f] <-(dd)- [v2] ^ | | | ^ \--(cd)-----/ |
+		 * \-----(cd)---/ (cd) / | [exc or normal]
+		 * 
 		 * New style:
-		 *
-		 * [v1] -(dd)-> [set f] <-(dd)- [v2]
-		 *   |              |            ^
-		 *  (cd)            \------(cd)--/
-		 *  / |
-		 * [exc or normal]
-		 *
+		 * 
+		 * [v1] -(dd)-> [set f] <-(dd)- [v2] | | ^ (cd) \------(cd)--/ / | [exc
+		 * or normal]
 		 */
 		public boolean noBasePointerDependency = true;
 		public String debugAccessPathOutputDir = null;
@@ -1514,43 +1540,49 @@ public class SDGBuilder implements CallGraphFilter {
 		public boolean computeInterference = true;
 		public boolean computeSummary = true;
 		/*
-		 * If this flag is set, pdg nodes for all call sites of virtual methods contain
-		 * the possible allocation sites of the this-pointer (the ids of PDG nodes of the
-		 * respective allocation sites). If not and 'computeInterference' is set, then this 
-		 * is done only for calls of Thread.start, Thread.join or Runnable.run() (or overriding
-		 * methods). Otherwise, no call site contains any allocation sites.
+		 * If this flag is set, pdg nodes for all call sites of virtual methods
+		 * contain the possible allocation sites of the this-pointer (the ids of
+		 * PDG nodes of the respective allocation sites). If not and
+		 * 'computeInterference' is set, then this is done only for calls of
+		 * Thread.start, Thread.join or Runnable.run() (or overriding methods).
+		 * Otherwise, no call site contains any allocation sites.
 		 */
 		public boolean computeAllocationSites = false;
 		public SideEffectDetectorConfig sideEffects = null;
-        /**
-         *  Debugging-Option: Rename variables in the SDG when no name is available.
-         *
-         *  If this is set to false variables in the SDG will have names like "v#" or "p#" if
-         *  no actual name can be determined. If it is set to true the Type-Name will be appended
-         *  (like "v# Integer"). This shall help manually reading pdg-Files.
-         *
-         *  @todo   Enabling this may Throw errors when generation a new TypeInference.
-         */
-        public boolean showTypeNameInValue = false;
-        /** The methodTargetSelector from the AnalysisOptions. 
-         *
-         * It will get copied back there before CallGraphConstruction. If it's null the default of the 
-         * AnalysisOptions Constructor will be used */
-        public MethodTargetSelector methodTargetSelector = null;
-        /**
-         *  Context will be the Union of this and Joanas Context with additionalContextSelector having
-         *  precedence.
-         */
-        public ContextSelector additionalContextSelector = null;
-        /**
-         *  Will be the one queried first from the FallbackContextInterpreter.
-         */
-        public SSAContextInterpreter additionalContextInterpreter = null;
-        /**
-         * Special object which takes the call graph produced during SDG construction and
-         * does something useful with it
-         */
-        public CGConsumer cgConsumer = null;
+		/**
+		 * Debugging-Option: Rename variables in the SDG when no name is
+		 * available.
+		 * 
+		 * If this is set to false variables in the SDG will have names like
+		 * "v#" or "p#" if no actual name can be determined. If it is set to
+		 * true the Type-Name will be appended (like "v# Integer"). This shall
+		 * help manually reading pdg-Files.
+		 * 
+		 * @todo Enabling this may Throw errors when generation a new
+		 *       TypeInference.
+		 */
+		public boolean showTypeNameInValue = false;
+		/**
+		 * The methodTargetSelector from the AnalysisOptions.
+		 * 
+		 * It will get copied back there before CallGraphConstruction. If it's
+		 * null the default of the AnalysisOptions Constructor will be used
+		 */
+		public MethodTargetSelector methodTargetSelector = null;
+		/**
+		 * Context will be the Union of this and Joanas Context with
+		 * additionalContextSelector having precedence.
+		 */
+		public ContextSelector additionalContextSelector = null;
+		/**
+		 * Will be the one queried first from the FallbackContextInterpreter.
+		 */
+		public SSAContextInterpreter additionalContextInterpreter = null;
+		/**
+		 * Special object which takes the call graph produced during SDG
+		 * construction and does something useful with it
+		 */
+		public CGConsumer cgConsumer = null;
 	}
 
 	public String getMainMethodName() {
@@ -1583,7 +1615,8 @@ public class SDGBuilder implements CallGraphFilter {
 
 	private IFieldsMayMod fieldsMayMod;
 
-	public void registerFinalModRef(final ModRefCandidates mrefs, final IProgressMonitor progress) throws CancelException {
+	public void registerFinalModRef(final ModRefCandidates mrefs, final IProgressMonitor progress)
+			throws CancelException {
 		if (!cfg.localKillingDefs) {
 			throw new IllegalStateException("Local killing definfitions is not activated.");
 		}
@@ -1597,7 +1630,8 @@ public class SDGBuilder implements CallGraphFilter {
 		}
 
 		if (fieldsMayMod == null) {
-			// default to simple always true may mod, if none has been set - e.g. when flat params is used and no
+			// default to simple always true may mod, if none has been set -
+			// e.g. when flat params is used and no
 			// modref candidates are computed
 			fieldsMayMod = new SimpleFieldsMayMod();
 		}
