@@ -11,6 +11,13 @@ import java.util.regex.Pattern;
 
 public class ClazzPreprocessor {
 
+	
+	private static final String CLASSES_SOURCE_PATH_JAVA_MAIN = "/src/main/java";
+	private static final String CLASSES_SOURCE_PATH_JAVA_MAIN_DOT = ".src.main.java.";
+	private static final String CLASSES_SOURCE_PATH = "/src";
+	private static final String CLASSES_SOURCE_PATH_DOT = ".src.";
+	private static final String JAVA_CLASSES_EXT = ".java";
+	
 	private List<String> meths;
 
 	public ClazzPreprocessor(String sourceDirectory, List<String> meths) {
@@ -64,6 +71,9 @@ public class ClazzPreprocessor {
 		ClazzContextManager context = ClazzContextManager.getInstance();
 		// reading line-by-line from input file
 		while ((line = br.readLine()) != null) {
+			if (clazzName == null) {
+				continue;
+			}
 			lineNumber++;
 			/**
 			 * Creates a matcher that will match the given input against this
@@ -83,12 +93,14 @@ public class ClazzPreprocessor {
 	private String formatClassName(String srcFile) {
 		String className = null;
 		// significa que comeca o diff de um novo arquivo
-		if (srcFile != null && srcFile.contains(".java")
-				&& srcFile.contains("/src")) {
-			className = srcFile.substring(srcFile.indexOf("/src"),
-					srcFile.indexOf(".java"));
+		if (srcFile != null && srcFile.contains(JAVA_CLASSES_EXT)
+				&& srcFile.contains(CLASSES_SOURCE_PATH)) {
+			// dependendo de onde o codigo fonte esteja, pode ser necessario alterar o path
+			className = srcFile.substring(srcFile.indexOf(CLASSES_SOURCE_PATH_JAVA_MAIN),
+					srcFile.indexOf(JAVA_CLASSES_EXT));
 			className = className.replace("/", ".");
-			className = className.replace(".src.", "");
+			// dependendo de onde o codigo fonte esteja, pode ser necessario alterar o path
+			className = className.replace(CLASSES_SOURCE_PATH_JAVA_MAIN_DOT, "");
 		}
 		return className;
 	}

@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -287,32 +286,6 @@ public class SDGProgram {
 			}
 
 		}
-		
-		//TODO debug purposes
-		
-//		for (SDGClass clazz : ret.getClasses()) {
-//			if (clazz.toString().contains("TokenCookie")) {
-//				System.out.println("Class TokenCookie: " + clazz);
-//			}
-//			for (SDGAttribute attr : clazz.getAttributes()) {
-//				if (attr.toString().contains("Cookie")) {
-//					System.out.println("Atributo: " + attr);
-//				}
-//			}
-//			for (SDGMethod meths : clazz.getMethods()) {
-//				if (meths.toString().contains("ImportingControllerCommand.doPost")) {
-//					System.out.println("Metodo: " + meths);
-//					for (SDGInstruction inst : meths.getInstructions()) {
-//						System.out.println("Instrucao: " + inst);
-//					}
-//					
-//				}
-//			}
-//		}
-		
-		// end debug
-		
-
 		return ret;
 	}
 	public static SDGBuilder createSDGBuilder(SDGConfig config) throws ClassHierarchyException, UnsoundGraphException, CancelException, IOException {

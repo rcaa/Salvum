@@ -48,7 +48,7 @@ public class AnalysisConfig {
 		 * For multi-threaded programs, it is currently necessary to use the jdk
 		 * 1.4 stubs
 		 */
-		SDGConfig config = new SDGConfig(classPath, null, Stubs.JRE_14);
+		SDGConfig config = new SDGConfig(classPath, null, Stubs.JRE_15);
 
 		config.setEntryMethods(entryMethods);
 

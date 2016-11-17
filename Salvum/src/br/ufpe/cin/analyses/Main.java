@@ -24,12 +24,15 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 
 import edu.kit.joana.api.IFCAnalysis;
+import edu.kit.joana.api.sdg.SDGAttribute;
 import edu.kit.joana.api.sdg.SDGClass;
+import edu.kit.joana.api.sdg.SDGMethod;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.api.sdg.SDGProgramPart;
 import edu.kit.joana.ifc.sdg.core.SecurityNode;
 import edu.kit.joana.ifc.sdg.core.violations.ClassifiedViolation;
 import edu.kit.joana.ifc.sdg.core.violations.IViolation;
+import edu.kit.joana.ifc.sdg.graph.SDG;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 //#if FEATURE
 //@import java.util.Set;
@@ -56,7 +59,7 @@ public class Main {
 		Properties p = new Properties();
 
 		//String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\" +
-		//		"simpleContributionExampleSysoWindows.properties";
+		//"teammatesLocal.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -189,6 +192,19 @@ public class Main {
 		try {
 			program = ana.buildSDG(p.getProperty("classpath"), entryMethods,
 					p.getProperty("thirdPartyLibsPath"));
+
+			/* DEBUG
+			
+			Collection<SDGAttribute> allAttributes = program.getAllAttributes();
+			for (SDGAttribute sdgAttribute : allAttributes) {
+				System.out.println(sdgAttribute);
+			}
+			Collection<SDGMethod> allMethods = program.getAllMethods();
+			for (SDGMethod sdgMethod : allMethods) {
+				System.out.println(sdgMethod);
+			}
+			*/
+			
 		} catch (IllegalStateException e) {
 			if (e.getMessage().contains("main([Ljava/lang/String")) {
 				System.out.println("Main method does not exist "
@@ -233,6 +249,7 @@ public class Main {
 		lconfig.labellingElements(sources, sinks, program, ifc);
 		Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 		for (IViolation<SecurityNode> iViolation : result) {
+			System.out.println("Tem violacao");
 			ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 			SecurityNode source = sn.getSource();
 			SecurityNode sink = sn.getSink();
@@ -248,7 +265,7 @@ public class Main {
 //@							);
 					// #elif CLAZZ
 						// tenho que colocar o path do arquivo aqui, ao inves de sink.getBytecodeName
-						//+ " " + GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
+						+ " " + GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
 						);
 					// #elif CONTRIBUTION
 					// @ + " in commit " + hash);
