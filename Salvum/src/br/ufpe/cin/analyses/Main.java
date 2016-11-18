@@ -249,14 +249,13 @@ public class Main {
 		lconfig.labellingElements(sources, sinks, program, ifc);
 		Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 		for (IViolation<SecurityNode> iViolation : result) {
-			System.out.println("Tem violacao");
 			ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 			SecurityNode source = sn.getSource();
 			SecurityNode sink = sn.getSink();
 			if (policy.getOperator().equals("noflow")) {
 				if (sn != null && sink != null && source != null
 						&& sink.getBytecodeIndex() >= 0) {
-					String filePath = "src/" + sink.getSource();
+					String filePath = "src/main/java/" + sink.getSource();
 					System.out.println("Illegal flow from "
 							+ source.getBytecodeName() + " to "
 							+ sink.getBytecodeName() + " at line "
@@ -264,8 +263,7 @@ public class Main {
 					// #if FEATURE
 //@							);
 					// #elif CLAZZ
-						// tenho que colocar o path do arquivo aqui, ao inves de sink.getBytecodeName
-						+ " " + GitIntegration.gitBlame(sourceDirectory, sink.getEr(), filePath)
+						+ " " + GitIntegration.gitBlame(p.getProperty("gitPath"), sink.getEr(), filePath)
 						);
 					// #elif CONTRIBUTION
 					// @ + " in commit " + hash);

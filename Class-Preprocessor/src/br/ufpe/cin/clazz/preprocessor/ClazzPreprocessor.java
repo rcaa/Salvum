@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class ClazzPreprocessor {
 
 	
-	private static final String CLASSES_SOURCE_PATH_JAVA_MAIN = "/src/main/java";
+	public static final String CLASSES_SOURCE_PATH_JAVA_MAIN = "/src/main/java";
 	private static final String CLASSES_SOURCE_PATH_JAVA_MAIN_DOT = ".src.main.java.";
 	private static final String CLASSES_SOURCE_PATH = "/src";
 	private static final String CLASSES_SOURCE_PATH_DOT = ".src.";
