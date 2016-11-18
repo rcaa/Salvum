@@ -107,6 +107,7 @@ public class GitIntegration {
 			}
 			i++;
 		}
+		scanner.close();
 		if (!hash.isEmpty() && !committer.isEmpty()) {
 			return "through " + hash + " and commited by " + committer;
 		}
