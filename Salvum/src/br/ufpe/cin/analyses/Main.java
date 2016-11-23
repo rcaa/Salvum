@@ -58,8 +58,8 @@ public class Main {
 		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
-		//String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\" +
-		//"teammatesLocal.properties";
+		//String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\"
+		//+ "simpleContributionExampleEntryPoints.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
@@ -137,10 +137,10 @@ public class Main {
 		// @ policy.getHash());
 		// @ cp.preprocess();
 		// @ ContextManagerContribution contextContribution =
-//@		// ContextManagerContribution
+		// @ // ContextManagerContribution
 		// @ .getContext();
 		// @ Map<String, List<Integer>> mapClassesLineNumbers =
-//@		// contextContribution
+		// @ // contextContribution
 		// @ .getMapClassesLineNumbers();
 		// @ if (mapClassesLineNumbers.isEmpty()) {
 		// @ continue;
@@ -164,7 +164,7 @@ public class Main {
 		// #elif CLAZZ
 		PolicyClazz policy = new PolicyClazz(path);
 		String sourceDirectory = p.getProperty("targetPathDirectory");
-		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory, 
+		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory,
 				policy.getMethods());
 		try {
 			cp.execute();
@@ -181,30 +181,30 @@ public class Main {
 		String[] entries = p.getProperty("main").split(":");
 		List<String> entryMethods = new ArrayList<String>();
 		for (String meth : entries) {
-			JavaMethodSignature entryMethod = JavaMethodSignature.fromString(meth);
+			JavaMethodSignature entryMethod = JavaMethodSignature
+					.fromString(meth);
 			entryMethods.add(entryMethod.toBCString());
 		}
-		//JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
-		//		.getProperty("main"));
-//		JavaMethodSignature entryMethod = JavaMethodSignature
-//		.mainMethodOfClass(p.getProperty("main"));
+		// JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+		// .getProperty("main"));
+		// JavaMethodSignature entryMethod = JavaMethodSignature
+		// .mainMethodOfClass(p.getProperty("main"));
 		SDGProgram program = null;
 		try {
 			program = ana.buildSDG(p.getProperty("classpath"), entryMethods,
 					p.getProperty("thirdPartyLibsPath"));
 
-			/* DEBUG
-			
-			Collection<SDGAttribute> allAttributes = program.getAllAttributes();
-			for (SDGAttribute sdgAttribute : allAttributes) {
-				System.out.println(sdgAttribute);
-			}
-			Collection<SDGMethod> allMethods = program.getAllMethods();
-			for (SDGMethod sdgMethod : allMethods) {
-				System.out.println(sdgMethod);
-			}
-			*/
-			
+			/*
+			 * DEBUG
+			 * 
+			 * Collection<SDGAttribute> allAttributes =
+			 * program.getAllAttributes(); for (SDGAttribute sdgAttribute :
+			 * allAttributes) { System.out.println(sdgAttribute); }
+			 * Collection<SDGMethod> allMethods = program.getAllMethods(); for
+			 * (SDGMethod sdgMethod : allMethods) {
+			 * System.out.println(sdgMethod); }
+			 */
+
 		} catch (IllegalStateException e) {
 			if (e.getMessage().contains("main([Ljava/lang/String")) {
 				System.out.println("Main method does not exist "
@@ -218,12 +218,13 @@ public class Main {
 		}
 
 		// get sdg
-		//SDGProgram program = 
-		//ana.retrieveSDG("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg");
-		
-		//save sdg
-//		SDGSerializer.toPDGFormat(program.getSDG(), 
-//				new FileOutputStream("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg"));
+		// SDGProgram program =
+		// ana.retrieveSDG("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg");
+
+		// save sdg
+		// SDGSerializer.toPDGFormat(program.getSDG(),
+		// new
+		// FileOutputStream("/home/local/CIN/rcaa2/contributionExperiments/joana/SDGFile.pdg"));
 
 		Collection<SDGClass> classes = program.getClasses();
 
@@ -255,16 +256,20 @@ public class Main {
 			if (policy.getOperator().equals("noflow")) {
 				if (sn != null && sink != null && source != null
 						&& sink.getBytecodeIndex() >= 0) {
-					String filePath = "src/main/java/" + sink.getSource();
+					String filePath = ClazzPreprocessor.CLASSES_SOURCE_PATH_JAVA_MAIN
+							+ "/" + sink.getSource();
 					System.out.println("Illegal flow from "
-							+ source.getBytecodeName() + " to "
-							+ sink.getBytecodeName() + " at line "
+							+ source.getBytecodeName()
+							+ " to "
+							+ sink.getBytecodeName()
+							+ " at line "
 							+ sink.getEr()
-					// #if FEATURE
-//@							);
-					// #elif CLAZZ
-						+ " " + GitIntegration.gitBlame(p.getProperty("gitPath"), sink.getEr(), filePath)
-						);
+							// #if FEATURE
+							// @ );
+							// #elif CLAZZ
+							+ " "
+							+ GitIntegration.gitBlame(p.getProperty("gitPath"),
+									sink.getEr(), filePath));
 					// #elif CONTRIBUTION
 					// @ + " in commit " + hash);
 					// #endif
