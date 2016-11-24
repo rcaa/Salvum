@@ -94,6 +94,7 @@ public class ContributionPreprocessor {
 				}
 			}
 		}
+		scanner.close();
 
 		GitUtil.checkoutCommitHash(this.targetPathDirectory,
 				this.currentCommitHash);

@@ -24,25 +24,15 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 
 import edu.kit.joana.api.IFCAnalysis;
-import edu.kit.joana.api.sdg.SDGAttribute;
 import edu.kit.joana.api.sdg.SDGClass;
-import edu.kit.joana.api.sdg.SDGMethod;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.api.sdg.SDGProgramPart;
 import edu.kit.joana.ifc.sdg.core.SecurityNode;
 import edu.kit.joana.ifc.sdg.core.violations.ClassifiedViolation;
 import edu.kit.joana.ifc.sdg.core.violations.IViolation;
-import edu.kit.joana.ifc.sdg.graph.SDG;
 import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
-//#if FEATURE
-//@import java.util.Set;
-//#endif
-//#if FEATURE
-//@import br.ufpe.cin.feature.preprocessor.ContextManager;
-//@import br.ufpe.cin.feature.preprocessor.FeaturePreprocessor;
-//@import br.ufpe.cin.feature.preprocessor.PreprocessorException;
-//@import br.ufpe.cin.policy.PolicyFeature;
-//#elif CONTRIBUTION
+
+//#if CONTRIBUTION
 //@import br.ufpe.cin.preprocessor.ContextManagerContribution;
 //@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 //@import br.ufpe.cin.preprocessor.GitUtil;
@@ -55,7 +45,6 @@ import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 public class Main {
 
 	public static void main(String[] args) {
-		// Properties p = CommandLine.parse(args);
 		Properties p = new Properties();
 
 		//String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\"
@@ -66,9 +55,7 @@ public class Main {
 		try {
 			in = new FileInputStream(propertiesPath);
 			p.load(in);
-			// #if FEATURE
-			// @
-			// #elif CONTRIBUTION
+			// #if CONTRIBUTION
 			// @ FileUtil.setOutput(p, null);
 			// #elif CLAZZ
 
@@ -116,23 +103,7 @@ public class Main {
 
 		// Primeiro passo logico
 
-		// #if FEATURE
-		// @ PolicyFeature policy = new PolicyFeature(policyText);
-		// @ try {
-		// @ String sourceDirectory = p.getProperty("targetPathDirectory");
-		// @ FeaturePreprocessor pp = new
-		// @ // FeaturePreprocessor(sourceDirectory,
-		// @ policy.getFeatureName());
-		// @ pp.execute();
-		// @ } catch (PreprocessorException e) {
-		// @ e.printStackTrace();
-		// @ }
-		// @ // mapeamento de features e linhas
-		// @ ContextManager contextFeature = ContextManager.getContext();
-		// @ Map<String, Map<String, Set<Integer>>> mapClassFeatures =
-		// @ // contextFeature
-		// @ .getMapClassFeatures();
-		// #elif CONTRIBUTION
+		// #if CONTRIBUTION
 		// @ ContributionPreprocessor cp = new ContributionPreprocessor(p,
 		// @ policy.getHash());
 		// @ cp.preprocess();
@@ -194,17 +165,6 @@ public class Main {
 			program = ana.buildSDG(p.getProperty("classpath"), entryMethods,
 					p.getProperty("thirdPartyLibsPath"));
 
-			/*
-			 * DEBUG
-			 * 
-			 * Collection<SDGAttribute> allAttributes =
-			 * program.getAllAttributes(); for (SDGAttribute sdgAttribute :
-			 * allAttributes) { System.out.println(sdgAttribute); }
-			 * Collection<SDGMethod> allMethods = program.getAllMethods(); for
-			 * (SDGMethod sdgMethod : allMethods) {
-			 * System.out.println(sdgMethod); }
-			 */
-
 		} catch (IllegalStateException e) {
 			if (e.getMessage().contains("main([Ljava/lang/String")) {
 				System.out.println("Main method does not exist "
@@ -233,11 +193,7 @@ public class Main {
 		List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
 		LabelConfig lconfig = new LabelConfig();
 
-		// #if FEATURE
-		// @ lconfig.prepareListsOfSourceAndSinks(classes, mapClassFeatures,
-		// @ // policy,
-		// @ sources, sinks);
-		// #elif CONTRIBUTION
+		// #if CONTRIBUTION
 		// @ lconfig.prepareListsOfSourceAndSinksContribution(classes,
 		// @ mapClassesLineNumbers, policy, sources, sinks);
 		// #elif CLAZZ
@@ -264,9 +220,7 @@ public class Main {
 							+ sink.getBytecodeName()
 							+ " at line "
 							+ sink.getEr()
-							// #if FEATURE
-							// @ );
-							// #elif CLAZZ
+							// #if CLAZZ
 							+ " "
 							+ GitIntegration.gitBlame(p.getProperty("gitPath"),
 									sink.getEr(), filePath));
@@ -278,10 +232,6 @@ public class Main {
 				if (sn != null && source != null && sink != null
 						&& source.getBytecodeIndex() >= 0) {
 					System.out.println("Illegal set "
-							// #if FEATURE
-							// @ + "from feature " + policy.getFeatureName()
-							// @ // + " on "
-							// #endif
 							+ sink.getBytecodeName() + " at "
 							+ source.getBytecodeName() + " at line "
 							+ source.getEr());
@@ -293,10 +243,7 @@ public class Main {
 		ifc = null;
 		classes.clear();
 
-		// #if FEATURE
-		// @ contextFeature.clearAll();
-		// @ contextFeature.getMapClassFeatures().clear();
-		// #elif CONTRIBUTION
+		// #if CONTRIBUTION
 		// @ contextContribution.clear();
 		// @ mapClassesLineNumbers.clear();
 		// #elif CLAZZ
