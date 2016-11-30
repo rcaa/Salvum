@@ -8,7 +8,7 @@ package br.ufpe.cin.util;
 //@import java.nio.file.StandardCopyOption;
 //@
 //@
-//@import br.ufpe.cin.policy.Policy;
+//@import br.ufpe.cin.policy.PolicyContribution;
 //@import java.util.Properties;
 //@import java.io.PrintStream;
 //@import java.io.FileNotFoundException;
@@ -33,7 +33,7 @@ public class FileUtil {
 //@		}
 //@	}
 //@
-//@ public static void setOutput(Properties p, Policy policy)
+//@ public static void setOutput(Properties p, PolicyContribution policy)
 //@ throws FileNotFoundException {
 //@
 //@ String outputPath = p.getProperty("output");

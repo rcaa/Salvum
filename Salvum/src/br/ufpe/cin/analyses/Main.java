@@ -9,16 +9,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 
+//#if CLAZZ
+import br.ufpe.cin.policy.PolicyClazz;
+import java.util.Set;
 import br.ufpe.cin.clazz.preprocessor.ClazzContextManager;
 import br.ufpe.cin.clazz.preprocessor.ClazzPreprocessor;
 import br.ufpe.cin.clazz.preprocessor.PreprocessorException;
 import br.ufpe.cin.policy.GitIntegration;
-import br.ufpe.cin.policy.PolicyClazz;
-
+//#endif
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
@@ -37,9 +38,8 @@ import edu.kit.joana.ifc.sdg.util.JavaMethodSignature;
 //@import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 //@import br.ufpe.cin.preprocessor.GitUtil;
 //@import br.ufpe.cin.ant.ProjectBuilder;
-//@import br.ufpe.cin.policy.Policy;
+//@import br.ufpe.cin.policy.PolicyContribution;
 //@import br.ufpe.cin.util.FileUtil;
-//#elif CLAZZ
 //#endif
 
 public class Main {
@@ -47,19 +47,15 @@ public class Main {
 	public static void main(String[] args) {
 		Properties p = new Properties();
 
-		//String propertiesPath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\"
-		//+ "simpleContributionExampleEntryPoints.properties";
+		// String propertiesPath =
+		// "C:\\Doutorado\\workspace\\Salvum\\Salvum\\configFiles\\"
+		// + "simpleContributionExampleEntryPoints.properties";
 		String propertiesPath = args[0];
 
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(propertiesPath);
 			p.load(in);
-			// #if CONTRIBUTION
-			// @ FileUtil.setOutput(p, null);
-			// #elif CLAZZ
-
-			// #endif
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} finally {
@@ -88,7 +84,7 @@ public class Main {
 		Path path = FileSystems.getDefault().getPath(
 				p.getProperty("policyDirectory"));
 		// #if CONTRIBUTION
-		// @ List<String> hashes = Policy.findHashes(policyText,
+		// @ List<String> hashes = PolicyContribution.findHashes(path,
 		// @ p.getProperty("targetPathDirectory"));
 		// @ System.out.println(hashes);
 		// @
@@ -97,27 +93,26 @@ public class Main {
 		// @ }
 		// @
 		// @ for (String hash : hashes) {
-		// @ Policy policy = new Policy(policyText, hash);
-		// @ FileUtil.setOutput(p, policy);
-		// #endif
-
-		// Primeiro passo logico
-
-		// #if CONTRIBUTION
+		// @ PolicyContribution policy = new PolicyContribution(path, hash);
+		// @ // Primeiro passo logico
+		// @
+		// @ // preciso fazer um unzip do source do projeto aqui neste ponto
+		// @
 		// @ ContributionPreprocessor cp = new ContributionPreprocessor(p,
 		// @ policy.getHash());
 		// @ cp.preprocess();
 		// @ ContextManagerContribution contextContribution =
-		// @ // ContextManagerContribution
+//@		// ContextManagerContribution
 		// @ .getContext();
 		// @ Map<String, List<Integer>> mapClassesLineNumbers =
-		// @ // contextContribution
+//@		// contextContribution
 		// @ .getMapClassesLineNumbers();
 		// @ if (mapClassesLineNumbers.isEmpty()) {
 		// @ continue;
 		// @ }
 		// @
-		// @ try {
+		// @ // nao vamos tentar compilar automaticamente
+		// @/* try {
 		// @ // copiar arquivos
 		// @ String sourceFiles = p.getProperty("nonexistentSourceFiles");
 		// @ String targetFiles = p.getProperty("nonexistentTargetFiles");
@@ -130,7 +125,7 @@ public class Main {
 		// @ } catch (Exception e) {
 		// @ System.out.println(e.getMessage());
 		// @ continue;
-		// @ }
+		// @ }*/
 		// @
 		// #elif CLAZZ
 		PolicyClazz policy = new PolicyClazz(path);
@@ -156,7 +151,8 @@ public class Main {
 					.fromString(meth);
 			entryMethods.add(entryMethod.toBCString());
 		}
-		// JavaMethodSignature entryMethod = JavaMethodSignature.fromString(p
+		// JavaMethodSignature entryMethod =
+		// JavaMethodSignature.fromString(p
 		// .getProperty("main"));
 		// JavaMethodSignature entryMethod = JavaMethodSignature
 		// .mainMethodOfClass(p.getProperty("main"));
@@ -166,12 +162,7 @@ public class Main {
 					p.getProperty("thirdPartyLibsPath"));
 
 		} catch (IllegalStateException e) {
-			if (e.getMessage().contains("main([Ljava/lang/String")) {
-				System.out.println("Main method does not exist "
-						+ "in this project version");
-			} else {
-				System.out.println(e.getMessage());
-			}
+			System.out.println(e.getMessage());
 			// #if CONTRIBUTION
 			// @ continue;
 			// #endif
@@ -212,8 +203,10 @@ public class Main {
 			if (policy.getOperator().equals("noflow")) {
 				if (sn != null && sink != null && source != null
 						&& sink.getBytecodeIndex() >= 0) {
+					// #if CLAZZ
 					String filePath = ClazzPreprocessor.CLASSES_SOURCE_PATH_JAVA_MAIN
 							+ "/" + sink.getSource();
+					// #endif
 					System.out.println("Illegal flow from "
 							+ source.getBytecodeName()
 							+ " to "
@@ -231,9 +224,8 @@ public class Main {
 			} else if (policy.getOperator().equals("noset")) {
 				if (sn != null && source != null && sink != null
 						&& source.getBytecodeIndex() >= 0) {
-					System.out.println("Illegal set "
-							+ sink.getBytecodeName() + " at "
-							+ source.getBytecodeName() + " at line "
+					System.out.println("Illegal set " + sink.getBytecodeName()
+							+ " at " + source.getBytecodeName() + " at line "
 							+ source.getEr());
 				}
 			}
