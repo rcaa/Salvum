@@ -62,7 +62,7 @@ public class GitIntegration {
 				}
 			}
 		}
-
+		scanner.close();
 		iterateOnError(process);
 	}
 	
@@ -123,6 +123,7 @@ public class GitIntegration {
 		while (stdError.hasNextLine()) {
 			System.out.println(stdError.nextLine());
 		}
+		stdError.close();
 	}
 
 	public static void main(String[] args) {
