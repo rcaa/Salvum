@@ -2,6 +2,7 @@ package br.ufpe.cin.policy;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -20,11 +21,11 @@ public class PolicyClazz {
 
 	private Map<String, Set<String>> clazzAndElements;
 	private String operator;
-	private List<String> methods;
+	private Map<String, Set<String>> methodsAndArgs;
 
 	public PolicyClazz(Path path) throws IOException {
 		this.clazzAndElements = new HashMap<String, Set<String>>();
-		this.methods = new ArrayList<String>();
+		this.methodsAndArgs = new HashMap<String, Set<String>>();
 		if (path.toString().endsWith(".pl")) {
 			// ainda recebe texto
 			String constraint = new String(Files.readAllBytes(path));
@@ -46,7 +47,8 @@ public class PolicyClazz {
 						secondPart.indexOf("{") + 1, secondPart.indexOf("}"));
 				String[] methods = methodsStr.split(",");
 				for (String meth : methods) {
-					this.methods.add(meth);
+					//TODO tenho que alterar esse null depois
+					this.methodsAndArgs.put(meth, null);
 				}
 			} else if (constraint.contains("noset")) {
 
@@ -58,9 +60,28 @@ public class PolicyClazz {
 				JSONObject jsonObject = (JSONObject) obj;
 
 				JSONObject module = (JSONObject) jsonObject.get("module");
-				JSONArray identifiers = (JSONArray) module.get("identifiers");
-				for (Object ident : identifiers) {
-					this.methods.add(ident.toString());
+
+				// identifiers como metodos
+				if (module.containsKey("identifiers")) {
+					JSONArray identifiers = (JSONArray) module
+							.get("identifiers");
+					for (Object ident : identifiers) {
+						//TODO tenho que alterar esse null depois
+						this.methodsAndArgs.put(ident.toString().trim(), null);
+					}
+				}
+				if (module.containsKey("identifier")
+						&& module.containsKey("method")
+						&& module.containsKey("arguments")) {
+					String identifier = (String) module.get("identifier");
+					String meth = (String) module.get("method");
+					JSONArray arguments = (JSONArray) module
+							.get("arguments");
+					Set<String> args = new HashSet<>();
+					for (Object argument : arguments) {
+						args.add(argument.toString().trim());
+					}
+					this.methodsAndArgs.put(meth.trim(), args);
 				}
 				String construct = (String) jsonObject.get("construct");
 				this.operator = construct;
@@ -73,9 +94,9 @@ public class PolicyClazz {
 							.get("fields");
 					Set<String> classElements = new HashSet<>();
 					for (Object field : fields) {
-						classElements.add(field.toString());
+						classElements.add(field.toString().trim());
 					}
-					this.clazzAndElements.put(class_name, classElements);
+					this.clazzAndElements.put(class_name.trim(), classElements);
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -110,7 +131,20 @@ public class PolicyClazz {
 		return clazzAndElements;
 	}
 
-	public List<String> getMethods() {
-		return methods;
+	public Map<String, Set<String>> getMethodsAndArgs() {
+		return methodsAndArgs;
+	}
+
+	public static void main(String[] args) {
+		Path path = FileSystems
+				.getDefault()
+				.getPath(
+						"C:\\Doutorado\\workspace\\Salvum\\Salvum\\policies\\temp.json");
+		try {
+			PolicyClazz policy = new PolicyClazz(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

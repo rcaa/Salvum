@@ -1,0 +1,16 @@
+{
+  "module": {
+  "identifiers": ["setCookie()"]
+  },
+  "construct": "noset",
+  "classes": [
+  {
+  "class-name": "com.gitblit.models.UserModel",
+  "fields": ["password", "locality"]
+  },
+  {
+  "class-name": "com.gitblit.models.UserChoice",
+  "fields": ["email"]
+  }
+  ]
+}

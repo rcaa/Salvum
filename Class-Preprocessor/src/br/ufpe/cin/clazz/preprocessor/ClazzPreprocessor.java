@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,9 +19,9 @@ public class ClazzPreprocessor {
 	private static final String CLASSES_SOURCE_PATH_DOT = ".src.";
 	private static final String JAVA_CLASSES_EXT = ".java";
 	
-	private List<String> meths;
+	private Set<String> meths;
 
-	public ClazzPreprocessor(String sourceDirectory, List<String> meths) {
+	public ClazzPreprocessor(String sourceDirectory, Set<String> meths) {
 		this.meths = meths;
 		File[] files = new File(sourceDirectory).listFiles();
 		try {
@@ -106,7 +107,7 @@ public class ClazzPreprocessor {
 	}
 
 	public static void main(String[] args) {
-		List<String> meths = new ArrayList<String>();
+		Set<String> meths = new HashSet<String>();
 		meths.add("logger.error");
 		meths.add("cookie");
 		ClazzPreprocessor cp = new ClazzPreprocessor(
