@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -12,13 +11,9 @@ import java.util.regex.Pattern;
 
 public class ClazzPreprocessor {
 
-	
-	public static final String CLASSES_SOURCE_PATH_JAVA_MAIN = "/src/main/java";
-	private static final String CLASSES_SOURCE_PATH_JAVA_MAIN_DOT = ".src.main.java.";
 	private static final String CLASSES_SOURCE_PATH = "/src";
-	private static final String CLASSES_SOURCE_PATH_DOT = ".src.";
 	private static final String JAVA_CLASSES_EXT = ".java";
-	
+
 	private Set<String> meths;
 
 	public ClazzPreprocessor(String sourceDirectory, Set<String> meths) {
@@ -31,17 +26,17 @@ public class ClazzPreprocessor {
 		}
 	}
 
-	public void execute() throws PreprocessorException, IOException {
+	public void execute(String targetPathDirectory) throws PreprocessorException, IOException {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 
 		if (manager.getSrcFiles() == null || manager.getSrcFiles().isEmpty()) {
 			throw new PreprocessorException("Java files not found, check input");
 		}
 
-		preprocess();
+		preprocess(targetPathDirectory);
 	}
 
-	private void preprocess() throws IOException, PreprocessorException {
+	private void preprocess(String targetPathDirectory) throws IOException, PreprocessorException {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 		List<String> srcFiles = manager.getSrcFiles();
 		BufferedReader br = null;
@@ -56,7 +51,7 @@ public class ClazzPreprocessor {
 						Pattern.CASE_INSENSITIVE);
 
 				int lineNumber = 0; // for counting the line number
-				iteratingOverSrcLines(br, pattern, lineNumber, srcFile);
+				iteratingOverSrcLines(br, pattern, lineNumber, srcFile, targetPathDirectory);
 			}
 		}
 		if (br != null) {
@@ -65,10 +60,10 @@ public class ClazzPreprocessor {
 	}
 
 	private void iteratingOverSrcLines(BufferedReader br, Pattern pattern,
-			int lineNumber, String srcFile) throws IOException,
+			int lineNumber, String srcFile, String targetPathDirectory) throws IOException,
 			PreprocessorException {
 		String line;
-		String clazzName = this.formatClassName(srcFile);
+		String clazzName = this.formatClassName(srcFile, targetPathDirectory);
 		ClazzContextManager context = ClazzContextManager.getInstance();
 		// reading line-by-line from input file
 		while ((line = br.readLine()) != null) {
@@ -91,29 +86,37 @@ public class ClazzPreprocessor {
 		}
 	}
 
-	private String formatClassName(String srcFile) {
+	public String formatClassName(String srcFile, String targetPathDirectory) {
+
+		String classSourcePath = targetPathDirectory.substring(
+				targetPathDirectory.indexOf("/src"),
+				targetPathDirectory.length() - 1);
 		String className = null;
 		// significa que comeca o diff de um novo arquivo
 		if (srcFile != null && srcFile.contains(JAVA_CLASSES_EXT)
 				&& srcFile.contains(CLASSES_SOURCE_PATH)) {
-			// dependendo de onde o codigo fonte esteja, pode ser necessario alterar o path
-			className = srcFile.substring(srcFile.indexOf(CLASSES_SOURCE_PATH_JAVA_MAIN),
+			// dependendo de onde o codigo fonte esteja, pode ser necessario
+			// alterar o path
+			className = srcFile.substring(
+					srcFile.indexOf(classSourcePath),
 					srcFile.indexOf(JAVA_CLASSES_EXT));
 			className = className.replace("/", ".");
-			// dependendo de onde o codigo fonte esteja, pode ser necessario alterar o path
-			className = className.replace(CLASSES_SOURCE_PATH_JAVA_MAIN_DOT, "");
+			// dependendo de onde o codigo fonte esteja, pode ser necessario
+			// alterar o path
+			String classSourcePathDot = classSourcePath.replace('/', '.') + ".";
+			className = className
+					.replace(classSourcePathDot, "");
 		}
 		return className;
 	}
 
 	public static void main(String[] args) {
-		Set<String> meths = new HashSet<String>();
-		meths.add("logger.error");
-		meths.add("cookie");
-		ClazzPreprocessor cp = new ClazzPreprocessor(
-				"/Users/rodrigoandrade/Documents/workspaces"
-						+ "/Doutorado/opensource/gitblit/", meths);
-		try {
+		String targetPathDirectory = "/home/local/CIN/rcaa2/contributionExperiments/casestudies/teammates/src/main/java/";
+		String classSourcePath = targetPathDirectory.substring(
+				targetPathDirectory.indexOf("/src"),
+				targetPathDirectory.length()-1);
+		System.out.println(classSourcePath);
+		/*try {
 			cp.execute();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -121,7 +124,6 @@ public class ClazzPreprocessor {
 			e.printStackTrace();
 		}
 		ClazzContextManager context = ClazzContextManager.getInstance();
-		System.out.println(context.getMapClassLines());
+		System.out.println(context.getMapClassLines()); */
 	}
-
 }
