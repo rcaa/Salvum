@@ -1,2 +1,2 @@
-org.hsqldb.server.Server {serverProperties} noflow AuthTask
-	where AuthTask = {c | c.author("erebino")}
+org.hsqldb.server.Server {serverProperties} noflow AuthorTask
+	where AuthorTask = {c | c.author("erebino")}
