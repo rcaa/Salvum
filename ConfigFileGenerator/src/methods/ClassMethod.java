@@ -1,17 +1,32 @@
 package methods;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-
-import testing.ClassMethodTest;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class ClassMethod {
 
-	public static void main(String args[]) throws IOException {
+	public static void main(String args[]) throws IOException,
+			ClassNotFoundException, SecurityException, InstantiationException,
+			IllegalAccessException {
 
-		ClassMethodTest t = new ClassMethodTest("val1", false);
+		//String filePath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\src\\br\\ufpe\\cin\\analyses\\Main.java";
+		//String className = "br.ufpe.cin.analyses.Main";
 
-		Method[] methods = t.getClass().getDeclaredMethods();
+		String filePath = args[0];
+		File file = new File(filePath);
+		URL url = file.toURI().toURL();
+		URLClassLoader classLoader = new URLClassLoader(new URL[] {url});
+		String className = args[1];
+
+		Class<?> classDefinition = classLoader.loadClass(className);
+		classLoader.close();
+				
+
+		Method[] methods = classDefinition.newInstance().getClass()
+				.getDeclaredMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Class<?>[] parameterTypes = methods[i].getParameterTypes();
 			String fullMethodName = methods[i].getDeclaringClass().getName()
