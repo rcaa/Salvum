@@ -1,0 +1,2 @@
+voldemort.server.VoldemortConfig {mysqlPassword,mysqlPort}, voldemort.VoldemortClientShell {adminClient}, voldemort.client.protocol.admin.BaseStreamingClient {adminClient}, voldemort.cluster.Node {httpPort,adminPort}, voldemort.server.gossip.Gossiper {adminClient}, voldemort.server.gossip.GossipService {adminClient}
+noflow PullRequestLoggingBnP where PullRequestLoggingBnP = {c | c.message.contains("Added some extra logging when OOM occurs in BnP")}

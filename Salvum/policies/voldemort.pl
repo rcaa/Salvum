@@ -1,0 +1,3 @@
+voldemort.server.VoldemortConfig {mysqlPassword,mysqlPort}, voldemort.VoldemortClientShell {adminClient}, voldemort.client.protocol.admin.BaseStreamingClient {adminClient}, voldemort.cluster.Node {httpPort,adminPort}, voldemort.server.gossip.Gossiper {adminClient}, voldemort.server.gossip.GossipService {adminClient}
+ noflow WriteOps
+	where WriteOps = {log.error,log.info,log.debug,log.warn,System.out.print,write}

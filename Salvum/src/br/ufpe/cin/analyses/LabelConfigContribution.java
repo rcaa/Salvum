@@ -5,13 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-//#if FEATURE
-//@import br.ufpe.cin.policy.PolicyFeature;
-//#elif CONTRIBUTION
 import br.ufpe.cin.policy.PolicyContribution;
-//#elif CLAZZ
-//@import br.ufpe.cin.policy.PolicyClazz;
-//#endif
 
 import com.ibm.wala.classLoader.IMethod;
 
@@ -24,7 +18,7 @@ import edu.kit.joana.api.sdg.SDGMethod;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.api.sdg.SDGProgramPart;
 
-public class LabelConfig {
+public class LabelConfigContribution {
 
 	public void labellingElements(List<SDGProgramPart> sources,
 			List<SDGProgramPart> sinks, SDGProgram program, IFCAnalysis ana) {
@@ -84,10 +78,9 @@ public class LabelConfig {
 		}
 	}
 
-	// #if CONTRIBUTION
 	public void prepareListsOfSourceAndSinksContribution(
 			Collection<SDGClass> classes,
-			Map<String, List<Integer>> mapClassesLineNumbers,
+			Map<String, Set<Integer>> mapClassesLineNumbers,
 			PolicyContribution policy, List<SDGProgramPart> sources,
 			List<SDGProgramPart> sinks) {
 		for (SDGClass sdgClass : classes) {
@@ -109,7 +102,7 @@ public class LabelConfig {
 	}
 
 	private void iterateOverMethods(
-			Map<String, List<Integer>> mapClassesLineNumbers,
+			Map<String, Set<Integer>> mapClassesLineNumbers,
 			PolicyContribution policy, List<SDGProgramPart> sources,
 			List<SDGProgramPart> sinks, SDGClass sdgClass) {
 		// por enquanto so marca instrucao de metodo como sink
@@ -118,7 +111,7 @@ public class LabelConfig {
 			List<SDGInstruction> methodInstructions = sdgMethod
 					.getInstructions();
 			for (SDGInstruction sdgInstruction : methodInstructions) {
-				List<Integer> lineNumbers = mapClassesLineNumbers.get(sdgClass
+				Set<Integer> lineNumbers = mapClassesLineNumbers.get(sdgClass
 						.toString());
 
 				Integer sourceLine = meth.getLineNumber(sdgInstruction
@@ -156,70 +149,4 @@ public class LabelConfig {
 
 		}
 	}
-
-	// #elif CLAZZ
-//@	 public void prepareListsOfSourceAndSinks(Collection<SDGClass> classes,
-//@	 Map<String, Set<Integer>> mapClassLines, PolicyClazz policy,
-//@	 List<SDGProgramPart> sources, List<SDGProgramPart> sinks) {
-//@	 for (SDGClass sdgClass : classes) {
-//@	 Map<String, Set<String>> elements = policy.getClazzAndElements();
-//@	 Set<String> clazzes = elements.keySet();
-//@	 if (clazzes.contains(sdgClass.toString())) {
-//@	 labelSource(policy, sources, sinks, sdgClass, clazzes);
-//@	 }
-//@	 if (mapClassLines.containsKey(sdgClass.toString())) {
-//@	 // por enquanto so marca instrucao de metodo como sink
-//@	 labelSink(mapClassLines, policy, sources, sinks, sdgClass);
-//@	 }
-//@	 }
-//@	 }
-//@	
-//@	
-//@	 private void labelSource(PolicyClazz policy, List<SDGProgramPart>
-//@	sources,
-//@	 List<SDGProgramPart> sinks, SDGClass sdgClass, Set<String> clazzes) {
-//@	 for (String clazz : clazzes) {
-//@	 // por enquanto so marca atributo como source
-//@	 for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
-//@	 Set<String> sensitiveResources = policy
-//@	 .getSensitiveResources(clazz);
-//@	 for (String sensitiveResource : sensitiveResources) {
-//@	 if (sdgAttribute.toString().equals(sensitiveResource)) {
-//@	 if (policy.getOperator().equals("noflow")) {
-//@	 sources.add(sdgAttribute);
-//@	 } else if (policy.getOperator().equals("noset")) {
-//@	 sinks.add(sdgAttribute);
-//@	 }
-//@	 }
-//@	 }
-//@	 }
-//@	 }
-//@	 }
-//@	
-//@	 private void labelSink(Map<String, Set<Integer>> mapClassLines,
-//@	 PolicyClazz policy, List<SDGProgramPart> sources,
-//@	 List<SDGProgramPart> sinks, SDGClass sdgClass) {
-//@	 for (SDGMethod sdgMethod : sdgClass.getMethods()) {
-//@	 IMethod meth = sdgMethod.getMethod();
-//@	 List<SDGInstruction> methodInstructions = sdgMethod
-//@	 .getInstructions();
-//@	 for (SDGInstruction sdgInstruction : methodInstructions) {
-//@	 Set<Integer> lineNumbers = mapClassLines.get(sdgClass
-//@	 .toString());
-//@	
-//@	 Integer sourceLine = meth.getLineNumber(sdgInstruction
-//@	 .getBytecodeIndex());
-//@	
-//@	 if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
-//@	 if (policy.getOperator().equals("noflow")) {
-//@	 sinks.add(sdgInstruction);
-//@	 } else if (policy.getOperator().equals("noset")) {
-//@	 sources.add(sdgInstruction);
-//@	 }
-//@	
-//@	 }
-//@	 }
-//@	 }
-//@	 }
-	// #endif
 }

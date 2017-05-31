@@ -31,7 +31,7 @@ public class ClazzSrcManager {
 	 */
 	public void fillClassDirectories(File[] files) throws IOException {
 		for (File file : files) {
-			if (file.isDirectory()) {
+			if (file != null && file.isDirectory()) {
 				fillClassDirectories(file.listFiles());
 			} else {
 				// caso deseje-se considerar outros tipos de arquivos, eh so

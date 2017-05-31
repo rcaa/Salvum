@@ -2,6 +2,7 @@ package br.ufpe.cin.clazz.preprocessor;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ClazzPreprocessor {
 
-	private static final String CLASSES_SOURCE_PATH = "/src";
+	private static final String CLASSES_SOURCE_PATH = "/src/java";
 	private static final String JAVA_CLASSES_EXT = ".java";
 
 	private Set<String> meths;
@@ -26,7 +27,8 @@ public class ClazzPreprocessor {
 		}
 	}
 
-	public void execute(String targetPathDirectory) throws PreprocessorException, IOException {
+	public void execute(String targetPathDirectory)
+			throws PreprocessorException, IOException {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 
 		if (manager.getSrcFiles() == null || manager.getSrcFiles().isEmpty()) {
@@ -36,7 +38,8 @@ public class ClazzPreprocessor {
 		preprocess(targetPathDirectory);
 	}
 
-	private void preprocess(String targetPathDirectory) throws IOException, PreprocessorException {
+	private void preprocess(String targetPathDirectory) throws IOException,
+			PreprocessorException {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 		List<String> srcFiles = manager.getSrcFiles();
 		BufferedReader br = null;
@@ -46,12 +49,19 @@ public class ClazzPreprocessor {
 							Matcher.quoteReplacement("\\."))) + "(.*)";
 
 			for (String srcFile : srcFiles) {
-				br = new BufferedReader(new FileReader(srcFile));
+				FileReader fileReader = null;
+				try {
+					fileReader = new FileReader(srcFile);
+				} catch (FileNotFoundException e) {
+					continue;
+				}
+				br = new BufferedReader(fileReader);
 				Pattern pattern = Pattern.compile(methRegex.toString(),
 						Pattern.CASE_INSENSITIVE);
 
 				int lineNumber = 0; // for counting the line number
-				iteratingOverSrcLines(br, pattern, lineNumber, srcFile, targetPathDirectory);
+				iteratingOverSrcLines(br, pattern, lineNumber, srcFile,
+						targetPathDirectory);
 			}
 		}
 		if (br != null) {
@@ -60,8 +70,8 @@ public class ClazzPreprocessor {
 	}
 
 	private void iteratingOverSrcLines(BufferedReader br, Pattern pattern,
-			int lineNumber, String srcFile, String targetPathDirectory) throws IOException,
-			PreprocessorException {
+			int lineNumber, String srcFile, String targetPathDirectory)
+			throws IOException, PreprocessorException {
 		String line;
 		String clazzName = this.formatClassName(srcFile, targetPathDirectory);
 		ClazzContextManager context = ClazzContextManager.getInstance();
@@ -97,15 +107,13 @@ public class ClazzPreprocessor {
 				&& srcFile.contains(CLASSES_SOURCE_PATH)) {
 			// dependendo de onde o codigo fonte esteja, pode ser necessario
 			// alterar o path
-			className = srcFile.substring(
-					srcFile.indexOf(classSourcePath),
+			className = srcFile.substring(srcFile.indexOf(classSourcePath),
 					srcFile.indexOf(JAVA_CLASSES_EXT));
 			className = className.replace("/", ".");
 			// dependendo de onde o codigo fonte esteja, pode ser necessario
 			// alterar o path
 			String classSourcePathDot = classSourcePath.replace('/', '.') + ".";
-			className = className
-					.replace(classSourcePathDot, "");
+			className = className.replace(classSourcePathDot, "");
 		}
 		return className;
 	}
@@ -114,16 +122,13 @@ public class ClazzPreprocessor {
 		String targetPathDirectory = "/home/local/CIN/rcaa2/contributionExperiments/casestudies/teammates/src/main/java/";
 		String classSourcePath = targetPathDirectory.substring(
 				targetPathDirectory.indexOf("/src"),
-				targetPathDirectory.length()-1);
+				targetPathDirectory.length() - 1);
 		System.out.println(classSourcePath);
-		/*try {
-			cp.execute();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (PreprocessorException e) {
-			e.printStackTrace();
-		}
-		ClazzContextManager context = ClazzContextManager.getInstance();
-		System.out.println(context.getMapClassLines()); */
+		/*
+		 * try { cp.execute(); } catch (IOException e) { e.printStackTrace(); }
+		 * catch (PreprocessorException e) { e.printStackTrace(); }
+		 * ClazzContextManager context = ClazzContextManager.getInstance();
+		 * System.out.println(context.getMapClassLines());
+		 */
 	}
 }

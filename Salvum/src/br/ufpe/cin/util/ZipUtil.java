@@ -12,7 +12,7 @@ public class ZipUtil {
 
 	private static final int BUFFER_SIZE = 4096;
 	
-	public void unzip(String zipFilePath, String destDirectory)
+	public static void unzip(String zipFilePath, String destDirectory)
 			throws IOException {
 		File destDir = new File(destDirectory);
 		if (!destDir.exists()) {
@@ -38,7 +38,7 @@ public class ZipUtil {
 		zipIn.close();
 	}
 
-	private void extractFile(ZipInputStream zipIn, String filePath)
+	private static void extractFile(ZipInputStream zipIn, String filePath)
 			throws IOException {
 		BufferedOutputStream bos = new BufferedOutputStream(
 				new FileOutputStream(filePath));

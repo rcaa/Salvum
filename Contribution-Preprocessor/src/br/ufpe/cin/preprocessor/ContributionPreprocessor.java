@@ -3,10 +3,10 @@ package br.ufpe.cin.preprocessor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.Set;
 
 public class ContributionPreprocessor {
 
@@ -169,7 +169,7 @@ public class ContributionPreprocessor {
 				cp.preprocess();
 				ContextManagerContribution contextContribution = ContextManagerContribution
 						.getContext();
-				Map<String, List<Integer>> mapClassesLineNumbers = contextContribution
+				Map<String, Set<Integer>> mapClassesLineNumbers = contextContribution
 						.getMapClassesLineNumbers();
 				cp.preprocess();
 				System.out.println("-----------------------------------------------------------");

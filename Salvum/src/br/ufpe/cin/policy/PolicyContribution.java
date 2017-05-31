@@ -1,7 +1,5 @@
 package br.ufpe.cin.policy;
 
-// #if CONTRIBUTION
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,10 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-//#endif
 public class PolicyContribution {
-//#if CONTRIBUTION
-
 
 	private String hash;
 	private String taskName;
@@ -51,7 +46,7 @@ public class PolicyContribution {
 				// retreiveProgramElements(elements[3]);
 			}
 		}
-		
+
 	}
 
 	private Set<String> retreiveProgramElements(String element) {
@@ -64,8 +59,8 @@ public class PolicyContribution {
 		return elements;
 	}
 
-	public static List<String> findHashes(Path path,
-			String targetPathDirectory) throws IOException {
+	public static List<String> findHashes(Path path, String targetPathDirectory)
+			throws IOException {
 		String constraint = new String(Files.readAllBytes(path));
 		String term = constraint.substring(constraint.indexOf('"') + 1,
 				constraint.lastIndexOf('"'));
@@ -98,7 +93,6 @@ public class PolicyContribution {
 		this.taskName = taskName;
 	}
 
-
 	public Set<String> getSensitiveResources(String clazz) {
 		Set<String> sR = this.clazzAndElements.get(clazz);
 		Set<String> sesitiveResources = new HashSet<>();
@@ -119,5 +113,4 @@ public class PolicyContribution {
 	public Map<String, Set<String>> getClazzAndElements() {
 		return clazzAndElements;
 	}
-	// #endif
 }
