@@ -1,4 +1,4 @@
-package br.ufpe.cin.analyses;
+package br.ufpe.cin.sdgs;
 
 import java.util.ArrayList;
 import java.util.List;

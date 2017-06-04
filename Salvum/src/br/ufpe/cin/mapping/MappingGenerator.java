@@ -1,4 +1,4 @@
-package br.ufpe.cin.analyses;
+package br.ufpe.cin.mapping;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import br.ufpe.cin.clazz.preprocessor.ClazzContextManager;
@@ -23,37 +22,25 @@ import br.ufpe.cin.policy.PolicyContribution;
 import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 import br.ufpe.cin.util.FileUtil;
-import br.ufpe.cin.util.ZipUtil;
 
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-
-import edu.kit.joana.api.sdg.SDGProgram;
-import edu.kit.joana.ifc.sdg.graph.SDGSerializer;
-
-public class SDGGenerator {
+public class MappingGenerator {
 
 	public static void main(String[] args) {
-
+		if (args[0] == null || args[0].isEmpty()) {
+			System.out.println("Invalid zip property path");
+			return;
+		}
 		String zipPropPath = args[0];
 		Properties zipProp = FileUtil.getPropertiesFile(zipPropPath);
-
 		String zipDirectoryPath = zipProp.getProperty("zipDirectoryPath");
-		String unzipedDirectory = zipProp.getProperty("unzipedDirectory");
 		File zipDir = new File(zipDirectoryPath);
 		if (zipDir.isDirectory()) {
-			File[] zipFiles = zipDir.listFiles();
-			for (File zipFile : zipFiles) {
-				try {
-					ZipUtil.unzip(zipFile.getAbsolutePath(), unzipedDirectory);
-
+			try {
+				File[] zipFiles = zipDir.listFiles();
+				for (File zipFile : zipFiles) {
 					String projectPropPath = zipProp.getProperty("propFile");
 					Properties projectProp = FileUtil
 							.getPropertiesFile(projectPropPath);
-
-					SDGGenerator.generateSDGFile(zipFile, projectProp);
-
 					Map<String, Set<Integer>> mapClassLines = null;
 					if (args[1] != null && !args[1].isEmpty()
 							&& args[1].equals("contribution")) {
@@ -62,7 +49,6 @@ public class SDGGenerator {
 						List<String> hashes = PolicyContribution.findHashes(
 								policyPath,
 								projectProp.getProperty("targetPathDirectory"));
-						// voldemort-1d15aa8564727ad26abf60a98dedf93430303b1e.zip
 						String zipFileName = zipFile.getName();
 						String hash = zipFileName.substring(
 								zipFileName.indexOf('-'),
@@ -78,33 +64,11 @@ public class SDGGenerator {
 					}
 					registerMapping(zipFile, projectProp, mapClassLines);
 					System.out.println(mapClassLines);
-
-					FileUtils.deleteDirectory(new File(unzipedDirectory
-							+ projectProp.getProperty("projectName")));
-				} catch (ClassHierarchyException | IOException
-						| UnsoundGraphException | CancelException e) {
-					e.printStackTrace();
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
-	}
-
-	private static void generateSDGFile(File zipFile, Properties projectProp)
-			throws ClassHierarchyException, IOException, UnsoundGraphException,
-			CancelException {
-
-		List<String> entryMethods = MainAux.configureEntryMethods(projectProp);
-		String thirdPartyLibsPath = projectProp
-				.getProperty("thirdPartyLibsPath");
-		String sdgFilePath = projectProp.getProperty("outputPath")
-				+ FilenameUtils.removeExtension(zipFile.getName()) + ".pdg";
-		String classPath = projectProp.getProperty("classPath");
-
-		AnalysisConfig ana = new AnalysisConfig();
-		SDGProgram program = ana.buildSDG(classPath, entryMethods,
-				thirdPartyLibsPath);
-		SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
-				sdgFilePath));
 	}
 
 	private static Map<String, Set<Integer>> preprocessMappingClazz(

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 
 import br.ufpe.cin.policy.GitIntegration;
@@ -101,11 +102,13 @@ public class ClazzIFCAnalysis {
 					p.getProperty("policyDirectory"));
 			PolicyClazz policy = new PolicyClazz(path);
 
-			FileInputStream fis = new FileInputStream("map.ser");
+			FileInputStream fis = new FileInputStream(
+					p.getProperty("mappingsPath")
+							+ FilenameUtils.removeExtension(sdg.getName()));
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			Map<String,Set<Integer>> mapClassLines = null;
+			Map<String, Set<Integer>> mapClassLines = null;
 			try {
-				mapClassLines = (Map<String,Set<Integer>>) ois.readObject();
+				mapClassLines = (Map<String, Set<Integer>>) ois.readObject();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -125,7 +128,7 @@ public class ClazzIFCAnalysis {
 				if (policy.getOperator().equals("noflow")) {
 					if (sn != null && sink != null && source != null
 							&& sink.getBytecodeIndex() >= 0) {
-						String filePath = "src" + "/" + sink.getSource();
+						String filePath = "src/java" + "/" + sink.getSource();
 						System.out.println("Illegal flow from "
 								+ source.getBytecodeName()
 								+ " to "
