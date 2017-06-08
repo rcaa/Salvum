@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import br.ufpe.cin.analyses.AnalysisConfig;
+import br.ufpe.cin.mapping.LineMappingGenerator;
 import br.ufpe.cin.util.FileUtil;
 import br.ufpe.cin.util.ZipUtil;
 
@@ -68,6 +69,10 @@ public class SDGGenerator {
 				thirdPartyLibsPath);
 		SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
 				sdgFilePath));
+
+		LineMappingGenerator.createLineMapping(program, zipFile, projectProp);
 	}
+
+	
 
 }

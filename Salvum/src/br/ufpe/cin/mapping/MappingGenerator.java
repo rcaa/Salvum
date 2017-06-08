@@ -1,9 +1,11 @@
 package br.ufpe.cin.mapping;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -113,5 +115,21 @@ public class MappingGenerator {
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(mapClassLines);
 		oos.close();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Map<String, Set<Integer>> loadMapping(Properties p, File sdg)
+			throws FileNotFoundException, IOException {
+		FileInputStream fis = new FileInputStream(p.getProperty("mappingsPath")
+				+ FilenameUtils.removeExtension(sdg.getName()));
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		Map<String, Set<Integer>> mapClassLines = null;
+		try {
+			mapClassLines = (Map<String, Set<Integer>>) ois.readObject();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		ois.close();
+		return mapClassLines;
 	}
 }

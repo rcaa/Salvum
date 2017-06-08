@@ -1,9 +1,7 @@
 package br.ufpe.cin.analyses;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,9 +11,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 
+import br.ufpe.cin.mapping.LineMappingGenerator;
+import br.ufpe.cin.mapping.MappingGenerator;
 import br.ufpe.cin.policy.GitIntegration;
 import br.ufpe.cin.policy.PolicyClazz;
 import br.ufpe.cin.util.FileUtil;
@@ -52,7 +51,6 @@ public class ClazzIFCAnalysis {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	private void run(Properties p, String propertiesPath) throws WalaException,
 			IllegalArgumentException, IOException, UnsoundGraphException,
 			CancelException, CoreException {
@@ -102,20 +100,13 @@ public class ClazzIFCAnalysis {
 					p.getProperty("policyDirectory"));
 			PolicyClazz policy = new PolicyClazz(path);
 
-			FileInputStream fis = new FileInputStream(
-					p.getProperty("mappingsPath")
-							+ FilenameUtils.removeExtension(sdg.getName()));
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Map<String, Set<Integer>> mapClassLines = null;
-			try {
-				mapClassLines = (Map<String, Set<Integer>>) ois.readObject();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			ois.close();
+			Map<String, Set<Integer>> mapClassLines = MappingGenerator
+					.loadMapping(p, sdg);
+			Map<String, Integer> mapInstructionsLines = LineMappingGenerator
+					.loadMapping(p, sdg);
 
 			lconfig.prepareListsOfSourceAndSinks(classes, mapClassLines,
-					policy, sources, sinks);
+					policy, sources, sinks, mapInstructionsLines);
 
 			// rodo as analises
 			IFCAnalysis ifc = new IFCAnalysis(program);

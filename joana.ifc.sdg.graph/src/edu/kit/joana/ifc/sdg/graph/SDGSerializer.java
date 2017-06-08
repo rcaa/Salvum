@@ -157,10 +157,6 @@ public class SDGSerializer {
 				pw.print("U \"" + n.getUnresolvedCallTarget() + "\";\n");
 			}
 
-			if (n.getMethod() != null) {
-				pw.println("M \"" + n.getMethod().getLineNumber(n.getBytecodeIndex()));
-			}
-
 			printPDGDependencies(g, n, pw);
 			pw.print("}\n");
 		}
