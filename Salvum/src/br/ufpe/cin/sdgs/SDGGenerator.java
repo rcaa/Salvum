@@ -67,8 +67,10 @@ public class SDGGenerator {
 		AnalysisConfig ana = new AnalysisConfig();
 		SDGProgram program = ana.buildSDG(classPath, entryMethods,
 				thirdPartyLibsPath);
-		SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
-				sdgFilePath));
+		FileOutputStream sdgIO = new FileOutputStream(
+				sdgFilePath);
+		SDGSerializer.toPDGFormat(program.getSDG(), sdgIO);
+		sdgIO.close();
 
 		LineMappingGenerator.createLineMapping(program, zipFile, projectProp);
 	}

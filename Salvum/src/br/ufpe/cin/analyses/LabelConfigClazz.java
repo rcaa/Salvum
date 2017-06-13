@@ -5,17 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import br.ufpe.cin.mapping.LineMappingGenerator;
-//#if FEATURE
-//@import br.ufpe.cin.policy.PolicyFeature;
-//#elif CONTRIBUTION
-//@import br.ufpe.cin.policy.PolicyContribution;
-//#elif CLAZZ
 import br.ufpe.cin.policy.PolicyClazz;
-//#endif
-
-import com.ibm.wala.classLoader.IMethod;
-
 import edu.kit.joana.api.IFCAnalysis;
 import edu.kit.joana.api.lattice.BuiltinLattices;
 import edu.kit.joana.api.sdg.SDGAttribute;
@@ -24,6 +14,12 @@ import edu.kit.joana.api.sdg.SDGInstruction;
 import edu.kit.joana.api.sdg.SDGMethod;
 import edu.kit.joana.api.sdg.SDGProgram;
 import edu.kit.joana.api.sdg.SDGProgramPart;
+//#if FEATURE
+//@import br.ufpe.cin.policy.PolicyFeature;
+//#elif CONTRIBUTION
+//@import br.ufpe.cin.policy.PolicyContribution;
+//#elif CLAZZ
+//#endif
 
 public class LabelConfigClazz {
 

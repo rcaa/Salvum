@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import br.ufpe.cin.clazz.preprocessor.ClazzContextManager;
@@ -24,6 +25,7 @@ import br.ufpe.cin.policy.PolicyContribution;
 import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 import br.ufpe.cin.util.FileUtil;
+import br.ufpe.cin.util.ZipUtil;
 
 public class MappingGenerator {
 
@@ -35,16 +37,22 @@ public class MappingGenerator {
 		String zipPropPath = args[0];
 		Properties zipProp = FileUtil.getPropertiesFile(zipPropPath);
 		String zipDirectoryPath = zipProp.getProperty("zipDirectoryPath");
+		String unzipedDirectory = zipProp.getProperty("unzipedDirectory");
 		File zipDir = new File(zipDirectoryPath);
 		if (zipDir.isDirectory()) {
 			try {
 				File[] zipFiles = zipDir.listFiles();
 				for (File zipFile : zipFiles) {
+					if (zipFile.isDirectory()) {
+						continue;
+					}
+					ZipUtil.unzip(zipFile.getAbsolutePath(), unzipedDirectory);
 					String projectPropPath = zipProp.getProperty("propFile");
 					Properties projectProp = FileUtil
 							.getPropertiesFile(projectPropPath);
 					Map<String, Set<Integer>> mapClassLines = null;
-					if (args[1] != null && !args[1].isEmpty()
+					if (args.length > 1 && args[1] != null
+							&& !args[1].isEmpty()
 							&& args[1].equals("contribution")) {
 						Path policyPath = FileSystems.getDefault().getPath(
 								projectProp.getProperty("policyDirectory"));
@@ -66,6 +74,9 @@ public class MappingGenerator {
 					}
 					registerMapping(zipFile, projectProp, mapClassLines);
 					System.out.println(mapClassLines);
+					FileUtils.deleteDirectory(new File(unzipedDirectory
+							+ projectProp.getProperty("projectName")));
+					mapClassLines.clear();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -86,9 +97,7 @@ public class MappingGenerator {
 		} catch (PreprocessorException e1) {
 			e1.printStackTrace();
 		}
-		ClazzContextManager context = ClazzContextManager.getInstance();
-		Map<String, Set<Integer>> mapClassLines = context.getMapClassLines();
-		return mapClassLines;
+		return ClazzContextManager.getInstance().getMapClassLines();
 	}
 
 	private static Map<String, Set<Integer>> preprocessMappingContribution(
@@ -99,11 +108,8 @@ public class MappingGenerator {
 		ContributionPreprocessor cp = new ContributionPreprocessor(projectProp,
 				policy.getHash());
 		cp.preprocess();
-		ContextManagerContribution contextContribution = ContextManagerContribution
-				.getContext();
-		Map<String, Set<Integer>> mapClassesLineNumbers = contextContribution
+		return ContextManagerContribution.getContext()
 				.getMapClassesLineNumbers();
-		return mapClassesLineNumbers;
 	}
 
 	private static void registerMapping(File zipFile, Properties projectProp,
@@ -115,6 +121,7 @@ public class MappingGenerator {
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(mapClassLines);
 		oos.close();
+		fos.close();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -129,6 +136,7 @@ public class MappingGenerator {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		fis.close();
 		ois.close();
 		return mapClassLines;
 	}

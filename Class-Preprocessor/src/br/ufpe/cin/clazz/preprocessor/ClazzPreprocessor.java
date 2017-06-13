@@ -62,6 +62,9 @@ public class ClazzPreprocessor {
 				int lineNumber = 0; // for counting the line number
 				iteratingOverSrcLines(br, pattern, lineNumber, srcFile,
 						targetPathDirectory);
+				if (fileReader != null) {
+					fileReader.close();
+				}
 			}
 		}
 		if (br != null) {
