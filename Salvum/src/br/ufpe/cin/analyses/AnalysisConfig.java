@@ -14,7 +14,6 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 
 import edu.kit.joana.api.sdg.SDGConfig;
 import edu.kit.joana.api.sdg.SDGProgram;
-import edu.kit.joana.ifc.sdg.graph.SDG;
 import edu.kit.joana.ifc.sdg.mhpoptimization.MHPType;
 import edu.kit.joana.util.Stubs;
 import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
@@ -22,10 +21,6 @@ import edu.kit.joana.wala.core.SDGBuilder.FieldPropagation;
 import edu.kit.joana.wala.core.SDGBuilder.PointsToPrecision;
 
 public class AnalysisConfig {
-
-	public SDGProgram retrieveSDG(String path) throws IOException {
-		return new SDGProgram(SDG.readFrom(path));
-	}
 
 	public SDGProgram buildSDG(String classPath, List<String> entryMethods,
 			String thirdPartyLibsPath) throws ClassHierarchyException,

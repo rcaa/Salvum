@@ -50,13 +50,12 @@ public class ContributionIFCAnalysis {
 			IllegalArgumentException, IOException, CancelException,
 			CoreException, UnsoundGraphException {
 
-		AnalysisConfig ana = new AnalysisConfig();
 		String sdgsDirectoryPath = p.getProperty("sdgsDirectoryPath");
 		File sdgsDirectory = new File(sdgsDirectoryPath);
 		File[] sdgs = sdgsDirectory.listFiles();
 		for (File sdg : sdgs) {
 
-			SDGProgram program = ana.retrieveSDG(sdg.getAbsolutePath());
+			SDGProgram program = SDGProgram.loadSDG(sdg.getAbsolutePath());
 			Collection<SDGClass> classes = program.getClasses();
 			List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
 			List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();

@@ -55,11 +55,6 @@ public class ClazzIFCAnalysis {
 			IllegalArgumentException, IOException, UnsoundGraphException,
 			CancelException, CoreException {
 
-		// obtenho a policy
-
-		// Segundo passo logico
-		AnalysisConfig ana = new AnalysisConfig();
-
 		// JavaMethodSignature entryMethod =
 		// JavaMethodSignature.fromString(p
 		// .getProperty("main"));
@@ -82,7 +77,7 @@ public class ClazzIFCAnalysis {
 		File[] sdgs = sdgsDirectory.listFiles();
 		for (File sdg : sdgs) {
 
-			SDGProgram program = ana.retrieveSDG(sdg.getAbsolutePath());
+			SDGProgram program = SDGProgram.loadSDG(sdg.getAbsolutePath());
 
 			// save sdg
 			// SDGSerializer.toPDGFormat(program.getSDG(),
@@ -148,8 +143,8 @@ public class ClazzIFCAnalysis {
 
 			sources.clear();
 			sinks.clear();
-			System.out
-					.println("---------------------------------END-----------------------------------");
+			System.out.println("---------------------------------END----"
+					+ "-------------------------------");
 		}
 
 	}

@@ -3,6 +3,7 @@ package br.ufpe.cin.sdgs;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,16 +31,23 @@ public class SDGGenerator {
 
 		String zipDirectoryPath = zipProp.getProperty("zipDirectoryPath");
 		String unzipedDirectory = zipProp.getProperty("unzipedDirectory");
+
+		String projectPropPath = zipProp.getProperty("propFile");
+		Properties projectProp = FileUtil.getPropertiesFile(projectPropPath);
+
 		File zipDir = new File(zipDirectoryPath);
 		if (zipDir.isDirectory()) {
 			File[] zipFiles = zipDir.listFiles();
 			for (File zipFile : zipFiles) {
+
+				List<String> sdgsNames = checkExistingSDGs(projectProp);
+				if (sdgsNames.contains(FilenameUtils.removeExtension(zipFile
+						.getName()))) {
+					continue;
+				}
+
 				try {
 					ZipUtil.unzip(zipFile.getAbsolutePath(), unzipedDirectory);
-
-					String projectPropPath = zipProp.getProperty("propFile");
-					Properties projectProp = FileUtil
-							.getPropertiesFile(projectPropPath);
 
 					SDGGenerator.generateSDGFile(zipFile, projectProp);
 
@@ -51,6 +59,16 @@ public class SDGGenerator {
 				}
 			}
 		}
+	}
+
+	private static List<String> checkExistingSDGs(Properties projectProp) {
+		File sdgsDirFiles[] = new File(projectProp.getProperty("outputPath"))
+				.listFiles();
+		List<String> sdgsNames = new ArrayList<>();
+		for (File existingSDG : sdgsDirFiles) {
+			sdgsNames.add(FilenameUtils.removeExtension(existingSDG.getName()));
+		}
+		return sdgsNames;
 	}
 
 	private static void generateSDGFile(File zipFile, Properties projectProp)
@@ -67,14 +85,11 @@ public class SDGGenerator {
 		AnalysisConfig ana = new AnalysisConfig();
 		SDGProgram program = ana.buildSDG(classPath, entryMethods,
 				thirdPartyLibsPath);
-		FileOutputStream sdgIO = new FileOutputStream(
-				sdgFilePath);
+		FileOutputStream sdgIO = new FileOutputStream(sdgFilePath);
 		SDGSerializer.toPDGFormat(program.getSDG(), sdgIO);
 		sdgIO.close();
 
 		LineMappingGenerator.createLineMapping(program, zipFile, projectProp);
 	}
-
-	
 
 }
