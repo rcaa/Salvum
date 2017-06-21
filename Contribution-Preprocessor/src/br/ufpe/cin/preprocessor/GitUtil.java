@@ -12,14 +12,14 @@ import java.nio.file.Paths;
 
 public class GitUtil {
 
-	public static void runDiffCommand(String targetPathDirectory,
+	public static void runDiffCommand(String gitPath,
 			String parentCommitHash, String currentCommitHash,
 			String diffFilePath) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] gitDiffCommands = {
 				"bash",
 				"-c",
-				Tag.GIT_DIR + targetPathDirectory + ".git diff "
+				Tag.GIT_DIR + gitPath + ".git diff "
 						+ parentCommitHash + " " + currentCommitHash
 						+ " -- '*.java'" };
 		Process process = rt.exec(gitDiffCommands);
@@ -38,13 +38,13 @@ public class GitUtil {
 	// Files.delete(targetProjPath);
 	// }
 
-	public static String runParents(String targetPathDirectory,
+	public static String runParents(String gitPath,
 			String currentCommitHash) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] gitParentCommitCommand = {
 				"bash",
 				"-c",
-				Tag.GIT_DIR + targetPathDirectory
+				Tag.GIT_DIR + gitPath
 						+ ".git rev-list --parents -n 1  " + currentCommitHash };
 		Process process = rt.exec(gitParentCommitCommand);
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(

@@ -10,37 +10,37 @@ public class GitIntegration {
 	//
 
 	public static List<String> searchCommitHashesFromMessages(
-			String targetPathDirectory, String message) throws IOException {
+			String gitPath, String message) throws IOException {
 
 		List<String> commitHashes = new ArrayList<>();
 		Runtime rt = Runtime.getRuntime();
 		String[] command = new String[] { "git", "--git-dir",
-				targetPathDirectory + ".git", "log", "-i", "--grep=" + message };
+				gitPath + ".git", "log", "-i", "--grep=" + message };
 		iterateLog(commitHashes, rt, command);
 		return commitHashes;
 	}
 
 	public static List<String> searchCommitHashesFromAuthor(
-			String targetPathDirectory, String author) throws IOException {
+			String gitPath, String author) throws IOException {
 
 		List<String> commitHashes = new ArrayList<>();
 
 		Runtime rt = Runtime.getRuntime();
 		String[] command = new String[] { "git", "--git-dir",
-				targetPathDirectory + ".git", "log", "--author=" + author };
+				gitPath + ".git", "log", "--author=" + author };
 		// --committer
 		iterateLog(commitHashes, rt, command);
 		return commitHashes;
 	}
 
 	public static List<String> searchCommitHashesFromPackage(
-			String targetPathDirectory, String pckage) throws IOException {
+			String gitPath, String pckage) throws IOException {
 
 		List<String> commitHashes = new ArrayList<>();
 
 		Runtime rt = Runtime.getRuntime();
 		String[] command = new String[] { "git", "--git-dir",
-				targetPathDirectory + ".git", "log", "--", ".",
+				gitPath + ".git", "log", "--", ".",
 				"\":(exclude)" + pckage, "\"" };
 		iterateLog(commitHashes, rt, command);
 		return commitHashes;
@@ -70,11 +70,11 @@ public class GitIntegration {
 	// --work-tree=/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/SimpleContributionExample/ 
 	// blame -L 12,12 src/clazz/SysoExample.java
 
-	public static String gitBlame(String targetPathDirectory,
+	public static String gitBlame(String gitPath,
 			int lineNumber, String filePath) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] command = new String[] { "git", "--git-dir",
-				targetPathDirectory + ".git", "--work-tree=" + targetPathDirectory,
+				gitPath + ".git", "--work-tree=" + gitPath,
 				"blame", "-L",
 				lineNumber + "," + lineNumber, "-p", filePath };
 		Process process = rt.exec(command);

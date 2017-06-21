@@ -41,8 +41,9 @@ public class SDGGenerator {
 			for (File zipFile : zipFiles) {
 
 				List<String> sdgsNames = checkExistingSDGs(projectProp);
-				if (sdgsNames.contains(FilenameUtils.removeExtension(zipFile
-						.getName()))) {
+				if (zipFile.isDirectory()
+						|| sdgsNames.contains(FilenameUtils
+								.removeExtension(zipFile.getName()))) {
 					continue;
 				}
 

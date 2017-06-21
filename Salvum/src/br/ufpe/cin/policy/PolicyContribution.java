@@ -59,20 +59,20 @@ public class PolicyContribution {
 		return elements;
 	}
 
-	public static List<String> findHashes(Path path, String targetPathDirectory)
+	public static List<String> findHashes(Path path, String gitPath)
 			throws IOException {
 		String constraint = new String(Files.readAllBytes(path));
 		String term = constraint.substring(constraint.indexOf('"') + 1,
 				constraint.lastIndexOf('"'));
 		if (constraint.contains("c | c.message.contains")) {
 			return GitIntegration.searchCommitHashesFromMessages(
-					targetPathDirectory, term);
+					gitPath, term);
 		} else if (constraint.contains("c | c.author")) {
 			return GitIntegration.searchCommitHashesFromAuthor(
-					targetPathDirectory, term);
+					gitPath, term);
 		} else if (constraint.contains("c | !c.package")) {
 			return GitIntegration.searchCommitHashesFromPackage(
-					targetPathDirectory, term);
+					gitPath, term);
 		}
 		return null;
 	}

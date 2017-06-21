@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class ContributionPreprocessor {
 
-	private String targetPathDirectory;
+	private String gitPath;
 	private String parentCommitHash;
 	private String currentCommitHash;
 	private String diffFilePath;
@@ -18,7 +18,7 @@ public class ContributionPreprocessor {
 	public ContributionPreprocessor(String sourceDirectory,
 			String parentCommitHash, String currentCommitHash,
 			String diffFilePath) {
-		this.targetPathDirectory = sourceDirectory;
+		this.gitPath = sourceDirectory;
 		this.parentCommitHash = parentCommitHash;
 		this.currentCommitHash = currentCommitHash;
 		this.diffFilePath = setDiffFilePath(currentCommitHash, diffFilePath);
@@ -26,9 +26,9 @@ public class ContributionPreprocessor {
 
 	public ContributionPreprocessor(Properties p, String currentCommitHash)
 			throws IOException {
-		this.targetPathDirectory = p.getProperty("targetPathDirectory");
+		this.gitPath = p.getProperty("gitPath");
 		this.currentCommitHash = currentCommitHash;
-		this.parentCommitHash = GitUtil.runParents(targetPathDirectory,
+		this.parentCommitHash = GitUtil.runParents(gitPath,
 				currentCommitHash);
 		this.diffFilePath = setDiffFilePath(currentCommitHash,
 				p.getProperty("diffFilePath"));
@@ -36,7 +36,7 @@ public class ContributionPreprocessor {
 
 	public void preprocess() throws IOException {
 
-		GitUtil.runDiffCommand(this.targetPathDirectory, this.parentCommitHash,
+		GitUtil.runDiffCommand(this.gitPath, this.parentCommitHash,
 				this.currentCommitHash, this.diffFilePath);
 		Path targetProjPath = GitUtil.loadDiffFile(this.diffFilePath,
 				this.currentCommitHash);
@@ -96,8 +96,8 @@ public class ContributionPreprocessor {
 		}
 		scanner.close();
 
-		GitUtil.checkoutCommitHash(this.targetPathDirectory,
-				this.currentCommitHash);
+		//GitUtil.checkoutCommitHash(this.gitPath,
+		//		this.currentCommitHash);
 
 		System.out.println(manager.getMapClassesLineNumbers().toString());
 	}

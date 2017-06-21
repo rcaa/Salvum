@@ -71,6 +71,9 @@ public class ContributionIFCAnalysis {
 			IFCAnalysis ifc = new IFCAnalysis(program);
 			lconfig.labellingElements(sources, sinks, program, ifc);
 			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
+			if (result == null || result.isEmpty()) {
+				System.out.println("No violations found");
+			}
 			for (IViolation<SecurityNode> iViolation : result) {
 				ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 				SecurityNode source = sn.getSource();

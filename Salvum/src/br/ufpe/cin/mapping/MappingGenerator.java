@@ -9,7 +9,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -54,26 +53,27 @@ public class MappingGenerator {
 					if (args.length > 1 && args[1] != null
 							&& !args[1].isEmpty()
 							&& args[1].equals("contribution")) {
-						Path policyPath = FileSystems.getDefault().getPath(
-								projectProp.getProperty("policyDirectory"));
-						List<String> hashes = PolicyContribution.findHashes(
-								policyPath,
-								projectProp.getProperty("targetPathDirectory"));
+//						Path policyPath = FileSystems.getDefault().getPath(
+//								projectProp.getProperty("policyDirectory"));
+//						List<String> hashes = PolicyContribution.findHashes(
+//								policyPath,
+//								projectProp.getProperty("targetPathDirectory"));
 						String zipFileName = zipFile.getName();
 						String hash = zipFileName.substring(
-								zipFileName.indexOf('-'),
+								zipFileName.indexOf('-') + 1,
 								zipFileName.indexOf('.'));
-						if (hashes.contains(hash)) {
-							mapClassLines = preprocessMappingContribution(
-									projectProp, hash);
-						} else {
-							continue;
-						}
+						// comparo as hashes dos zips com as hashes resultantes
+						// da policy
+						// if (hashes.contains(hash)) {
+						mapClassLines = preprocessMappingContribution(
+								projectProp, hash);
+						// } else {
+//						continue;
+						// }
 					} else {
 						mapClassLines = preprocessMappingClazz(projectProp);
 					}
 					registerMapping(zipFile, projectProp, mapClassLines);
-					System.out.println(mapClassLines);
 					FileUtils.deleteDirectory(new File(unzipedDirectory
 							+ projectProp.getProperty("projectName")));
 					mapClassLines.clear();
