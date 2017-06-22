@@ -6,13 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClazzPreprocessor {
 
-	private static final String CLASSES_SOURCE_PATH = "/src/java";
 	private static final String JAVA_CLASSES_EXT = ".java";
 
 	private Set<String> meths;
@@ -27,7 +27,7 @@ public class ClazzPreprocessor {
 		}
 	}
 
-	public void execute(String targetPathDirectory)
+	public void execute(Properties prop)
 			throws PreprocessorException, IOException {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 
@@ -35,10 +35,10 @@ public class ClazzPreprocessor {
 			throw new PreprocessorException("Java files not found, check input");
 		}
 
-		preprocess(targetPathDirectory);
+		preprocess(prop);
 	}
 
-	private void preprocess(String targetPathDirectory) throws IOException,
+	private void preprocess(Properties prop) throws IOException,
 			PreprocessorException {
 		ClazzSrcManager manager = ClazzSrcManager.getSrcManager();
 		List<String> srcFiles = manager.getSrcFiles();
@@ -61,7 +61,7 @@ public class ClazzPreprocessor {
 
 				int lineNumber = 0; // for counting the line number
 				iteratingOverSrcLines(br, pattern, lineNumber, srcFile,
-						targetPathDirectory);
+						prop);
 				if (fileReader != null) {
 					fileReader.close();
 				}
@@ -73,10 +73,10 @@ public class ClazzPreprocessor {
 	}
 
 	private void iteratingOverSrcLines(BufferedReader br, Pattern pattern,
-			int lineNumber, String srcFile, String targetPathDirectory)
+			int lineNumber, String srcFile, Properties prop)
 			throws IOException, PreprocessorException {
 		String line;
-		String clazzName = this.formatClassName(srcFile, targetPathDirectory);
+		String clazzName = this.formatClassName(srcFile, prop);
 		ClazzContextManager context = ClazzContextManager.getInstance();
 		// reading line-by-line from input file
 		while ((line = br.readLine()) != null) {
@@ -99,15 +99,15 @@ public class ClazzPreprocessor {
 		}
 	}
 
-	public String formatClassName(String srcFile, String targetPathDirectory) {
-
+	public String formatClassName(String srcFile, Properties prop) {
+		String targetPathDirectory = prop.getProperty("targetPathDirectory");
 		String classSourcePath = targetPathDirectory.substring(
 				targetPathDirectory.indexOf("/src"),
 				targetPathDirectory.length() - 1);
 		String className = null;
 		// significa que comeca o diff de um novo arquivo
 		if (srcFile != null && srcFile.contains(JAVA_CLASSES_EXT)
-				&& srcFile.contains(CLASSES_SOURCE_PATH)) {
+				&& srcFile.contains(prop.getProperty("javaSources"))) {
 			// dependendo de onde o codigo fonte esteja, pode ser necessario
 			// alterar o path
 			className = srcFile.substring(srcFile.indexOf(classSourcePath),

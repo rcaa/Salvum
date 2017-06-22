@@ -117,7 +117,7 @@ public class ClazzIFCAnalysis {
 				if (policy.getOperator().equals("noflow")) {
 					if (sn != null && sink != null && source != null
 							&& sink.getBytecodeIndex() >= 0) {
-						String filePath = "src/java" + "/" + sink.getSource();
+						String filePath = p.getProperty("javaSources") + sink.getSource();
 						System.out.println("Illegal flow from "
 								+ source.getBytecodeName()
 								+ " to "

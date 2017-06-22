@@ -93,7 +93,7 @@ public class MappingGenerator {
 		ClazzPreprocessor cp = new ClazzPreprocessor(sourceDirectory, policy
 				.getMethodsAndArgs().keySet());
 		try {
-			cp.execute(sourceDirectory);
+			cp.execute(projectProp);
 		} catch (PreprocessorException e1) {
 			e1.printStackTrace();
 		}
