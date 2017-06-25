@@ -63,11 +63,13 @@ public class SDGGenerator {
 	}
 
 	private static List<String> checkExistingSDGs(Properties projectProp) {
-		File sdgsDirFiles[] = new File(projectProp.getProperty("outputPath"))
-				.listFiles();
 		List<String> sdgsNames = new ArrayList<>();
-		for (File existingSDG : sdgsDirFiles) {
-			sdgsNames.add(FilenameUtils.removeExtension(existingSDG.getName()));
+		File sdgDir = new File(projectProp.getProperty("sdgsDirectoryPath"));
+		if (sdgDir != null && sdgDir.isDirectory()) {
+			String sdgsDirNames[] = sdgDir.list();
+			for (String existingSDG : sdgsDirNames) {
+				sdgsNames.add(FilenameUtils.removeExtension(existingSDG));
+			}
 		}
 		return sdgsNames;
 	}
@@ -79,7 +81,7 @@ public class SDGGenerator {
 		List<String> entryMethods = MainAux.configureEntryMethods(projectProp);
 		String thirdPartyLibsPath = projectProp
 				.getProperty("thirdPartyLibsPath");
-		String sdgFilePath = projectProp.getProperty("outputPath")
+		String sdgFilePath = projectProp.getProperty("sdgsDirectoryPath")
 				+ FilenameUtils.removeExtension(zipFile.getName()) + ".pdg";
 		String classPath = projectProp.getProperty("classPath");
 
