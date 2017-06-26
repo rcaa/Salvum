@@ -12,18 +12,18 @@ public class ClassMethod {
 			ClassNotFoundException, SecurityException, InstantiationException,
 			IllegalAccessException {
 
-		//String filePath = "C:\\Doutorado\\workspace\\Salvum\\Salvum\\src\\br\\ufpe\\cin\\analyses\\Main.java";
-		//String className = "br.ufpe.cin.analyses.Main";
+		// String filePath =
+		// "C:\\Doutorado\\workspace\\Salvum\\Salvum\\src\\br\\ufpe\\cin\\analyses\\Main.java";
+		// String className = "br.ufpe.cin.analyses.Main";
 
 		String filePath = args[0];
 		File file = new File(filePath);
 		URL url = file.toURI().toURL();
-		URLClassLoader classLoader = new URLClassLoader(new URL[] {url});
+		URLClassLoader classLoader = new URLClassLoader(new URL[] { url });
 		String className = args[1];
 
 		Class<?> classDefinition = classLoader.loadClass(className);
 		classLoader.close();
-				
 
 		Method[] methods = classDefinition.newInstance().getClass()
 				.getDeclaredMethods();
@@ -48,8 +48,11 @@ public class ClassMethod {
 		String returningTypeWithBars = returnType.getName().replace('.', '/');
 		if (returningTypeWithBars.equals("void")) {
 			fullMethodName = fullMethodName + "V";
-		} else if (returnType.isArray() || returnType.isPrimitive()) {
+		} else if (returnType.isArray()) {
 			fullMethodName = fullMethodName + returningTypeWithBars;
+		} else if (returnType.isPrimitive()) {
+			fullMethodName = fullMethodName
+					+ parseJavaNotation(returnType.getName());
 		} else {
 			fullMethodName = fullMethodName + "L" + returningTypeWithBars + ";";
 		}
@@ -61,13 +64,49 @@ public class ClassMethod {
 		for (Class<?> paramType : parameterTypes) {
 			String paramTypeNameWithBars = paramType.getName()
 					.replace('.', '/');
-			if (paramType.isArray() || paramType.isPrimitive()) {
+			if (paramType.isArray()) {
 				fullMethodName = fullMethodName + paramTypeNameWithBars;
+			} else if (paramType.isPrimitive()) {
+				fullMethodName = fullMethodName
+						+ parseJavaNotation(paramType.getName());
 			} else {
 				fullMethodName = fullMethodName + "L" + paramTypeNameWithBars
 						+ ";";
 			}
 		}
 		return fullMethodName;
+	}
+
+	private static String parseJavaNotation(String name) {
+		String returning = "";
+		switch (name) {
+		case "long":
+			returning = "J";
+			break;
+		case "byte":
+			returning = "B";
+			break;
+		case "char":
+			returning = "C";
+			break;
+		case "double":
+			returning = "D";
+			break;
+		case "float":
+			returning = "F";
+			break;
+		case "int":
+			returning = "I";
+			break;
+		case "short":
+			returning = "S";
+			break;
+		case "boolean":
+			returning = "Z";
+			break;
+		default:
+			break;
+		}
+		return returning;
 	}
 }
