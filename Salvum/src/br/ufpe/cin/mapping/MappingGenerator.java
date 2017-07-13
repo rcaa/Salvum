@@ -1,14 +1,14 @@
 package br.ufpe.cin.mapping;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.lang.reflect.Type;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -25,6 +25,11 @@ import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 import br.ufpe.cin.util.FileUtil;
 import br.ufpe.cin.util.ZipUtil;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 public class MappingGenerator {
 
@@ -53,11 +58,11 @@ public class MappingGenerator {
 					if (args.length > 1 && args[1] != null
 							&& !args[1].isEmpty()
 							&& args[1].equals("contribution")) {
-//						Path policyPath = FileSystems.getDefault().getPath(
-//								projectProp.getProperty("policyDirectory"));
-//						List<String> hashes = PolicyContribution.findHashes(
-//								policyPath,
-//								projectProp.getProperty("targetPathDirectory"));
+						// Path policyPath = FileSystems.getDefault().getPath(
+						// projectProp.getProperty("policyDirectory"));
+						// List<String> hashes = PolicyContribution.findHashes(
+						// policyPath,
+						// projectProp.getProperty("targetPathDirectory"));
 						String zipFileName = zipFile.getName();
 						String hash = zipFileName.substring(
 								zipFileName.indexOf('-') + 1,
@@ -68,7 +73,7 @@ public class MappingGenerator {
 						mapClassLines = preprocessMappingContribution(
 								projectProp, hash);
 						// } else {
-//						continue;
+						// continue;
 						// }
 					} else {
 						mapClassLines = preprocessMappingClazz(projectProp);
@@ -116,28 +121,30 @@ public class MappingGenerator {
 			Map<String, Set<Integer>> mapClassLines)
 			throws FileNotFoundException, IOException {
 		String mappingName = projectProp.getProperty("mappingsPath")
-				+ FilenameUtils.removeExtension(zipFile.getName());
-		FileOutputStream fos = new FileOutputStream(mappingName);
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(mapClassLines);
-		oos.close();
-		fos.close();
+				+ FilenameUtils.removeExtension(zipFile.getName()) + ".json";
+		Gson gson = new Gson();
+		Type mapType = new TypeToken<HashMap<String, Set<Integer>>>() {
+		}.getType();
+		JsonWriter writer = new JsonWriter(new FileWriter(mappingName));
+		gson.toJson(mapClassLines, mapType, writer);
+		writer.close();
 	}
 
-	@SuppressWarnings("unchecked")
 	public static Map<String, Set<Integer>> loadMapping(Properties p, File sdg)
 			throws FileNotFoundException, IOException {
-		FileInputStream fis = new FileInputStream(p.getProperty("mappingsPath")
-				+ FilenameUtils.removeExtension(sdg.getName()));
-		ObjectInputStream ois = new ObjectInputStream(fis);
+		String mappingPath = p.getProperty("mappingsPath")
+				+ FilenameUtils.removeExtension(sdg.getName()) + ".json";
 		Map<String, Set<Integer>> mapClassLines = null;
-		try {
-			mapClassLines = (Map<String, Set<Integer>>) ois.readObject();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		fis.close();
-		ois.close();
+
+		// JsonElement jsonElement = gson.toJsonTree(map);
+		// MyPojo pojo = gson.fromJson(jsonElement, MyPojo.class);
+
+		Gson gson = new Gson();
+		JsonReader reader = new JsonReader(new FileReader(mappingPath));
+		mapClassLines = gson.fromJson(reader,
+				new TypeToken<HashMap<String, Set<Integer>>>() {
+				}.getType());
+		reader.close();
 		return mapClassLines;
 	}
 }

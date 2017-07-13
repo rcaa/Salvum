@@ -133,10 +133,15 @@ public class LabelConfigClazz {
 				// sourceLine = null;
 				// = meth.getLineNumber(sdgInstruction
 				// .getBytecodeIndex());
-
-				Integer sourceLine = mapInstructionsLines.get(sdgInstruction
-						.toString());
-
+				Integer sourceLine = null;
+				Set<String> instructionsSet = mapInstructionsLines.keySet();
+				for (String sdgIns : instructionsSet) {
+					if (sdgIns.equals(sdgInstruction.toString())) {
+						sourceLine = mapInstructionsLines.get(sdgIns);
+						break;
+					}
+				}
+				
 				if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
 					if (policy.getOperator().equals("noflow")) {
 						sinks.add(sdgInstruction);

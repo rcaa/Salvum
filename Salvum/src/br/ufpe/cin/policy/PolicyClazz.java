@@ -2,9 +2,9 @@ package br.ufpe.cin.policy;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class PolicyClazz {
 						secondPart.indexOf("{") + 1, secondPart.indexOf("}"));
 				String[] methods = methodsStr.split(",");
 				for (String meth : methods) {
-					//TODO tenho que alterar esse null depois
+					// TODO tenho que alterar esse null depois
 					this.methodsAndArgs.put(meth, null);
 				}
 			} else if (constraint.contains("noset")) {
@@ -64,7 +64,7 @@ public class PolicyClazz {
 					JSONArray identifiers = (JSONArray) module
 							.get("identifiers");
 					for (Object ident : identifiers) {
-						//TODO tenho que alterar esse null depois
+						// TODO tenho que alterar esse null depois
 						this.methodsAndArgs.put(ident.toString().trim(), null);
 					}
 				}
@@ -73,8 +73,7 @@ public class PolicyClazz {
 						&& module.containsKey("arguments")) {
 					String identifier = (String) module.get("identifier");
 					String meth = (String) module.get("method");
-					JSONArray arguments = (JSONArray) module
-							.get("arguments");
+					JSONArray arguments = (JSONArray) module.get("arguments");
 					Set<String> args = new HashSet<>();
 					for (Object argument : arguments) {
 						args.add(argument.toString().trim());
@@ -134,14 +133,13 @@ public class PolicyClazz {
 	}
 
 	public static void main(String[] args) {
-		Path path = FileSystems
-				.getDefault()
-				.getPath(
-						"C:\\Doutorado\\workspace\\Salvum\\Salvum\\policies\\temp.json");
+		Path path = Paths
+				.get("C:\\Doutorado\\workspace\\Salvum\\Salvum\\policies\\TA-clazz.pl");
 		try {
-			PolicyClazz policy = new PolicyClazz(path);
+			PolicyClazz pc = new PolicyClazz(path);
+			System.out.println("Class e elements: " + pc.getClazzAndElements());
+			System.out.println("Methods e args: " + pc.getMethodsAndArgs());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

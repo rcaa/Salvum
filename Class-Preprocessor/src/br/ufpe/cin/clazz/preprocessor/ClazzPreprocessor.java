@@ -47,7 +47,6 @@ public class ClazzPreprocessor {
 			String methRegex = "(.*)"
 					+ (meth.trim().replaceAll("\\.",
 							Matcher.quoteReplacement("\\."))) + "(.*)";
-
 			for (String srcFile : srcFiles) {
 				FileReader fileReader = null;
 				try {
@@ -104,6 +103,7 @@ public class ClazzPreprocessor {
 		String classSourcePath = targetPathDirectory.substring(
 				targetPathDirectory.indexOf("/src"),
 				targetPathDirectory.length() - 1);
+
 		String className = null;
 		// significa que comeca o diff de um novo arquivo
 		if (srcFile != null && srcFile.contains(JAVA_CLASSES_EXT)
