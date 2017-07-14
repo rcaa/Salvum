@@ -6,9 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import br.ufpe.cin.policy.PolicyContribution;
-
-import com.ibm.wala.classLoader.IMethod;
-
 import edu.kit.joana.api.IFCAnalysis;
 import edu.kit.joana.api.lattice.BuiltinLattices;
 import edu.kit.joana.api.sdg.SDGAttribute;
@@ -82,7 +79,7 @@ public class LabelConfigContribution {
 			Collection<SDGClass> classes,
 			Map<String, Set<Integer>> mapClassesLineNumbers,
 			PolicyContribution policy, List<SDGProgramPart> sources,
-			List<SDGProgramPart> sinks) {
+			List<SDGProgramPart> sinks, Map<String, Integer> mapInstructionsLines) {
 		for (SDGClass sdgClass : classes) {
 			// foreach class da policy
 
@@ -95,7 +92,7 @@ public class LabelConfigContribution {
 							clazz);
 
 					iterateOverMethods(mapClassesLineNumbers, policy, sources,
-							sinks, sdgClass);
+							sinks, sdgClass, mapInstructionsLines);
 				}
 			}
 		}
@@ -104,18 +101,24 @@ public class LabelConfigContribution {
 	private void iterateOverMethods(
 			Map<String, Set<Integer>> mapClassesLineNumbers,
 			PolicyContribution policy, List<SDGProgramPart> sources,
-			List<SDGProgramPart> sinks, SDGClass sdgClass) {
+			List<SDGProgramPart> sinks, SDGClass sdgClass,
+			Map<String, Integer> mapInstructionsLines) {
 		// por enquanto so marca instrucao de metodo como sink
 		for (SDGMethod sdgMethod : sdgClass.getMethods()) {
-			IMethod meth = sdgMethod.getMethod();
 			List<SDGInstruction> methodInstructions = sdgMethod
 					.getInstructions();
 			for (SDGInstruction sdgInstruction : methodInstructions) {
 				Set<Integer> lineNumbers = mapClassesLineNumbers.get(sdgClass
 						.toString());
 
-				Integer sourceLine = meth.getLineNumber(sdgInstruction
-						.getBytecodeIndex());
+				Integer sourceLine = null;
+				Set<String> instructionsSet = mapInstructionsLines.keySet();
+				for (String sdgIns : instructionsSet) {
+					if (sdgIns.equals(sdgInstruction.toString())) {
+						sourceLine = mapInstructionsLines.get(sdgIns);
+						break;
+					}
+				}
 
 				if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
 					if (policy.getOperator().equals("noflow")) {

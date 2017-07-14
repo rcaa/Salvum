@@ -8,10 +8,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 
+import br.ufpe.cin.mapping.LineMappingGenerator;
+import br.ufpe.cin.mapping.MappingGenerator;
 import br.ufpe.cin.policy.PolicyContribution;
 
 import com.ibm.wala.util.CancelException;
@@ -54,7 +58,9 @@ public class ContributionIFCAnalysis {
 		File sdgsDirectory = new File(sdgsDirectoryPath);
 		File[] sdgs = sdgsDirectory.listFiles();
 		for (File sdg : sdgs) {
-
+			if (sdg.isDirectory()) {
+				continue;
+			}
 			SDGProgram program = SDGProgram.loadSDG(sdg.getAbsolutePath());
 			Collection<SDGClass> classes = program.getClasses();
 			List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
@@ -67,6 +73,14 @@ public class ContributionIFCAnalysis {
 					sdgFileName.indexOf('.'));
 			PolicyContribution policy = new PolicyContribution(path, hash);
 
+			Map<String, Set<Integer>> mapClassLines = MappingGenerator
+					.loadMapping(p, sdg);
+			Map<String, Integer> mapInstructionsLines = LineMappingGenerator
+					.loadMapping(p, sdg);
+
+			lconfig.prepareListsOfSourceAndSinksContribution(classes, mapClassLines,
+					policy, sources, sinks, mapInstructionsLines);
+			
 			// rodo as analises
 			IFCAnalysis ifc = new IFCAnalysis(program);
 			lconfig.labellingElements(sources, sinks, program, ifc);
