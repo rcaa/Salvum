@@ -1,4 +1,4 @@
-package br.ufpe.cin.mapping;
+ package br.ufpe.cin.mapping;
 
 import java.io.File;
 import java.io.FileNotFoundException;

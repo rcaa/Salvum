@@ -54,39 +54,46 @@ public class MappingGenerator {
 					String projectPropPath = zipProp.getProperty("propFile");
 					Properties projectProp = FileUtil
 							.getPropertiesFile(projectPropPath);
-					Map<String, Set<Integer>> mapClassLines = null;
-					if (args.length > 1 && args[1] != null
-							&& !args[1].isEmpty()
-							&& args[1].equals("contribution")) {
-						// Path policyPath = FileSystems.getDefault().getPath(
-						// projectProp.getProperty("policyDirectory"));
-						// List<String> hashes = PolicyContribution.findHashes(
-						// policyPath,
-						// projectProp.getProperty("targetPathDirectory"));
-						String zipFileName = zipFile.getName();
-						String hash = zipFileName.substring(
-								zipFileName.indexOf('-') + 1,
-								zipFileName.indexOf('.'));
-						// comparo as hashes dos zips com as hashes resultantes
-						// da policy
-						// if (hashes.contains(hash)) {
-						mapClassLines = preprocessMappingContribution(
-								projectProp, hash);
-						// } else {
-						// continue;
-						// }
-					} else {
-						mapClassLines = preprocessMappingClazz(projectProp);
-					}
-					registerMapping(zipFile, projectProp, mapClassLines);
+
+					createClazzMapping(args, unzipedDirectory, zipFile,
+							projectProp);
+					
 					FileUtils.deleteDirectory(new File(unzipedDirectory
 							+ projectProp.getProperty("projectName")));
-					mapClassLines.clear();
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private static void createClazzMapping(String[] args,
+			String unzipedDirectory, File zipFile, Properties projectProp)
+			throws IOException, FileNotFoundException {
+		Map<String, Set<Integer>> mapClassLines = null;
+		if (args.length > 1 && args[1] != null && !args[1].isEmpty()
+				&& args[1].equals("contribution")) {
+			// Path policyPath = FileSystems.getDefault().getPath(
+			// projectProp.getProperty("policyDirectory"));
+			// List<String> hashes = PolicyContribution.findHashes(
+			// policyPath,
+			// projectProp.getProperty("targetPathDirectory"));
+			String zipFileName = zipFile.getName();
+			String hash = zipFileName.substring(zipFileName.indexOf('-') + 1,
+					zipFileName.indexOf('.'));
+			// comparo as hashes dos zips com as hashes resultantes
+			// da policy
+			// if (hashes.contains(hash)) {
+			mapClassLines = preprocessMappingContribution(projectProp, hash);
+			// } else {
+			// continue;
+			// }
+		} else {
+			mapClassLines = preprocessMappingClazz(projectProp);
+		}
+		registerMapping(zipFile, projectProp, mapClassLines);
+		mapClassLines.clear();
 	}
 
 	private static Map<String, Set<Integer>> preprocessMappingClazz(

@@ -39,21 +39,25 @@ public class SDGGenerator {
 		if (zipDir.isDirectory()) {
 			File[] zipFiles = zipDir.listFiles();
 			for (File zipFile : zipFiles) {
-
 				List<String> sdgsNames = checkExistingSDGs(projectProp);
-				if (zipFile.isDirectory()
-						|| sdgsNames.contains(FilenameUtils
-								.removeExtension(zipFile.getName()))) {
-					continue;
-				}
-
 				try {
-					ZipUtil.unzip(zipFile.getAbsolutePath(), unzipedDirectory);
+					if (zipFile.isDirectory()
+							|| sdgsNames.contains(FilenameUtils
+									.removeExtension(zipFile.getName()))) {
+						continue;
+					} else {
 
-					SDGGenerator.generateSDGFile(zipFile, projectProp);
+						ZipUtil.unzip(zipFile.getAbsolutePath(),
+								unzipedDirectory);
+						SDGProgram program = SDGGenerator.generateSDGFile(zipFile,
+								projectProp);
 
-					FileUtils.deleteDirectory(new File(unzipedDirectory
-							+ projectProp.getProperty("projectName")));
+						LineMappingGenerator.createLineMapping(program, zipFile,
+								projectProp);
+						
+						FileUtils.deleteDirectory(new File(unzipedDirectory
+								+ projectProp.getProperty("projectName")));
+					}
 				} catch (ClassHierarchyException | IOException
 						| UnsoundGraphException | CancelException e) {
 					e.printStackTrace();
@@ -74,9 +78,9 @@ public class SDGGenerator {
 		return sdgsNames;
 	}
 
-	private static void generateSDGFile(File zipFile, Properties projectProp)
-			throws ClassHierarchyException, IOException, UnsoundGraphException,
-			CancelException {
+	private static SDGProgram generateSDGFile(File zipFile,
+			Properties projectProp) throws ClassHierarchyException,
+			IOException, UnsoundGraphException, CancelException {
 
 		List<String> entryMethods = MainAux.configureEntryMethods(projectProp);
 		String thirdPartyLibsPath = projectProp
@@ -91,8 +95,7 @@ public class SDGGenerator {
 		FileOutputStream sdgIO = new FileOutputStream(sdgFilePath);
 		SDGSerializer.toPDGFormat(program.getSDG(), sdgIO);
 		sdgIO.close();
-
-		LineMappingGenerator.createLineMapping(program, zipFile, projectProp);
+		return program;
 	}
 
 }
