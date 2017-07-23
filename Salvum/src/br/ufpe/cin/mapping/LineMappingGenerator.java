@@ -1,4 +1,4 @@
- package br.ufpe.cin.mapping;
+package br.ufpe.cin.mapping;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,24 +44,28 @@ public class LineMappingGenerator {
 	private static void registerMapping(File zipFile, Properties projectProp,
 			Map<String, Integer> mapInstructionsLines)
 			throws FileNotFoundException, IOException {
-		Gson gson = new Gson();
-		Type mapType = new TypeToken<HashMap<String, Integer>>() {
-		}.getType();
-
 		String mappingName = projectProp.getProperty("lineMappingsPath")
 				+ FilenameUtils.removeExtension(zipFile.getName()) + ".json";
+		File f = new File(mappingName);
+		if (!f.exists()) {
+			Gson gson = new Gson();
+			Type mapType = new TypeToken<HashMap<String, Integer>>() {
+			}.getType();
+			JsonWriter writer = new JsonWriter(new FileWriter(mappingName));
+			gson.toJson(mapInstructionsLines, mapType, writer);
+			writer.close();
+		} else {
+			System.out.println("Line Mapping already exist for "
+					+ zipFile.getName());
+		}
 
-		JsonWriter writer = new JsonWriter(new FileWriter(mappingName));
-		gson.toJson(mapInstructionsLines, mapType, writer);
-		writer.close();
 	}
 
-	public static Map<String, Integer> loadMapping(Properties p,
-			File mapping) throws FileNotFoundException, IOException {
+	public static Map<String, Integer> loadMapping(Properties p, File mapping)
+			throws FileNotFoundException, IOException {
 		String mappingPath = p.getProperty("lineMappingsPath")
 				+ FilenameUtils.removeExtension(mapping.getName()) + ".json";
 		Map<String, Integer> mapInstructionsLines = null;
-	
 
 		Gson gson = new Gson();
 		JsonReader reader = new JsonReader(new FileReader(mappingPath));

@@ -55,9 +55,8 @@ public class MappingGenerator {
 					Properties projectProp = FileUtil
 							.getPropertiesFile(projectPropPath);
 
-					createClazzMapping(args, unzipedDirectory, zipFile,
-							projectProp);
-					
+					createMapping(args, unzipedDirectory, zipFile, projectProp);
+
 					FileUtils.deleteDirectory(new File(unzipedDirectory
 							+ projectProp.getProperty("projectName")));
 
@@ -68,9 +67,9 @@ public class MappingGenerator {
 		}
 	}
 
-	private static void createClazzMapping(String[] args,
-			String unzipedDirectory, File zipFile, Properties projectProp)
-			throws IOException, FileNotFoundException {
+	private static void createMapping(String[] args, String unzipedDirectory,
+			File zipFile, Properties projectProp) throws IOException,
+			FileNotFoundException {
 		Map<String, Set<Integer>> mapClassLines = null;
 		if (args.length > 1 && args[1] != null && !args[1].isEmpty()
 				&& args[1].equals("contribution")) {
@@ -86,13 +85,15 @@ public class MappingGenerator {
 			// da policy
 			// if (hashes.contains(hash)) {
 			mapClassLines = preprocessMappingContribution(projectProp, hash);
+			registerMapping(zipFile, projectProp, mapClassLines, "-contribution");
 			// } else {
 			// continue;
 			// }
 		} else {
 			mapClassLines = preprocessMappingClazz(projectProp);
+			registerMapping(zipFile, projectProp, mapClassLines, "-clazz");
 		}
-		registerMapping(zipFile, projectProp, mapClassLines);
+		
 		mapClassLines.clear();
 	}
 
@@ -125,27 +126,29 @@ public class MappingGenerator {
 	}
 
 	private static void registerMapping(File zipFile, Properties projectProp,
-			Map<String, Set<Integer>> mapClassLines)
+			Map<String, Set<Integer>> mapClassLines, String flag)
 			throws FileNotFoundException, IOException {
 		String mappingName = projectProp.getProperty("mappingsPath")
-				+ FilenameUtils.removeExtension(zipFile.getName()) + ".json";
-		Gson gson = new Gson();
-		Type mapType = new TypeToken<HashMap<String, Set<Integer>>>() {
-		}.getType();
-		JsonWriter writer = new JsonWriter(new FileWriter(mappingName));
-		gson.toJson(mapClassLines, mapType, writer);
-		writer.close();
+				+ FilenameUtils.removeExtension(zipFile.getName()) + flag + ".json";
+		File f = new File(mappingName);
+		if (!f.exists()) {
+			Gson gson = new Gson();
+			Type mapType = new TypeToken<HashMap<String, Set<Integer>>>() {
+			}.getType();
+			JsonWriter writer = new JsonWriter(new FileWriter(mappingName));
+			gson.toJson(mapClassLines, mapType, writer);
+			writer.close();
+		} else {
+			System.out
+					.println("Mapping already exist for " + zipFile.getName());
+		}
 	}
 
-	public static Map<String, Set<Integer>> loadMapping(Properties p, File sdg)
+	public static Map<String, Set<Integer>> loadMapping(Properties p, File sdg, String flag)
 			throws FileNotFoundException, IOException {
 		String mappingPath = p.getProperty("mappingsPath")
-				+ FilenameUtils.removeExtension(sdg.getName()) + ".json";
+				+ FilenameUtils.removeExtension(sdg.getName()) + flag + ".json";
 		Map<String, Set<Integer>> mapClassLines = null;
-
-		// JsonElement jsonElement = gson.toJsonTree(map);
-		// MyPojo pojo = gson.fromJson(jsonElement, MyPojo.class);
-
 		Gson gson = new Gson();
 		JsonReader reader = new JsonReader(new FileReader(mappingPath));
 		mapClassLines = gson.fromJson(reader,

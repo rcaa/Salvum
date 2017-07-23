@@ -96,7 +96,7 @@ public class ClazzIFCAnalysis {
 			PolicyClazz policy = new PolicyClazz(path);
 
 			Map<String, Set<Integer>> mapClassLines = MappingGenerator
-					.loadMapping(p, sdg);
+					.loadMapping(p, sdg, "-clazz");
 			Map<String, Integer> mapInstructionsLines = LineMappingGenerator
 					.loadMapping(p, sdg);
 

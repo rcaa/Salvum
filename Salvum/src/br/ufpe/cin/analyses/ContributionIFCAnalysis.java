@@ -74,7 +74,7 @@ public class ContributionIFCAnalysis {
 			PolicyContribution policy = new PolicyContribution(path, hash);
 
 			Map<String, Set<Integer>> mapClassLines = MappingGenerator
-					.loadMapping(p, sdg);
+					.loadMapping(p, sdg, "-contribution");
 			Map<String, Integer> mapInstructionsLines = LineMappingGenerator
 					.loadMapping(p, sdg);
 
