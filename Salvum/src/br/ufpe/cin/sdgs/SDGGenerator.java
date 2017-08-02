@@ -26,6 +26,7 @@ public class SDGGenerator {
 
 	public static void main(String[] args) {
 
+		System.out.println("Starting SDG generator...");
 		String zipPropPath = args[0];
 		Properties zipProp = FileUtil.getPropertiesFile(zipPropPath);
 
@@ -39,6 +40,7 @@ public class SDGGenerator {
 		if (zipDir.isDirectory()) {
 			File[] zipFiles = zipDir.listFiles();
 			for (File zipFile : zipFiles) {
+				System.out.println("Running SDG generator for " + zipFile.getName());
 				List<String> sdgsNames = checkExistingSDGs(projectProp);
 				try {
 					if (zipFile.isDirectory()
@@ -62,8 +64,10 @@ public class SDGGenerator {
 						| UnsoundGraphException | CancelException e) {
 					e.printStackTrace();
 				}
+				System.out.println("Ending SDG generator for " + zipFile.getName());
 			}
 		}
+		System.out.println("Ending SDG generator.");
 	}
 
 	private static List<String> checkExistingSDGs(Properties projectProp) {

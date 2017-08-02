@@ -21,7 +21,11 @@ public class ClazzPreprocessor {
 		this.meths = meths;
 		File[] files = new File(sourceDirectory).listFiles();
 		try {
-			ClazzSrcManager.getSrcManager().fillClassDirectories(files);
+			if (files != null && files.length > 0) {
+				ClazzSrcManager.getSrcManager().fillClassDirectories(files);
+			} else {
+				System.out.println("------There is no file to preprocess------");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

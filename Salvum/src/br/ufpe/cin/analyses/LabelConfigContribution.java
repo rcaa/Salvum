@@ -29,7 +29,10 @@ public class LabelConfigContribution {
 
 	private void annotateSources(List<SDGProgramPart> sources,
 			SDGProgram program, IFCAnalysis ana) {
+		System.out.println("List of sources: ");
+		int i = 1;
 		for (SDGProgramPart source : sources) {
+			System.out.println(i + "- " + source);
 			if (source instanceof SDGMethod) {
 				ana.addSourceAnnotation(program.getMethod(source.toString()),
 						BuiltinLattices.STD_SECLEVEL_HIGH);
@@ -50,6 +53,7 @@ public class LabelConfigContribution {
 						BuiltinLattices.STD_SECLEVEL_HIGH);
 			}
 		}
+		i++;
 	}
 
 	private void annotateSinks(List<SDGProgramPart> sinks, SDGProgram program,

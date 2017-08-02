@@ -71,7 +71,7 @@ public class PolicyClazz {
 				if (module.containsKey("identifier")
 						&& module.containsKey("method")
 						&& module.containsKey("arguments")) {
-					String identifier = (String) module.get("identifier");
+					//String identifier = (String) module.get("identifier");
 					String meth = (String) module.get("method");
 					JSONArray arguments = (JSONArray) module.get("arguments");
 					Set<String> args = new HashSet<>();

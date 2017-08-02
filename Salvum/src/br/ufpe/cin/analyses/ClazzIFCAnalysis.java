@@ -6,6 +6,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -44,8 +45,10 @@ public class ClazzIFCAnalysis {
 		Properties p = FileUtil.getPropertiesFile(propertiesPath);
 
 		try {
+			System.out.println("Starting Clazz IFC Analysis...");
 			ClazzIFCAnalysis m = new ClazzIFCAnalysis();
 			m.run(p, propertiesPath);
+			System.out.println("Ending Clazz IFC Analysis");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,6 +79,11 @@ public class ClazzIFCAnalysis {
 		File sdgsDirectory = new File(sdgsDirectoryPath);
 		File[] sdgs = sdgsDirectory.listFiles();
 		for (File sdg : sdgs) {
+			if (sdg.isDirectory()) {
+				continue;
+			}
+			
+			System.out.println("Starting IFC for: " + sdg.getName());
 
 			SDGProgram program = SDGProgram.loadSDG(sdg.getAbsolutePath());
 
@@ -108,9 +116,10 @@ public class ClazzIFCAnalysis {
 			lconfig.labellingElements(sources, sinks, program, ifc);
 			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 			if (result == null || result.isEmpty()) {
-				System.out.println("No violations found");
+				System.out.println("-----No violations found-----");
 			}
-			for (IViolation<SecurityNode> iViolation : result) {
+			Set<IViolation<SecurityNode>> violations = new LinkedHashSet<>(result);
+			for (IViolation<SecurityNode> iViolation : violations) {
 				ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 				SecurityNode source = sn.getSource();
 				SecurityNode sink = sn.getSink();
@@ -146,8 +155,7 @@ public class ClazzIFCAnalysis {
 
 			sources.clear();
 			sinks.clear();
-			System.out.println("---------------------------------END----"
-					+ "-------------------------------");
+			System.out.println("Ending IFC for: " + sdg.getName());
 		}
 
 	}

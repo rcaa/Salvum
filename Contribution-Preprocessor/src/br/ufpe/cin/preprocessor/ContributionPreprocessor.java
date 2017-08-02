@@ -30,6 +30,7 @@ public class ContributionPreprocessor {
 		this.currentCommitHash = currentCommitHash;
 		this.parentCommitHash = GitUtil.runParents(gitPath,
 				currentCommitHash);
+		System.out.println("currentCommitHash: " + currentCommitHash);
 		this.diffFilePath = setDiffFilePath(currentCommitHash,
 				p.getProperty("diffFilePath"));
 	}

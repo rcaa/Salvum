@@ -35,7 +35,10 @@ public class LabelConfigClazz {
 
 	private void annotateSources(List<SDGProgramPart> sources,
 			SDGProgram program, IFCAnalysis ana) {
+		System.out.println("List of sources: ");
+		int i = 1;
 		for (SDGProgramPart source : sources) {
+			System.out.println(i + "- " + source);
 			if (source instanceof SDGMethod) {
 				ana.addSourceAnnotation(program.getMethod(source.toString()),
 						BuiltinLattices.STD_SECLEVEL_HIGH);
@@ -55,6 +58,7 @@ public class LabelConfigClazz {
 				ana.addSourceAnnotation(source,
 						BuiltinLattices.STD_SECLEVEL_HIGH);
 			}
+			i++;
 		}
 	}
 
@@ -107,8 +111,9 @@ public class LabelConfigClazz {
 				Set<String> sensitiveResources = policy
 						.getSensitiveResources(clazz);
 				for (String sensitiveResource : sensitiveResources) {
-					if (sdgAttribute.toString().equals(sensitiveResource)) {
+					if (sdgAttribute.toString().equals(sensitiveResource.toString())) {
 						if (policy.getOperator().equals("noflow")) {
+							System.out.println("source to be labelled: " + sdgAttribute);
 							sources.add(sdgAttribute);
 						} else if (policy.getOperator().equals("noset")) {
 							sinks.add(sdgAttribute);

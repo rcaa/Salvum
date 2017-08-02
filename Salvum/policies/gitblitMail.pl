@@ -1,0 +1,2 @@
+com.gitblit.utils.X509Utils {CA_CONFIG}, com.gitblit.models.UserModel {password,locality}, com.gitblit.models.FederationModel {token}, com.gitblit.models.FederationProposal {token}, com.gitblit.models.RegistrantAccessPermission {permission}, com.gitblit.models.RepositoryModel {accessRestriction,authorizationControl}, com.gitblit.models.RepositoryUrl {permission}, com.gitblit.models.TeamModel {permissions} noflow email
+	where email = {sendMail}

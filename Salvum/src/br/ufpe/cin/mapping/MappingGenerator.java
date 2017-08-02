@@ -20,7 +20,6 @@ import br.ufpe.cin.clazz.preprocessor.ClazzContextManager;
 import br.ufpe.cin.clazz.preprocessor.ClazzPreprocessor;
 import br.ufpe.cin.clazz.preprocessor.PreprocessorException;
 import br.ufpe.cin.policy.PolicyClazz;
-import br.ufpe.cin.policy.PolicyContribution;
 import br.ufpe.cin.preprocessor.ContextManagerContribution;
 import br.ufpe.cin.preprocessor.ContributionPreprocessor;
 import br.ufpe.cin.util.FileUtil;
@@ -38,6 +37,7 @@ public class MappingGenerator {
 			System.out.println("Invalid zip property path");
 			return;
 		}
+		System.out.println("Starting mapping generator...");
 		String zipPropPath = args[0];
 		Properties zipProp = FileUtil.getPropertiesFile(zipPropPath);
 		String zipDirectoryPath = zipProp.getProperty("zipDirectoryPath");
@@ -50,6 +50,8 @@ public class MappingGenerator {
 					if (zipFile.isDirectory()) {
 						continue;
 					}
+					System.out.println("Running mapping generator for "
+							+ zipFile.getName());
 					ZipUtil.unzip(zipFile.getAbsolutePath(), unzipedDirectory);
 					String projectPropPath = zipProp.getProperty("propFile");
 					Properties projectProp = FileUtil
@@ -59,12 +61,14 @@ public class MappingGenerator {
 
 					FileUtils.deleteDirectory(new File(unzipedDirectory
 							+ projectProp.getProperty("projectName")));
-
+					System.out.println("Ending mapping generator for "
+							+ zipFile.getName());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Ending mapping generator.");
 	}
 
 	private static void createMapping(String[] args, String unzipedDirectory,
@@ -85,7 +89,8 @@ public class MappingGenerator {
 			// da policy
 			// if (hashes.contains(hash)) {
 			mapClassLines = preprocessMappingContribution(projectProp, hash);
-			registerMapping(zipFile, projectProp, mapClassLines, "-contribution");
+			registerMapping(zipFile, projectProp, mapClassLines,
+					"-contribution");
 			// } else {
 			// continue;
 			// }
@@ -93,7 +98,7 @@ public class MappingGenerator {
 			mapClassLines = preprocessMappingClazz(projectProp);
 			registerMapping(zipFile, projectProp, mapClassLines, "-clazz");
 		}
-		
+
 		mapClassLines.clear();
 	}
 
@@ -115,11 +120,11 @@ public class MappingGenerator {
 
 	private static Map<String, Set<Integer>> preprocessMappingContribution(
 			Properties projectProp, String hash) throws IOException {
-		Path path = FileSystems.getDefault().getPath(
-				projectProp.getProperty("policyDirectory"));
-		PolicyContribution policy = new PolicyContribution(path, hash);
+		// Path path = FileSystems.getDefault().getPath(
+		// projectProp.getProperty("policyDirectory"));
+		// PolicyContribution policy = new PolicyContribution(path, hash);
 		ContributionPreprocessor cp = new ContributionPreprocessor(projectProp,
-				policy.getHash());
+				hash);
 		cp.preprocess();
 		return ContextManagerContribution.getContext()
 				.getMapClassesLineNumbers();
@@ -129,7 +134,8 @@ public class MappingGenerator {
 			Map<String, Set<Integer>> mapClassLines, String flag)
 			throws FileNotFoundException, IOException {
 		String mappingName = projectProp.getProperty("mappingsPath")
-				+ FilenameUtils.removeExtension(zipFile.getName()) + flag + ".json";
+				+ FilenameUtils.removeExtension(zipFile.getName()) + flag
+				+ ".json";
 		File f = new File(mappingName);
 		if (!f.exists()) {
 			Gson gson = new Gson();
@@ -144,8 +150,8 @@ public class MappingGenerator {
 		}
 	}
 
-	public static Map<String, Set<Integer>> loadMapping(Properties p, File sdg, String flag)
-			throws FileNotFoundException, IOException {
+	public static Map<String, Set<Integer>> loadMapping(Properties p, File sdg,
+			String flag) throws FileNotFoundException, IOException {
 		String mappingPath = p.getProperty("mappingsPath")
 				+ FilenameUtils.removeExtension(sdg.getName()) + flag + ".json";
 		Map<String, Set<Integer>> mapClassLines = null;
