@@ -40,7 +40,8 @@ public class SDGGenerator {
 		if (zipDir.isDirectory()) {
 			File[] zipFiles = zipDir.listFiles();
 			for (File zipFile : zipFiles) {
-				System.out.println("Running SDG generator for " + zipFile.getName());
+				System.out.println("Running SDG generator for "
+						+ zipFile.getName());
 				List<String> sdgsNames = checkExistingSDGs(projectProp);
 				try {
 					if (zipFile.isDirectory()
@@ -51,12 +52,12 @@ public class SDGGenerator {
 
 						ZipUtil.unzip(zipFile.getAbsolutePath(),
 								unzipedDirectory);
-						SDGProgram program = SDGGenerator.generateSDGFile(zipFile,
-								projectProp);
+						SDGProgram program = SDGGenerator.generateSDGFile(
+								zipFile, projectProp);
 
-						LineMappingGenerator.createLineMapping(program, zipFile,
-								projectProp);
-						
+						LineMappingGenerator.createLineMapping(program,
+								zipFile, projectProp);
+
 						FileUtils.deleteDirectory(new File(unzipedDirectory
 								+ projectProp.getProperty("projectName")));
 					}
@@ -64,7 +65,8 @@ public class SDGGenerator {
 						| UnsoundGraphException | CancelException e) {
 					e.printStackTrace();
 				}
-				System.out.println("Ending SDG generator for " + zipFile.getName());
+				System.out.println("Ending SDG generator for "
+						+ zipFile.getName());
 			}
 		}
 		System.out.println("Ending SDG generator.");
@@ -86,7 +88,8 @@ public class SDGGenerator {
 			Properties projectProp) throws ClassHierarchyException,
 			IOException, UnsoundGraphException, CancelException {
 
-		List<String> entryMethods = MainAux.configureEntryMethods(projectProp);
+		List<String> entryMethods = MainAux.configureEntryMethods(projectProp
+				.getProperty("main"));
 		String thirdPartyLibsPath = projectProp
 				.getProperty("thirdPartyLibsPath");
 		String sdgFilePath = projectProp.getProperty("sdgsDirectoryPath")
