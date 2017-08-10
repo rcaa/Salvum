@@ -59,6 +59,7 @@ import edu.kit.joana.wala.core.CGConsumer;
 import edu.kit.joana.wala.core.ExternalCallCheck;
 import edu.kit.joana.wala.core.NullProgressMonitor;
 import edu.kit.joana.wala.core.SDGBuilder;
+import edu.kit.joana.wala.core.SDGBuilder.CGResult;
 import edu.kit.joana.wala.core.SDGBuilder.ExceptionAnalysis;
 import edu.kit.joana.wala.core.SDGBuilder.FieldPropagation;
 import edu.kit.joana.wala.core.SDGBuilder.PointsToPrecision;
@@ -229,26 +230,8 @@ public final class SDGBuildPreparation {
 		}
 
 		// MODIFICATION
-		if (cfg.extern != null) {
-			cfg.extern.setClassHierarchy(cha);
-		}
 		IMethod m = null;
-		List<IMethod> ms = null;
-		if (cfg.entryMethods != null && cfg.entryMethods.size() > 0) {
-			ms = new ArrayList<IMethod>();
-			for (String entryMethod : cfg.entryMethods) {
-				out.print("Setting up entrypoint " + entryMethod + "... ");
-
-				// Methode in der Klassenhierarchie suchen
-				final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, entryMethod);
-
-				IMethod meth = cha.resolveMethod(mr);
-				if (meth == null) {
-					fail("could not resolve " + mr);
-				}
-				ms.add(meth);
-			}
-		}
+		List<IMethod> ms = prepareEntryMethods(out, cfg, cha);
 		//
 
 		out.println("done.");
@@ -319,6 +302,26 @@ public final class SDGBuildPreparation {
 		return Pair.make(startTime, scfg);
 	}
 
+	private static List<IMethod> prepareEntryMethods(PrintStream out, Config cfg, ClassHierarchy cha) {
+		List<IMethod> ms = null;
+		if (cfg.entryMethods != null && cfg.entryMethods.size() > 0) {
+			ms = new ArrayList<IMethod>();
+			for (String entryMethod : cfg.entryMethods) {
+				out.print("Setting up entrypoint " + entryMethod + "... ");
+
+				// Methode in der Klassenhierarchie suchen
+				final MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, entryMethod);
+
+				IMethod meth = cha.resolveMethod(mr);
+				if (meth == null) {
+					fail("could not resolve " + mr);
+				}
+				ms.add(meth);
+			}
+		}
+		return ms;
+	}
+
 	private static void postpareBuild(long startTime, PrintStream out) {
 		out.println("\ndone.");
 		final long endTime = System.currentTimeMillis();
@@ -326,6 +329,22 @@ public final class SDGBuildPreparation {
 		out.println("Time needed: " + (endTime - startTime) + "ms - Memory: "
 				+ ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024))
 				+ "M used.");
+	}
+
+	public static CGResult computeCallGraphOnly(PrintStream out, Config cfg, boolean computeInterference,
+			IProgressMonitor progress) throws ClassHierarchyException, IOException, UnsoundGraphException,
+			CancelException {
+		Pair<Long, SDGBuilder.SDGBuilderConfig> p = prepareBuild(out, cfg, computeInterference, progress);
+		long startTime = p.fst;
+		SDGBuilder.SDGBuilderConfig scfg = p.snd;
+		SDGBuilder sdgBuilder = SDGBuilder.onlyCreate(scfg);
+		CGResult cgResult = sdgBuilder.buildCallgraph(progress);
+		postpareBuild(startTime, out);
+		progress.beginTask("pruning call graph...", IProgressMonitor.UNKNOWN);
+		edu.kit.joana.wala.core.CallGraph cg = sdgBuilder.convertAndPruneCallGraph(scfg.prunecg, cgResult, progress);
+		progress.done();
+		scfg.out.println(cg.vertexSet().size() + " nodes and " + cg.edgeSet().size() + " edges");
+		return cgResult;
 	}
 
 	public static SDG compute(PrintStream out, Config cfg, boolean computeInterference, IProgressMonitor progress)

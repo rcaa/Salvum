@@ -979,7 +979,7 @@ public class SDGBuilder implements CallGraphFilter {
 		return new CGResult(callgraph, cgb.getPointerAnalysis());
 	}
 
-	private CallGraph convertAndPruneCallGraph(final int prune, final CGResult walaCG, final IProgressMonitor progress)
+	public CallGraph convertAndPruneCallGraph(final int prune, final CGResult walaCG, final IProgressMonitor progress)
 			throws IllegalArgumentException, CallGraphBuilderCancelException {
 
 		com.ibm.wala.ipa.callgraph.CallGraph curcg = walaCG.cg;

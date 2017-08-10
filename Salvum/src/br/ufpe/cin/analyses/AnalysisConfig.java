@@ -26,23 +26,20 @@ public class AnalysisConfig {
 			String thirdPartyLibsPath) throws ClassHierarchyException,
 			IOException, UnsoundGraphException, CancelException {
 		/**
-		 * the class path is either a directory or a jar containing all the
-		 * classes of the program which you want to analyze
-		 */
-		// String classPath =
-		// "/Users/rodrigoandrade/Documents/workspaces/Doutorado/wala/SimpleExamples/bin/";
-
-		/**
-		 * the entry method is the main method which starts the program you want
-		 * to analyze
-		 */
-		// JavaMethodSignature entryMethod = JavaMethodSignature
-		// .mainMethodOfClass("Main");
-
-		/**
 		 * For multi-threaded programs, it is currently necessary to use the jdk
 		 * 1.4 stubs
 		 */
+		SDGConfig config = configureAnalysis(classPath, entryMethods,
+				thirdPartyLibsPath);
+
+		SDGProgram program = createSDG(config);
+
+		return program;
+	}
+
+	public static SDGConfig configureAnalysis(String classPath,
+			List<String> entryMethods, String thirdPartyLibsPath)
+			throws IOException {
 		SDGConfig config = new SDGConfig(classPath, null, Stubs.JRE_15);
 
 		config.setEntryMethods(entryMethods);
@@ -76,18 +73,19 @@ public class AnalysisConfig {
 		String libsPath = prepareLibsPath(thirdPartyLibsPath);
 
 		config.setThirdPartyLibsPath(libsPath);
+		return config;
+	}
 
+	private SDGProgram createSDG(SDGConfig config)
+			throws ClassHierarchyException, IOException, UnsoundGraphException,
+			CancelException {
 		/** build the PDG */
 		SDGProgram program = SDGProgram.createSDGProgram(config, System.out,
 				new NullProgressMonitor());
-
-		/** optional: save PDG to disk */
-		// SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
-		// "/Users/rodrigoandrade/Dropbox/Temp/SDGDirect.pdg"));
 		return program;
 	}
 
-	private String prepareLibsPath(String thirdPartyLibsPath)
+	private static String prepareLibsPath(String thirdPartyLibsPath)
 			throws IOException {
 		String libsPath = "";
 		if (thirdPartyLibsPath != null && !thirdPartyLibsPath.isEmpty()) {
@@ -111,7 +109,7 @@ public class AnalysisConfig {
 		return libsPath;
 	}
 
-	private String includeSubfolders(String thirdPartyLibsPath)
+	private static String includeSubfolders(String thirdPartyLibsPath)
 			throws IOException {
 		String thirdPartyLibsPathTobeUsed = "";
 		if (thirdPartyLibsPath.contains("*")) {
@@ -127,8 +125,8 @@ public class AnalysisConfig {
 
 	}
 
-	private String createThirdLibsPath(String thirdPartyLibsPathTobeUsed,
-			List<String> jarPathsList) {
+	private static String createThirdLibsPath(
+			String thirdPartyLibsPathTobeUsed, List<String> jarPathsList) {
 		for (String jar : jarPathsList) {
 			if (thirdPartyLibsPathTobeUsed.equals("")) {
 				thirdPartyLibsPathTobeUsed = jar;
@@ -140,7 +138,7 @@ public class AnalysisConfig {
 		return thirdPartyLibsPathTobeUsed;
 	}
 
-	private void walk(List<String> jarPathsList, String path)
+	private static void walk(List<String> jarPathsList, String path)
 			throws IOException {
 		File root = new File(path);
 		File[] list = root.listFiles();
@@ -158,8 +156,8 @@ public class AnalysisConfig {
 		}
 	}
 
-	private String iterateFiles(String thirdPartyLibsPath, String libsPath)
-			throws IOException {
+	private static String iterateFiles(String thirdPartyLibsPath,
+			String libsPath) throws IOException {
 		File[] files = new File(thirdPartyLibsPath)
 				.listFiles(new LibFilterUtil());
 		for (int i = 0; i < files.length; i++) {
@@ -173,7 +171,7 @@ public class AnalysisConfig {
 		return libsPath;
 	}
 
-	private boolean containsJar(File file) {
+	private static boolean containsJar(File file) {
 		String[] listFiles = file.list();
 		if (listFiles != null) {
 			for (String f : listFiles) {

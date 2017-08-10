@@ -54,6 +54,7 @@ import edu.kit.joana.util.Stubs;
 import edu.kit.joana.util.io.IOFactory;
 import edu.kit.joana.wala.core.NullProgressMonitor;
 import edu.kit.joana.wala.core.SDGBuilder;
+import edu.kit.joana.wala.core.SDGBuilder.CGResult;
 import edu.kit.joana.wala.core.SDGBuilder.PointsToPrecision;
 import edu.kit.joana.wala.summary.SummaryComputation;
 import edu.kit.joana.wala.summary.WorkPackage;
@@ -65,7 +66,9 @@ import gnu.trove.set.hash.TIntHashSet;
 public class SDGProgram {
 
 	/**
-	 * Special object which provides information about where a given code piece stems from
+	 * Special object which provides information about where a given code piece
+	 * stems from
+	 * 
 	 * @author Martin Mohr
 	 */
 	public static class ClassLoader {
@@ -87,8 +90,11 @@ public class SDGProgram {
 		}
 
 		/**
-		 * Extracts the class loader from the given entry node. Does not work if the given node is not an entry node.
-		 * @param entry entry node to extract class loader from
+		 * Extracts the class loader from the given entry node. Does not work if
+		 * the given node is not an entry node.
+		 * 
+		 * @param entry
+		 *            entry node to extract class loader from
 		 * @return class loader value from the given entry node
 		 */
 		public static ClassLoader fromSDGNode(SDGNode entry) {
@@ -101,18 +107,20 @@ public class SDGProgram {
 				return new ClassLoader(clsLoader);
 			}
 		}
-		
+
 		public static ClassLoader fromString(String clsLoader) {
 			if (clsLoader.equals("Application")) {
 				return APPLICATION;
-			} else if (clsLoader.equals("Primordial")){
+			} else if (clsLoader.equals("Primordial")) {
 				return PRIMORDIAL;
 			} else {
 				return new ClassLoader(clsLoader);
 			}
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -123,7 +131,9 @@ public class SDGProgram {
 			return result;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -216,21 +226,28 @@ public class SDGProgram {
 		return createSDGProgram(config, IOFactory.createUTF8PrintStream(new ByteArrayOutputStream()),
 				NullProgressMonitor.INSTANCE);
 	}
-	
+
 	public static SDGProgram createSDGProgram(SDGConfig config, PrintStream out, IProgressMonitor monitor)
 			throws ClassHierarchyException, IOException, UnsoundGraphException, CancelException {
 		return createSDGProgram(config, out, monitor, null);
 	}
 
-	public static SDGProgram createSDGProgram(SDGConfig config, PrintStream out, IProgressMonitor monitor, OutputStream sdgFileOut)
+	public static CGResult createCallGraphOnly(SDGConfig config, PrintStream out, IProgressMonitor progress)
 			throws ClassHierarchyException, IOException, UnsoundGraphException, CancelException {
+		return SDGBuildPreparation.computeCallGraphOnly(out, makeBuildPreparationConfig(config),
+				config.computeInterferences(), progress);
+	}
+
+	public static SDGProgram createSDGProgram(SDGConfig config, PrintStream out, IProgressMonitor monitor,
+			OutputStream sdgFileOut) throws ClassHierarchyException, IOException, UnsoundGraphException,
+			CancelException {
 		monitor.beginTask("build SDG", 20);
 		ConstructionNotifier notifier = config.getNotifier();
 		if (notifier != null) {
 			notifier.sdgStarted();
 		}
-		final com.ibm.wala.util.collections.Pair<SDG, SDGBuilder> p =
-				SDGBuildPreparation.computeAndKeepBuilder(out, makeBuildPreparationConfig(config),	config.computeInterferences(), monitor);
+		final com.ibm.wala.util.collections.Pair<SDG, SDGBuilder> p = SDGBuildPreparation.computeAndKeepBuilder(out,
+				makeBuildPreparationConfig(config), config.computeInterferences(), monitor);
 		final SDG sdg = p.fst;
 		final SDGBuilder builder = p.snd;
 		// MODIFICATION alterei aqui pra pode pegar a hierarquia de classes WALA
@@ -241,7 +258,8 @@ public class SDGProgram {
 		}
 		if (notifier != null) {
 			notifier.sdgFinished();
-			notifier.numberOfCGNodes(builder.getNonPrunedWalaCallGraph().getNumberOfNodes(), builder.getWalaCallGraph().getNumberOfNodes());
+			notifier.numberOfCGNodes(builder.getNonPrunedWalaCallGraph().getNumberOfNodes(), builder.getWalaCallGraph()
+					.getNumberOfNodes());
 		}
 		if (config.getIgnoreIndirectFlows()) {
 			if (notifier != null) {
@@ -251,7 +269,7 @@ public class SDGProgram {
 			if (notifier != null) {
 				notifier.stripControlDepsFinished();
 			}
-			
+
 		}
 		if (sdgFileOut != null) {
 			SDGSerializer.toPDGFormat(sdg, sdgFileOut);
@@ -288,16 +306,21 @@ public class SDGProgram {
 		}
 		return ret;
 	}
-	public static SDGBuilder createSDGBuilder(SDGConfig config) throws ClassHierarchyException, UnsoundGraphException, CancelException, IOException {
-		return SDGBuildPreparation.createBuilder(IOFactory.createUTF8PrintStream(new ByteArrayOutputStream()), makeBuildPreparationConfig(config), config.computeInterferences(), NullProgressMonitor.INSTANCE);
+
+	public static SDGBuilder createSDGBuilder(SDGConfig config) throws ClassHierarchyException, UnsoundGraphException,
+			CancelException, IOException {
+		return SDGBuildPreparation.createBuilder(IOFactory.createUTF8PrintStream(new ByteArrayOutputStream()),
+				makeBuildPreparationConfig(config), config.computeInterferences(), NullProgressMonitor.INSTANCE);
 	}
-	private static SDGBuildPreparation.Config makeBuildPreparationConfig(SDGConfig config) {
-		//MODIFICATION
-		JavaMethodSignature mainMethod = config.getEntryMethod() != null ? JavaMethodSignature.fromString(config.getEntryMethod()) : null;// JavaMethodSignature.mainMethodOfClass(config.getMainClass());
-		String mainMethodBc = mainMethod != null ? mainMethod.toBCString() : null; 
-		SDGBuildPreparation.Config cfg = new SDGBuildPreparation.Config(mainMethodBc, mainMethodBc, config.getClassPath(),
-				config.getFieldPropagation());
-		//MODIFICATION
+
+	public static SDGBuildPreparation.Config makeBuildPreparationConfig(SDGConfig config) {
+		// MODIFICATION
+		JavaMethodSignature mainMethod = config.getEntryMethod() != null ? JavaMethodSignature.fromString(config
+				.getEntryMethod()) : null;// JavaMethodSignature.mainMethodOfClass(config.getMainClass());
+		String mainMethodBc = mainMethod != null ? mainMethod.toBCString() : null;
+		SDGBuildPreparation.Config cfg = new SDGBuildPreparation.Config(mainMethodBc, mainMethodBc,
+				config.getClassPath(), config.getFieldPropagation());
+		// MODIFICATION
 		cfg.entryMethods = config.getEntryMethods();
 		cfg.thirdPartyLibPath = config.getThirdPartyLibsPath();
 		cfg.exceptions = config.getExceptionAnalysis();
@@ -320,7 +343,8 @@ public class SDGProgram {
 				if (config.getMethodFilter() == null) {
 					cfg.objSensFilter = new ThreadSensitiveMethodFilterWithCaching();
 				} else {
-					cfg.objSensFilter = new MethodFilterChain(new ThreadSensitiveMethodFilterWithCaching(),	config.getMethodFilter());
+					cfg.objSensFilter = new MethodFilterChain(new ThreadSensitiveMethodFilterWithCaching(),
+							config.getMethodFilter());
 				}
 			} else {
 				cfg.pts = PointsToPrecision.OBJECT_SENSITIVE;
@@ -331,6 +355,7 @@ public class SDGProgram {
 		}
 		return cfg;
 	}
+
 	private static void throwAwayControlDeps(SDG sdg) throws CancelException {
 		final List<SDGEdge> toRemove = new LinkedList<SDGEdge>();
 		for (final SDGEdge e : sdg.edgeSet()) {
@@ -410,10 +435,13 @@ public class SDGProgram {
 	}
 
 	/**
-	 * Get instructions by label, i.e. the label of the corresponding sdg node. Precisely, all
-	 *
-	 * @param methodSig method in which to search
-	 * @param labelRegEx label to look for
+	 * Get instructions by label, i.e. the label of the corresponding sdg node.
+	 * Precisely, all
+	 * 
+	 * @param methodSig
+	 *            method in which to search
+	 * @param labelRegEx
+	 *            label to look for
 	 * @return instructions for which the label matches the given regex
 	 */
 	public Collection<SDGInstruction> getInstruction(JavaMethodSignature methodSig, String labelRegEx) {
@@ -441,10 +469,13 @@ public class SDGProgram {
 	}
 
 	/**
-	 * Returns whether the given instruction is contained in the application's code
-	 * @param i an instruction from this program
-	 * @return {@code true}, if the given instruction is contained in the application's code,
-	 * {@code false} otherwise
+	 * Returns whether the given instruction is contained in the application's
+	 * code
+	 * 
+	 * @param i
+	 *            an instruction from this program
+	 * @return {@code true}, if the given instruction is contained in the
+	 *         application's code, {@code false} otherwise
 	 */
 	public boolean isInApplicationCode(SDGInstruction i) {
 		return getClassLoader(i) == ClassLoader.APPLICATION;
@@ -452,19 +483,24 @@ public class SDGProgram {
 
 	/**
 	 * Returns whether the given method is contained in the application's code
-	 * @param m a method from this program
-	 * @return {@code true}, if the given method is contained in the application's code,
-	 * {@code false} otherwise
+	 * 
+	 * @param m
+	 *            a method from this program
+	 * @return {@code true}, if the given method is contained in the
+	 *         application's code, {@code false} otherwise
 	 */
 	public boolean isInApplicationCode(SDGMethod m) {
 		return getClassLoader(m) == ClassLoader.APPLICATION;
 	}
 
 	/**
-	 * Returns whether the given instruction is contained in standard library code
-	 * @param i an instruction from this program
-	 * @return {@code true}, if the given instruction is contained in standard library code,
-	 * {@code false} otherwise
+	 * Returns whether the given instruction is contained in standard library
+	 * code
+	 * 
+	 * @param i
+	 *            an instruction from this program
+	 * @return {@code true}, if the given instruction is contained in standard
+	 *         library code, {@code false} otherwise
 	 */
 	public boolean isInPrimordialCode(SDGInstruction i) {
 		return getClassLoader(i) == ClassLoader.PRIMORDIAL;
@@ -472,9 +508,11 @@ public class SDGProgram {
 
 	/**
 	 * Returns whether the given method is contained in standard library code
-	 * @param m a method from this program
-	 * @return {@code true}, if the given method is contained in standard library code,
-	 * {@code false} otherwise
+	 * 
+	 * @param m
+	 *            a method from this program
+	 * @return {@code true}, if the given method is contained in standard
+	 *         library code, {@code false} otherwise
 	 */
 	public boolean isInPrimordialCode(SDGMethod m) {
 		return getClassLoader(m) == ClassLoader.PRIMORDIAL;
@@ -506,15 +544,19 @@ public class SDGProgram {
 	}
 
 	/**
-	 * Tries to find a covering program part for the given SDG node. Currently, the following types of nodes are supported:
+	 * Tries to find a covering program part for the given SDG node. Currently,
+	 * the following types of nodes are supported:
 	 * <ul>
 	 * <li>nodes of kind ENTRY, FORMAL_IN, FORMAL_OUT, EXIT</li>
 	 * <li>nodes of kind ACTUAL_IN, ACTUAL_OUT</li>
 	 * <li>other nodes with non-negative bytecode index</li>
 	 * </ul>
 	 * For all other types of nodes, {@code null} is returned.
-	 * @param node node for which a covering program part shall be found
-	 * @return covering program part for the given node, or {@code null} if the node is not supported (see above)
+	 * 
+	 * @param node
+	 *            node for which a covering program part shall be found
+	 * @return covering program part for the given node, or {@code null} if the
+	 *         node is not supported (see above)
 	 */
 	public SDGProgramPart findCoveringProgramPart(SDGNode node) {
 		Set<SDGProgramPart> candidates = collectCoveringCandidates(node);
@@ -572,7 +614,8 @@ public class SDGProgram {
 				for (SDGMethod m : methods) {
 					SDGInstruction i = m.getInstructionWithBCIndex(callBCIndex);
 					if (!(i instanceof SDGCall)) {
-						throw new IllegalStateException(String.format("instruction should be a call instruction: (%s):%d", m.getSignature(), callBCIndex));
+						throw new IllegalStateException(String.format(
+								"instruction should be a call instruction: (%s):%d", m.getSignature(), callBCIndex));
 					}
 					SDGCall call = (SDGCall) m.getInstructionWithBCIndex(callBCIndex);
 					if (rootParam.getBytecodeName().equals(BytecodeLocation.RETURN_PARAM)) {
@@ -606,20 +649,27 @@ public class SDGProgram {
 	}
 
 	public boolean covers(SDGProgramPart ppart, SDGNode node) {
-		return coll.collectNodes(ppart, AnnotationType.SOURCE).contains(node) || coll.collectNodes(ppart, AnnotationType.SINK).contains(node);
+		return coll.collectNodes(ppart, AnnotationType.SOURCE).contains(node)
+				|| coll.collectNodes(ppart, AnnotationType.SINK).contains(node);
 	}
 
 	/**
-	 * Given a source and a sink instructions, computes a chop of these two program parts and collects all instructions which are on the way.
-	 * This works only for sequential programs
-	 * @param source source instruction
-	 * @param sink sink instruction
-	 * @return instructions through which information may flow from source to sink
+	 * Given a source and a sink instructions, computes a chop of these two
+	 * program parts and collects all instructions which are on the way. This
+	 * works only for sequential programs
+	 * 
+	 * @param source
+	 *            source instruction
+	 * @param sink
+	 *            sink instruction
+	 * @return instructions through which information may flow from source to
+	 *         sink
 	 */
 	public Set<SDGInstruction> computeInstructionChop(SDGProgramPart source, SDGProgramPart sink) {
 		Chopper chopper = new NonSameLevelChopper(this.sdg);
 		AnnotationTypeBasedNodeCollector c = new AnnotationTypeBasedNodeCollector(this.sdg);
-		Collection<SDGNode> chop = chopper.chop(c.collectNodes(source, AnnotationType.SOURCE), c.collectNodes(sink, AnnotationType.SINK));
+		Collection<SDGNode> chop = chopper.chop(c.collectNodes(source, AnnotationType.SOURCE),
+				c.collectNodes(sink, AnnotationType.SINK));
 		Set<SDGInstruction> ret = new HashSet<SDGInstruction>();
 		for (SDGNode n : chop) {
 			SDGMethod m = getMethod(this.sdg.getEntry(n).getBytecodeMethod());
@@ -684,9 +734,9 @@ public class SDGProgram {
 	 * signature followed by ":<number>" where <number> denotes the bytecode
 	 * index of the instruction. This index has to be taken from the sdg
 	 * representing the program from which the instruction is to be taken.
-	 *
+	 * 
 	 * @author Martin Mohr
-	 *
+	 * 
 	 */
 	private static final class SDGProgramPartParserBC {
 
@@ -883,7 +933,8 @@ class SDGClassResolver {
 		return ret;
 	}
 
-	public Collection<SDGFormalParameter> getMethodParameter(JavaType typeName, JavaMethodSignature methodSig, int paramNo) {
+	public Collection<SDGFormalParameter> getMethodParameter(JavaType typeName, JavaMethodSignature methodSig,
+			int paramNo) {
 		Collection<SDGMethod> ms = getMethod(typeName, methodSig);
 		Collection<SDGFormalParameter> ret = new LinkedList<SDGFormalParameter>();
 		for (SDGMethod m : ms) {
@@ -1042,14 +1093,14 @@ class ThreadSensitiveMethodFilter implements ObjSensZeroXCFABuilder.MethodFilter
  * F1 nor F2 find a given method interesting enough to distinguish its object
  * contexts.
  * <p/>
- *
+ * 
  * It works as follows:
  * <ul>
  * <li>For engageObjectSensitivity(), it first asks F1 - if F1 says
  * {@code false}, then F2 is asked.</li>
  * <li>For fallback callsite sensitivity, F1's return value is taken.</li>
  * </ul>
- *
+ * 
  * @author Martin Mohr
  */
 class MethodFilterChain implements ObjSensZeroXCFABuilder.MethodFilter {
@@ -1062,7 +1113,7 @@ class MethodFilterChain implements ObjSensZeroXCFABuilder.MethodFilter {
 
 	/**
 	 * Chains together this method filter from the two given method filters
-	 *
+	 * 
 	 * @param filter1
 	 *            first filter to be used
 	 * @param filter2
@@ -1076,7 +1127,7 @@ class MethodFilterChain implements ObjSensZeroXCFABuilder.MethodFilter {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * edu.kit.joana.wala.flowless.wala.ObjSensContextSelector.MethodFilter#
 	 * engageObjectSensitivity(com.ibm.wala.classLoader.IMethod)
@@ -1092,7 +1143,7 @@ class MethodFilterChain implements ObjSensZeroXCFABuilder.MethodFilter {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * edu.kit.joana.wala.flowless.wala.ObjSensContextSelector.MethodFilter#
 	 * getFallbackCallsiteSensitivity()
@@ -1102,8 +1153,12 @@ class MethodFilterChain implements ObjSensZeroXCFABuilder.MethodFilter {
 		return filter1.getFallbackCallsiteSensitivity();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.kit.joana.wala.flowless.wala.ObjSensContextSelector.MethodFilter#restrictToOneLevelObjectSensitivity(com.ibm.wala.classLoader.IMethod)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.kit.joana.wala.flowless.wala.ObjSensContextSelector.MethodFilter#
+	 * restrictToOneLevelObjectSensitivity(com.ibm.wala.classLoader.IMethod)
 	 */
 	@Override
 	public boolean restrictToOneLevelObjectSensitivity(IMethod m) {
