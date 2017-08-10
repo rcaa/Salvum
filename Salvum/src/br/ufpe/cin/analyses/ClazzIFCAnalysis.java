@@ -6,7 +6,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -118,8 +117,10 @@ public class ClazzIFCAnalysis {
 			if (result == null || result.isEmpty()) {
 				System.out.println("-----No violations found-----");
 			}
-			Set<IViolation<SecurityNode>> violations = new LinkedHashSet<>(result);
-			for (IViolation<SecurityNode> iViolation : violations) {
+			
+			removeDuplicatedViolations(result);
+			
+			for (IViolation<SecurityNode> iViolation : result) {
 				ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 				SecurityNode source = sn.getSource();
 				SecurityNode sink = sn.getSink();
@@ -158,5 +159,17 @@ public class ClazzIFCAnalysis {
 			System.out.println("Ending IFC for: " + sdg.getName());
 		}
 
+	}
+
+	private void removeDuplicatedViolations(
+			Collection<? extends IViolation<SecurityNode>> result) {
+		List<String> stringViolation = new ArrayList<>();
+		for (IViolation<SecurityNode> iViolation : result) {
+			if (stringViolation.contains(iViolation.toString())) {
+				result.remove(iViolation);
+			} else {
+				stringViolation.add(iViolation.toString());
+			}
+		}
 	}
 }
