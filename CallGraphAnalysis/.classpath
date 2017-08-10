@@ -12,13 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.sdg.graph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.sdg.mhpoptimization"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.sdg.util"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/joana.ifc.wala.sdpn"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.annotations"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.ifc.sdg.compiler"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.ifc.sdg.graphviewer"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.ifc.sdg.latticeeditor"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.ifc.sdg.textual.highlight"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.ifc.sdg.viewer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.ui.ifc.wala.console"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/joana.wala.core"/>
