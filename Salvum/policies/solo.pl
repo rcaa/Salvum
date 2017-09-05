@@ -1,0 +1,1 @@
+org.b3log.latke.model.User {USER_PASSWORD,USER_NEW_PASSWORD}, org.b3log.latke.util.Sessions {COOKIE_SECRET}, javax.servlet.http.Cookie {value}, org.b3log.solo.model.Article {ARTICLE_SIGN_ID,ARTICLE_AUTHOR_EMAIL}, org.b3log.solo.model.Comment {COMMENT_EMAIL}, org.b3log.solo.model.Option {ID_C_ADMIN_EMAIL} noflow WriteOps where WriteOps = {LOGGER}

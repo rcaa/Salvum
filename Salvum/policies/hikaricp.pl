@@ -1,0 +1,1 @@
+com.zaxxer.hikari.HikariConfig {password} noflow WriteOps where WriteOps = {LOGGER.log,LOGGER.warn,LOGGER.debug,LOGGER.error,LOGGER.info}
