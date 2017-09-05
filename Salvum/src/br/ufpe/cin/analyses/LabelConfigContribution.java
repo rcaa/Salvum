@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.ClassUtils;
+
 import br.ufpe.cin.policy.PolicyContribution;
 import edu.kit.joana.api.IFCAnalysis;
 import edu.kit.joana.api.lattice.BuiltinLattices;
@@ -83,22 +85,43 @@ public class LabelConfigContribution {
 			Collection<SDGClass> classes,
 			Map<String, Set<Integer>> mapClassesLineNumbers,
 			PolicyContribution policy, List<SDGProgramPart> sources,
-			List<SDGProgramPart> sinks, Map<String, Integer> mapInstructionsLines) {
+			List<SDGProgramPart> sinks,
+			Map<String, Integer> mapInstructionsLines) {
 		for (SDGClass sdgClass : classes) {
 			// foreach class da policy
 
 			Map<String, Set<String>> elements = policy.getClazzAndElements();
 			Set<String> clazzes = elements.keySet();
 			for (String clazz : clazzes) {
-				if (mapClassesLineNumbers.containsKey(sdgClass.toString())
-						|| sdgClass.toString().contains(clazz)) {
+				// fazer uma condicao a mais para passar todas as classes de um
+				// pacote
+				if (policy.getClazzAndElements().containsKey("Contribution")
+						&& (sdgClass.toString().contains(
+								ClassUtils.getPackageCanonicalName(clazz)) || clazz
+								.contains(ClassUtils
+										.getPackageCanonicalName(sdgClass
+												.toString())))) {
 					iterateOverAttributes(policy, sources, sinks, sdgClass,
-							clazz);
+							clazz, mapClassesLineNumbers);
+
+					iterateOverMethods(mapClassesLineNumbers, policy, sources,
+							sinks, sdgClass, mapInstructionsLines);
+				} else if (mapClassesLineNumbers.containsKey(sdgClass
+						.toString()) || sdgClass.toString().contains(clazz)) {
+					iterateOverAttributes(policy, sources, sinks, sdgClass,
+							clazz, mapClassesLineNumbers);
 
 					iterateOverMethods(mapClassesLineNumbers, policy, sources,
 							sinks, sdgClass, mapInstructionsLines);
 				}
 			}
+		}
+		//TODO degub somente
+		for (SDGProgramPart sdgProgramPart : sources) {
+			System.out.println("Source: " + sdgProgramPart);
+		}
+		for (SDGProgramPart sdgProgramPart : sinks) {
+			System.out.println("Sink: " + sdgProgramPart);
 		}
 	}
 
@@ -124,13 +147,27 @@ public class LabelConfigContribution {
 					}
 				}
 
-				if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
+				if (lineNumbers != null
+						&& lineNumbers.contains(sourceLine)
+						&& !policy.getClazzAndElements().containsKey(
+								"Contribution")) {
 					if (policy.getOperator().equals("noflow")) {
 						sinks.add(sdgInstruction);
 					} else if (policy.getOperator().equals("noset")) {
 						sources.add(sdgInstruction);
 					}
-
+				} else if (policy.getClazzAndElements().containsKey(
+						"Contribution")) {
+					// casos da policy considerando pacotes
+					if (lineNumbers != null
+							&& lineNumbers.contains(sourceLine)) {
+						// esta no diff
+						sources.add(sdgInstruction);
+					} else if (sdgClass.toString().contains(
+							policy.getSecurePackage())) {
+						// esta em determinado pacote
+						sinks.add(sdgInstruction);
+					}
 				}
 			}
 		}
@@ -138,22 +175,35 @@ public class LabelConfigContribution {
 
 	private void iterateOverAttributes(PolicyContribution policy,
 			List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
-			SDGClass sdgClass, String clazz) {
+			SDGClass sdgClass, String clazz,
+			Map<String, Set<Integer>> mapClassesLineNumbers) {
 		// por enquanto so marca atributo como source
 		for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
 
 			Set<String> sensitiveResources = policy
 					.getSensitiveResources(clazz);
 			for (String sensitiveResource : sensitiveResources) {
-				if (sdgAttribute.toString().equals(sensitiveResource)) {
+				if (sdgAttribute.toString().equals(sensitiveResource)
+						&& !policy.getClazzAndElements().containsKey(
+								"Contribution")) {
 					if (policy.getOperator().equals("noflow")) {
 						sources.add(sdgAttribute);
 					} else if (policy.getOperator().equals("noset")) {
 						sinks.add(sdgAttribute);
 					}
+				} else if (policy.getClazzAndElements().containsKey(
+						"Contribution")) {
+					// casos da policy considerando pacotes
+					if (sdgClass.toString().contains(
+							policy.getSecurePackage())) {
+						// esta em determinado pacote
+						sinks.add(sdgAttribute);
+					} else {
+						// esta no diff
+						sources.add(sdgAttribute);
+					}
 				}
 			}
-
 		}
 	}
 }

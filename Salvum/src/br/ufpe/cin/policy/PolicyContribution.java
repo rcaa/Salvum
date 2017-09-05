@@ -16,6 +16,7 @@ public class PolicyContribution {
 
 	private String operator;
 	private Map<String, Set<String>> clazzAndElements;
+	private String securePackage;
 
 	public PolicyContribution(Path path, String hash) throws IOException {
 		this.clazzAndElements = new HashMap<String, Set<String>>();
@@ -28,8 +29,18 @@ public class PolicyContribution {
 				for (String string : classAndElements) {
 					String[] temp = string.split(" ");
 					String clazz = temp[0];
-					Set<String> classElements = retreiveProgramElements(temp[1]);
-					this.getClazzAndElements().put(clazz, classElements);
+					if (temp.length > 1 && (temp[1] != null)) {
+						Set<String> classElements = retreiveProgramElements(temp[1]);
+						this.getClazzAndElements().put(clazz, classElements);
+					} else if (temp[0].contains("Contribution")) {
+						Set<String> classElements = new HashSet<>();
+						this.getClazzAndElements().put(clazz, classElements);
+						String securePackage = elements[1].substring(
+								elements[1].indexOf("{") + 1,
+								elements[1].indexOf("}"));
+						this.securePackage = securePackage;
+					}
+
 				}
 				this.operator = "noflow";
 
@@ -65,14 +76,11 @@ public class PolicyContribution {
 		String term = constraint.substring(constraint.indexOf('"') + 1,
 				constraint.lastIndexOf('"'));
 		if (constraint.contains("c | c.message.contains")) {
-			return GitIntegration.searchCommitHashesFromMessages(
-					gitPath, term);
+			return GitIntegration.searchCommitHashesFromMessages(gitPath, term);
 		} else if (constraint.contains("c | c.author")) {
-			return GitIntegration.searchCommitHashesFromAuthor(
-					gitPath, term);
+			return GitIntegration.searchCommitHashesFromAuthor(gitPath, term);
 		} else if (constraint.contains("c | !c.package")) {
-			return GitIntegration.searchCommitHashesFromPackage(
-					gitPath, term);
+			return GitIntegration.searchCommitHashesFromPackage(gitPath, term);
 		}
 		return null;
 	}
@@ -112,5 +120,13 @@ public class PolicyContribution {
 
 	public Map<String, Set<String>> getClazzAndElements() {
 		return clazzAndElements;
+	}
+
+	public String getSecurePackage() {
+		return securePackage;
+	}
+
+	public void setSecurePackage(String securePackage) {
+		this.securePackage = securePackage;
 	}
 }
