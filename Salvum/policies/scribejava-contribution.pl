@@ -1,0 +1,1 @@
+com.github.scribejava.core.model.OAuth1Token {tokenSecret} noflow Contribution

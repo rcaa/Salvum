@@ -1,1 +1,1 @@
-Contribution noflow SecurePackage where SecurePackage = {repository}
+Contribution noflow SecurePackage where SecurePackage = {repository,view}

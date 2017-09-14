@@ -1,0 +1,1 @@
+Contribution noflow WriteOps where WriteOps = {org.apache.kafka.clients.admin,org.apache.kafka.common.security}

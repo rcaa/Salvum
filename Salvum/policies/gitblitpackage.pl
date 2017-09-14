@@ -1,2 +1,1 @@
-com.gitblit.wicket.pages.RootPage {username,password} noflow NonGUITask
-	where NonGUITask = {c | !c.package="/home/local/CIN/rcaa2/contributionExperiments/casestudies/gitblit/src/main/java/com/gitblit/wicket"}
+Contribution noflow SecurePackage where SecurePackage = {com.gitblit.auth,com.gitblit.authority}
