@@ -125,7 +125,7 @@ public class MappingGenerator {
 		// PolicyContribution policy = new PolicyContribution(path, hash);
 		ContributionPreprocessor cp = new ContributionPreprocessor(projectProp,
 				hash);
-		cp.preprocess();
+		cp.preprocess(projectProp);
 		return ContextManagerContribution.getContext()
 				.getMapClassesLineNumbers();
 	}

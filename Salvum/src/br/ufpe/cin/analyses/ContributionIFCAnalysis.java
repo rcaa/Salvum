@@ -78,6 +78,7 @@ public class ContributionIFCAnalysis {
 
 			Map<String, Set<Integer>> mapClassLines = MappingGenerator
 					.loadMapping(p, sdg, "-contribution");
+			
 			Map<String, Integer> mapInstructionsLines = LineMappingGenerator
 					.loadMapping(p, sdg);
 

@@ -16,7 +16,7 @@ public class PolicyContribution {
 
 	private String operator;
 	private Map<String, Set<String>> clazzAndElements;
-	private String securePackage;
+	private Set<String> securePackages;
 
 	public PolicyContribution(Path path, String hash) throws IOException {
 		this.clazzAndElements = new HashMap<String, Set<String>>();
@@ -31,14 +31,18 @@ public class PolicyContribution {
 					String clazz = temp[0];
 					if (temp.length > 1 && (temp[1] != null)) {
 						Set<String> classElements = retreiveProgramElements(temp[1]);
-						this.getClazzAndElements().put(clazz, classElements);
+						this.clazzAndElements.put(clazz, classElements);
 					} else if (temp[0].contains("Contribution")) {
 						Set<String> classElements = new HashSet<>();
-						this.getClazzAndElements().put(clazz, classElements);
-						String securePackage = elements[1].substring(
+						this.clazzAndElements.put(clazz, classElements);
+						String securePackages = elements[1].substring(
 								elements[1].indexOf("{") + 1,
 								elements[1].indexOf("}"));
-						this.securePackage = securePackage;
+						String[] securePackagesArray = securePackages.split(",");
+						this.securePackages = new HashSet<>();
+						for (String securePackage : securePackagesArray) {
+							this.securePackages.add(securePackage);
+						}
 					}
 
 				}
@@ -122,11 +126,11 @@ public class PolicyContribution {
 		return clazzAndElements;
 	}
 
-	public String getSecurePackage() {
-		return securePackage;
+	public Set<String> getSecurePackages() {
+		return securePackages;
 	}
 
-	public void setSecurePackage(String securePackage) {
-		this.securePackage = securePackage;
+	public void setSecurePackages(Set<String> securePackages) {
+		this.securePackages = securePackages;
 	}
 }

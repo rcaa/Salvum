@@ -28,14 +28,13 @@ public class ContributionPreprocessor {
 			throws IOException {
 		this.gitPath = p.getProperty("gitPath");
 		this.currentCommitHash = currentCommitHash;
-		this.parentCommitHash = GitUtil.runParents(gitPath,
-				currentCommitHash);
+		this.parentCommitHash = GitUtil.runParents(gitPath, currentCommitHash);
 		System.out.println("currentCommitHash: " + currentCommitHash);
 		this.diffFilePath = setDiffFilePath(currentCommitHash,
 				p.getProperty("diffFilePath"));
 	}
 
-	public void preprocess() throws IOException {
+	public void preprocess(Properties projectProp) throws IOException {
 
 		GitUtil.runDiffCommand(this.gitPath, this.parentCommitHash,
 				this.currentCommitHash, this.diffFilePath);
@@ -53,7 +52,7 @@ public class ContributionPreprocessor {
 			String nextLine = scanner.nextLine();
 
 			if (nextLine.startsWith(Tag.DIFF)) {
-				className = formatClassName(nextLine);
+				className = formatClassName(nextLine, projectProp);
 				if (className == null) {
 					// tenho que percorrer as linhas que nao sao interessantes
 					// linha de arquivos que nao sao classes
@@ -61,7 +60,8 @@ public class ContributionPreprocessor {
 					while (scanner.hasNextLine()) {
 						String nextLineTemp = scanner.nextLine();
 						if (nextLineTemp.contains(Tag.DIFF)) {
-							className = formatClassName(nextLineTemp);
+							className = formatClassName(nextLineTemp,
+									projectProp);
 							break;
 						}
 					}
@@ -97,21 +97,23 @@ public class ContributionPreprocessor {
 		}
 		scanner.close();
 
-		//GitUtil.checkoutCommitHash(this.gitPath,
-		//		this.currentCommitHash);
+		// GitUtil.checkoutCommitHash(this.gitPath,
+		// this.currentCommitHash);
 
 		System.out.println(manager.getMapClassesLineNumbers().toString());
 	}
 
-	private String formatClassName(String nextLine) {
+	private String formatClassName(String nextLine, Properties projectProp) {
 		String className = null;
 		// significa que comeca o diff de um novo arquivo
 		if (nextLine != null && nextLine.contains(".java")
-				&& nextLine.contains("/src")) {
-			className = nextLine.substring(nextLine.indexOf("/src"),
+				&& nextLine.contains(projectProp.getProperty("javaSources"))) {
+			className = nextLine.substring(
+					nextLine.indexOf(projectProp.getProperty("javaSources")),
 					nextLine.indexOf(".java"));
+			className = className.replace(
+					projectProp.getProperty("javaSources"), "");
 			className = className.replace("/", ".");
-			className = className.replace(".src.", "");
 		}
 		return className;
 	}
@@ -162,23 +164,25 @@ public class ContributionPreprocessor {
 					"b3aae19568204e683dfea1ed0c1cbc7e766a0976",
 					"cdda1edcf08976871f7455e6f7d869fe6aa9cdee",
 					"f2c4e3ab486207412ff9ac8678f0237e3828d2ca" };
-			
+
 			System.out.println("Starting tests: ");
 			for (String hash : hashes) {
 				ContributionPreprocessor cp = new ContributionPreprocessor(p,
 						hash);
-				cp.preprocess();
+				cp.preprocess(null);
 				ContextManagerContribution contextContribution = ContextManagerContribution
 						.getContext();
 				Map<String, Set<Integer>> mapClassesLineNumbers = contextContribution
 						.getMapClassesLineNumbers();
-				cp.preprocess();
-				System.out.println("-----------------------------------------------------------");
+				cp.preprocess(null);
+				System.out
+						.println("-----------------------------------------------------------");
 				System.out.println("Starting new mapping for hash " + hash);
 				System.out.println();
 				System.out.println(mapClassesLineNumbers);
 				System.out.println();
-				System.out.println("-----------------------------------------------------------");
+				System.out
+						.println("-----------------------------------------------------------");
 				contextContribution.clear();
 			}
 		} catch (Exception e) {

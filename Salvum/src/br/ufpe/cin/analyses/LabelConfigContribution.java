@@ -1,11 +1,13 @@
 package br.ufpe.cin.analyses;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import br.ufpe.cin.policy.PolicyContribution;
 import edu.kit.joana.api.IFCAnalysis;
@@ -31,10 +33,7 @@ public class LabelConfigContribution {
 
 	private void annotateSources(List<SDGProgramPart> sources,
 			SDGProgram program, IFCAnalysis ana) {
-		System.out.println("List of sources: ");
-		int i = 1;
 		for (SDGProgramPart source : sources) {
-			System.out.println(i + "- " + source);
 			if (source instanceof SDGMethod) {
 				ana.addSourceAnnotation(program.getMethod(source.toString()),
 						BuiltinLattices.STD_SECLEVEL_HIGH);
@@ -55,7 +54,6 @@ public class LabelConfigContribution {
 						BuiltinLattices.STD_SECLEVEL_HIGH);
 			}
 		}
-		i++;
 	}
 
 	private void annotateSinks(List<SDGProgramPart> sinks, SDGProgram program,
@@ -87,36 +85,30 @@ public class LabelConfigContribution {
 			PolicyContribution policy, List<SDGProgramPart> sources,
 			List<SDGProgramPart> sinks,
 			Map<String, Integer> mapInstructionsLines) {
+		Map<String, Set<String>> elements = policy.getClazzAndElements();
+		Set<String> clazzes = elements.keySet();
+
 		for (SDGClass sdgClass : classes) {
-			// foreach class da policy
+			// fazer uma condicao a mais para passar todas as classes de um
+			// pacote
+			if (policy.getClazzAndElements().containsKey("Contribution")
+					&& (policy.getSecurePackages().contains(ClassUtils
+							.getPackageCanonicalName(sdgClass.toString())))) {
+				iterateOverAttributes(policy, sources, sinks, sdgClass,
+						mapClassesLineNumbers);
 
-			Map<String, Set<String>> elements = policy.getClazzAndElements();
-			Set<String> clazzes = elements.keySet();
-			for (String clazz : clazzes) {
-				// fazer uma condicao a mais para passar todas as classes de um
-				// pacote
-				if (policy.getClazzAndElements().containsKey("Contribution")
-						&& (sdgClass.toString().contains(
-								ClassUtils.getPackageCanonicalName(clazz)) || clazz
-								.contains(ClassUtils
-										.getPackageCanonicalName(sdgClass
-												.toString())))) {
-					iterateOverAttributes(policy, sources, sinks, sdgClass,
-							clazz, mapClassesLineNumbers);
+				iterateOverMethods(mapClassesLineNumbers, policy, sources,
+						sinks, sdgClass, mapInstructionsLines);
+			} else if (mapClassesLineNumbers.containsKey(sdgClass.toString())
+					|| clazzes.contains(sdgClass.toString())) {
+				iterateOverAttributes(policy, sources, sinks, sdgClass,
+						mapClassesLineNumbers);
 
-					iterateOverMethods(mapClassesLineNumbers, policy, sources,
-							sinks, sdgClass, mapInstructionsLines);
-				} else if (mapClassesLineNumbers.containsKey(sdgClass
-						.toString()) || sdgClass.toString().contains(clazz)) {
-					iterateOverAttributes(policy, sources, sinks, sdgClass,
-							clazz, mapClassesLineNumbers);
-
-					iterateOverMethods(mapClassesLineNumbers, policy, sources,
-							sinks, sdgClass, mapInstructionsLines);
-				}
+				iterateOverMethods(mapClassesLineNumbers, policy, sources,
+						sinks, sdgClass, mapInstructionsLines);
 			}
 		}
-		//TODO degub somente
+		// TODO degub somente
 		for (SDGProgramPart sdgProgramPart : sources) {
 			System.out.println("Source: " + sdgProgramPart);
 		}
@@ -159,12 +151,11 @@ public class LabelConfigContribution {
 				} else if (policy.getClazzAndElements().containsKey(
 						"Contribution")) {
 					// casos da policy considerando pacotes
-					if (lineNumbers != null
-							&& lineNumbers.contains(sourceLine)) {
+					if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
 						// esta no diff
 						sources.add(sdgInstruction);
-					} else if (sdgClass.toString().contains(
-							policy.getSecurePackage())) {
+					} else if (policy.getSecurePackages().contains(
+							ClassUtils.getPackageName(sdgClass.toString()))) {
 						// esta em determinado pacote
 						sinks.add(sdgInstruction);
 					}
@@ -175,13 +166,12 @@ public class LabelConfigContribution {
 
 	private void iterateOverAttributes(PolicyContribution policy,
 			List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
-			SDGClass sdgClass, String clazz,
-			Map<String, Set<Integer>> mapClassesLineNumbers) {
+			SDGClass sdgClass, Map<String, Set<Integer>> mapClassesLineNumbers) {
 		// por enquanto so marca atributo como source
 		for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
 
 			Set<String> sensitiveResources = policy
-					.getSensitiveResources(clazz);
+					.getSensitiveResources(sdgClass.toString());
 			for (String sensitiveResource : sensitiveResources) {
 				if (sdgAttribute.toString().equals(sensitiveResource)
 						&& !policy.getClazzAndElements().containsKey(
@@ -194,8 +184,8 @@ public class LabelConfigContribution {
 				} else if (policy.getClazzAndElements().containsKey(
 						"Contribution")) {
 					// casos da policy considerando pacotes
-					if (sdgClass.toString().contains(
-							policy.getSecurePackage())) {
+					if (policy.getSecurePackages().contains(
+							ClassUtils.getPackageName(sdgClass.toString()))) {
 						// esta em determinado pacote
 						sinks.add(sdgAttribute);
 					} else {
