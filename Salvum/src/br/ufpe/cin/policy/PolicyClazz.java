@@ -36,6 +36,7 @@ public class PolicyClazz {
 				for (String string : classAndElements) {
 					String[] temp = string.split(" ");
 					String clazz = temp[0];
+					System.out.println("Classe: " + clazz);
 					Set<String> classElements = retreiveProgramElements(temp[1]);
 					this.clazzAndElements.put(clazz, classElements);
 				}

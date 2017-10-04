@@ -1,13 +1,11 @@
 package br.ufpe.cin.analyses;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import br.ufpe.cin.policy.PolicyContribution;
 import edu.kit.joana.api.IFCAnalysis;
@@ -94,6 +92,7 @@ public class LabelConfigContribution {
 			if (policy.getClazzAndElements().containsKey("Contribution")
 					&& (policy.getSecurePackages().contains(ClassUtils
 							.getPackageCanonicalName(sdgClass.toString())))) {
+				System.out.println("Contribution em program elements");
 				iterateOverAttributes(policy, sources, sinks, sdgClass,
 						mapClassesLineNumbers);
 
@@ -101,6 +100,7 @@ public class LabelConfigContribution {
 						sinks, sdgClass, mapInstructionsLines);
 			} else if (mapClassesLineNumbers.containsKey(sdgClass.toString())
 					|| clazzes.contains(sdgClass.toString())) {
+				System.out.println("Contribution como modulo");
 				iterateOverAttributes(policy, sources, sinks, sdgClass,
 						mapClassesLineNumbers);
 
@@ -168,6 +168,7 @@ public class LabelConfigContribution {
 			List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
 			SDGClass sdgClass, Map<String, Set<Integer>> mapClassesLineNumbers) {
 		// por enquanto so marca atributo como source
+		System.out.println("SDG Class " + sdgClass.toString());
 		for (SDGAttribute sdgAttribute : sdgClass.getAttributes()) {
 
 			Set<String> sensitiveResources = policy

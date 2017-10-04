@@ -149,6 +149,7 @@ public class LabelConfigClazz {
 				
 				if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
 					if (policy.getOperator().equals("noflow")) {
+						System.out.println("sink to be labelled: " + sdgInstruction);
 						sinks.add(sdgInstruction);
 					} else if (policy.getOperator().equals("noset")) {
 						sources.add(sdgInstruction);

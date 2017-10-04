@@ -118,15 +118,15 @@ public class ClazzIFCAnalysis {
 				System.out.println("-----No violations found-----");
 			}
 			
-			removeDuplicatedViolations(result);
+			//removeDuplicatedViolations(result);
 			
 			for (IViolation<SecurityNode> iViolation : result) {
 				ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 				SecurityNode source = sn.getSource();
 				SecurityNode sink = sn.getSink();
 				if (policy.getOperator().equals("noflow")) {
-					if (sn != null && sink != null && source != null
-							&& sink.getBytecodeIndex() >= 0) {
+					if (sink != null && source != null) {
+						//	&& sink.getBytecodeIndex() >= 0) {
 						String filePath = p.getProperty("javaSources") + sink.getSource();
 						System.out.println("Illegal flow from "
 								+ source.getBytecodeName()
@@ -140,7 +140,7 @@ public class ClazzIFCAnalysis {
 										filePath));
 					}
 				} else if (policy.getOperator().equals("noset")) {
-					if (sn != null && source != null && sink != null
+					if (source != null && sink != null
 							&& source.getBytecodeIndex() >= 0) {
 						System.out.println("Illegal set "
 								+ sink.getBytecodeName() + " at "
@@ -159,17 +159,5 @@ public class ClazzIFCAnalysis {
 			System.out.println("Ending IFC for: " + sdg.getName());
 		}
 
-	}
-
-	private void removeDuplicatedViolations(
-			Collection<? extends IViolation<SecurityNode>> result) {
-		List<String> stringViolation = new ArrayList<>();
-		for (IViolation<SecurityNode> iViolation : result) {
-			if (stringViolation.contains(iViolation.toString())) {
-				result.remove(iViolation);
-			} else {
-				stringViolation.add(iViolation.toString());
-			}
-		}
 	}
 }

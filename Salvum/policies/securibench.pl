@@ -1,0 +1,1 @@
+securibench.micro.aliasing.Aliasing1 {name} noflow WriteOps where WriteOps = {print}

@@ -38,7 +38,8 @@ public class PolicyContribution {
 						String securePackages = elements[1].substring(
 								elements[1].indexOf("{") + 1,
 								elements[1].indexOf("}"));
-						String[] securePackagesArray = securePackages.split(",");
+						String[] securePackagesArray = securePackages
+								.split(",");
 						this.securePackages = new HashSet<>();
 						for (String securePackage : securePackagesArray) {
 							this.securePackages.add(securePackage);
@@ -108,8 +109,10 @@ public class PolicyContribution {
 	public Set<String> getSensitiveResources(String clazz) {
 		Set<String> sR = this.clazzAndElements.get(clazz);
 		Set<String> sesitiveResources = new HashSet<>();
-		for (String programElement : sR) {
-			sesitiveResources.add(clazz + "." + programElement);
+		if (sR != null) {
+			for (String programElement : sR) {
+				sesitiveResources.add(clazz + "." + programElement);
+			}
 		}
 		return sesitiveResources;
 	}

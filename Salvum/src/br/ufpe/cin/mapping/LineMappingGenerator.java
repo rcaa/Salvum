@@ -28,7 +28,7 @@ public class LineMappingGenerator {
 	public static void createLineMapping(SDGProgram program, File zipFile,
 			Properties projectProp) throws FileNotFoundException, IOException {
 		Map<String, Integer> lineMapping = new HashMap<>();
-
+		
 		Collection<SDGMethod> allMethods = program.getAllMethods();
 		for (SDGMethod sdgMethod : allMethods) {
 			List<SDGInstruction> instructions = sdgMethod.getInstructions();
@@ -48,12 +48,14 @@ public class LineMappingGenerator {
 				+ FilenameUtils.removeExtension(zipFile.getName()) + ".json";
 		File f = new File(mappingName);
 		if (!f.exists()) {
+			System.out.println("Generating Line Mapping for contribution");
 			Gson gson = new Gson();
 			Type mapType = new TypeToken<HashMap<String, Integer>>() {
 			}.getType();
 			JsonWriter writer = new JsonWriter(new FileWriter(mappingName));
 			gson.toJson(mapInstructionsLines, mapType, writer);
 			writer.close();
+			System.out.println("Line mapping generated");
 		} else {
 			System.out.println("Line Mapping already exist for "
 					+ zipFile.getName());

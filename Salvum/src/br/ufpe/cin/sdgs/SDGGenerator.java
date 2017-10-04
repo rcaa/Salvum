@@ -40,33 +40,34 @@ public class SDGGenerator {
 		if (zipDir.isDirectory()) {
 			File[] zipFiles = zipDir.listFiles();
 			for (File zipFile : zipFiles) {
-				System.out.println("Running SDG generator for "
-						+ zipFile.getName());
 				List<String> sdgsNames = checkExistingSDGs(projectProp);
 				try {
-					if (zipFile.isDirectory()
-							|| sdgsNames.contains(FilenameUtils
-									.removeExtension(zipFile.getName()))) {
+					if (zipFile.isDirectory()) {
+						continue;
+					} else if (sdgsNames.contains(FilenameUtils
+							.removeExtension(zipFile.getName()))) {
+						System.out.println("SDG file already exists. Skipping SDG Generator...");
 						continue;
 					} else {
-
+						System.out.println("Running SDG generator for "
+								+ zipFile.getName());
 						ZipUtil.unzip(zipFile.getAbsolutePath(),
 								unzipedDirectory);
 						SDGProgram program = SDGGenerator.generateSDGFile(
 								zipFile, projectProp);
-
+						System.out.println("Gerou sdg");
 						LineMappingGenerator.createLineMapping(program,
 								zipFile, projectProp);
-
+						System.out.println("Criou o line mapping");
 						FileUtils.deleteDirectory(new File(unzipedDirectory
 								+ projectProp.getProperty("projectName")));
+						System.out.println("Ending SDG generator for "
+								+ zipFile.getName());
 					}
 				} catch (ClassHierarchyException | IOException
 						| UnsoundGraphException | CancelException e) {
 					e.printStackTrace();
 				}
-				System.out.println("Ending SDG generator for "
-						+ zipFile.getName());
 			}
 		}
 		System.out.println("Ending SDG generator.");
@@ -95,11 +96,14 @@ public class SDGGenerator {
 		String sdgFilePath = projectProp.getProperty("sdgsDirectoryPath")
 				+ FilenameUtils.removeExtension(zipFile.getName()) + ".pdg";
 		String classPath = projectProp.getProperty("classPath");
+		System.out.println("Class path: " + classPath);
+		System.out.println("sdgFilePath " + sdgFilePath);
 
 		AnalysisConfig ana = new AnalysisConfig();
 		SDGProgram program = ana.buildSDG(classPath, entryMethods,
 				thirdPartyLibsPath);
 		FileOutputStream sdgIO = new FileOutputStream(sdgFilePath);
+		
 		SDGSerializer.toPDGFormat(program.getSDG(), sdgIO);
 		sdgIO.close();
 		return program;
