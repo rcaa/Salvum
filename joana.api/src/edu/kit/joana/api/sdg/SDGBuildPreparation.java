@@ -402,6 +402,7 @@ public final class SDGBuildPreparation {
 	public static class Config {
 		public String name;
 		public String entryMethod;
+		//MODIFICATION
 		public List<String> entryMethods;
 		public String classpath;
 		public String thirdPartyLibPath;

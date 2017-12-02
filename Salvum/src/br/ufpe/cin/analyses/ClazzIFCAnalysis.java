@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.eclipse.core.runtime.CoreException;
 
 import br.ufpe.cin.mapping.LineMappingGenerator;
 import br.ufpe.cin.mapping.MappingGenerator;
-import br.ufpe.cin.policy.GitIntegration;
 import br.ufpe.cin.policy.PolicyClazz;
 import br.ufpe.cin.util.FileUtil;
 
@@ -81,7 +81,7 @@ public class ClazzIFCAnalysis {
 			if (sdg.isDirectory()) {
 				continue;
 			}
-			
+
 			System.out.println("Starting IFC for: " + sdg.getName());
 
 			SDGProgram program = SDGProgram.loadSDG(sdg.getAbsolutePath());
@@ -117,27 +117,23 @@ public class ClazzIFCAnalysis {
 			if (result == null || result.isEmpty()) {
 				System.out.println("-----No violations found-----");
 			}
-			
-			//removeDuplicatedViolations(result);
-			
+
 			for (IViolation<SecurityNode> iViolation : result) {
 				ClassifiedViolation sn = (ClassifiedViolation) iViolation;
 				SecurityNode source = sn.getSource();
 				SecurityNode sink = sn.getSink();
 				if (policy.getOperator().equals("noflow")) {
 					if (sink != null && source != null) {
-						//	&& sink.getBytecodeIndex() >= 0) {
-						String filePath = p.getProperty("javaSources") + sink.getSource();
+						// String filePath = p.getProperty("javaSources") +
+						// sink.getSource();
 						System.out.println("Illegal flow from "
-								+ source.getBytecodeName()
-								+ " to "
-								+ sink.getBytecodeName()
-								+ " at line "
-								+ sink.getEr()
-								+ " "
-								+ GitIntegration.gitBlame(
-										p.getProperty("gitPath"), sink.getEr(),
-										filePath));
+								+ source.getBytecodeName() + " to "
+								+ sink.getBytecodeName() + " at line "
+								+ sink.getEr());
+						// + " "
+						// + GitIntegration.gitBlame(
+						// p.getProperty("gitPath"), sink.getEr(),
+						// filePath));
 					}
 				} else if (policy.getOperator().equals("noset")) {
 					if (source != null && sink != null

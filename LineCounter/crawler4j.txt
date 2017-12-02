@@ -1,0 +1,1937 @@
+b380c7c96f3aec3acce021f7deb2ffc490c8cc0b
+a780fd1a73e5b338aed19e18850cdc6fda785b24
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+db8ab67ee9e2ee6ea3d6db9006a6781b337bdc14
+05fd2834a80ca416bcac9a7eb5527a4c179980a0
+
+ README.md | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+45eaf4d65262ed75e1c7ea97786770f6175a773a
+035e61bd6194c466c9ec24caf92012f85031e24d
+
+ README.md | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+e939976a03c6a2dce1a2b7f7f44c5f86c66783ee
+
+ crawler4j/pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+3ff5e67dda265b09e5936bb3e16d8ab88f15e2bc
+
+ .idea/.name                                        |    1 -
+ .idea/codeStyleSettings.xml                        |   84 -
+ .idea/compiler.xml                                 |   16 -
+ .idea/copyright/profiles_settings.xml              |    3 -
+ .idea/encodings.xml                                |    6 -
+ .idea/inspectionProfiles/Project_Default.xml       | 1086 ---
+ .idea/inspectionProfiles/profiles_settings.xml     |    7 -
+ .idea/misc.xml                                     |  358 -
+ .idea/modules.xml                                  |    8 -
+ .idea/sqldialects.xml                              |    6 -
+ .idea/vcs.xml                                      |    6 -
+ checkstyle.xml                                     |  128 -
+ crawler4j/checkstyle.xml                           |  128 +
+ crawler4j/pom.xml                                  |  522 ++
+ .../uci/ics/crawler4j/crawler/Configurable.java    |   37 +
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |  613 ++
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  548 ++
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |  309 +
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  543 ++
+ .../crawler4j/crawler/authentication/AuthInfo.java |  179 +
+ .../crawler/authentication/BasicAuthInfo.java      |   37 +
+ .../crawler/authentication/FormAuthInfo.java       |   69 +
+ .../crawler/authentication/NtAuthInfo.java         |   26 +
+ .../crawler/exceptions/ContentFetchException.java  |   10 +
+ .../exceptions/PageBiggerThanMaxSizeException.java |   19 +
+ .../crawler/exceptions/ParseException.java         |   10 +
+ .../fetcher/IdleConnectionMonitorThread.java       |   57 +
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |  109 +
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  335 +
+ .../SniPoolingHttpClientConnectionManager.java     |   58 +
+ .../fetcher/SniSSLConnectionSocketFactory.java     |   45 +
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   |  142 +
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    |  154 +
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |  207 +
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |   72 +
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |   54 +
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java |  146 +
+ .../edu/uci/ics/crawler4j/parser/AllTagMapper.java |   43 +
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  |  126 +
+ .../crawler4j/parser/ExtractedUrlAnchorPair.java   |   52 +
+ .../ics/crawler4j/parser/HtmlContentHandler.java   |  212 +
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |   84 +
+ .../parser/NotAllowedContentException.java         |   14 +
+ .../edu/uci/ics/crawler4j/parser/ParseData.java    |   32 +
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  166 +
+ .../uci/ics/crawler4j/parser/TextParseData.java    |   52 +
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  150 +
+ .../edu/uci/ics/crawler4j/robotstxt/PathRule.java  |  131 +
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java   |   80 +
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   |  101 +
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  191 +
+ .../crawler4j/robotstxt/UserAgentDirectives.java   |  232 +
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |  108 +
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |  194 +
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     |  461 ++
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |  236 +
+ .../main/java/edu/uci/ics/crawler4j/util/IO.java   |   51 +
+ .../main/java/edu/uci/ics/crawler4j/util/Net.java  |   50 +
+ .../main/java/edu/uci/ics/crawler4j/util/Util.java |   82 +
+ crawler4j/src/main/resources/tld-names.txt         | 8730 ++++++++++++++++++++
+ .../ics/crawler4j/crawler/CrawlerWithJSTest.groovy |  140 +
+ .../uci/ics/crawler4j/crawler/NoFollowTest.groovy  |   93 +
+ .../uci/ics/crawler4j/crawler/NoIndexTest.groovy   |  111 +
+ .../edu/uci/ics/crawler4j/crawler/PageTest.groovy  |   28 +
+ .../crawler4j/crawler/RedirectHandlerTest.groovy   |  115 +
+ .../ics/crawler4j/crawler/WebCrawlerTest.groovy    |  104 +
+ .../examples/basic/BasicCrawlController.java       |  124 +
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |   96 +
+ .../examples/fetcher/PageFetcherHtmlOnly.java      |   60 +
+ .../examples/fetcher/PageFetcherHtmlTest.java      |   68 +
+ .../imagecrawler/ImageCrawlController.java         |   72 +
+ .../examples/imagecrawler/ImageCrawler.java        |  105 +
+ .../crawler4j/examples/localdata/CrawlStat.java    |   60 +
+ .../crawler4j/examples/localdata/Downloader.java   |   97 +
+ .../localdata/LocalDataCollectorController.java    |   75 +
+ .../localdata/LocalDataCollectorCrawler.java       |   97 +
+ .../crawler4j/examples/multiple/BasicCrawler.java  |   87 +
+ .../multiple/MultipleCrawlerController.java        |  108 +
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |   73 +
+ .../examples/shutdown/ControllerWithShutdown.java  |   95 +
+ .../StatusHandlerCrawlController.java              |  119 +
+ .../statushandler/StatusHandlerCrawler.java        |   74 +
+ .../crawler4j/tests/HtmlContentHandlerTest.java    |   79 +
+ .../RobotstxtParserNonLowercaseUserAgentTest.java  |   28 +
+ .../ics/crawler4j/tests/RobotstxtPathRuleTest.java |   55 +
+ .../edu/uci/ics/crawler4j/tests/TLDListTest.java   |   45 +
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |   84 +
+ .../edu/uci/ics/crawler4j/tests/WebURLTest.java    |   18 +
+ crawler4j/src/test/resources/logback.xml           |   26 +
+ pom.xml                                            |  600 +-
+ .../uci/ics/crawler4j/crawler/Configurable.java    |   37 -
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |  613 --
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  548 --
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |  309 -
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  543 --
+ .../crawler4j/crawler/authentication/AuthInfo.java |  179 -
+ .../crawler/authentication/BasicAuthInfo.java      |   37 -
+ .../crawler/authentication/FormAuthInfo.java       |   69 -
+ .../crawler/authentication/NtAuthInfo.java         |   26 -
+ .../crawler/exceptions/ContentFetchException.java  |   10 -
+ .../exceptions/PageBiggerThanMaxSizeException.java |   19 -
+ .../crawler/exceptions/ParseException.java         |   10 -
+ .../fetcher/IdleConnectionMonitorThread.java       |   57 -
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |  109 -
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  335 -
+ .../SniPoolingHttpClientConnectionManager.java     |   58 -
+ .../fetcher/SniSSLConnectionSocketFactory.java     |   45 -
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   |  142 -
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    |  154 -
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |  207 -
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |   72 -
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |   54 -
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java |  146 -
+ .../edu/uci/ics/crawler4j/parser/AllTagMapper.java |   43 -
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  |  126 -
+ .../crawler4j/parser/ExtractedUrlAnchorPair.java   |   52 -
+ .../ics/crawler4j/parser/HtmlContentHandler.java   |  212 -
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |   84 -
+ .../parser/NotAllowedContentException.java         |   14 -
+ .../edu/uci/ics/crawler4j/parser/ParseData.java    |   32 -
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  166 -
+ .../uci/ics/crawler4j/parser/TextParseData.java    |   52 -
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  150 -
+ .../edu/uci/ics/crawler4j/robotstxt/PathRule.java  |  131 -
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java   |   80 -
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   |  101 -
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  191 -
+ .../crawler4j/robotstxt/UserAgentDirectives.java   |  232 -
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |  108 -
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |  194 -
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     |  461 --
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |  236 -
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |   51 -
+ src/main/java/edu/uci/ics/crawler4j/util/Net.java  |   50 -
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |   82 -
+ src/main/resources/tld-names.txt                   | 8730 --------------------
+ .../ics/crawler4j/crawler/CrawlerWithJSTest.groovy |  140 -
+ .../uci/ics/crawler4j/crawler/NoFollowTest.groovy  |   93 -
+ .../uci/ics/crawler4j/crawler/NoIndexTest.groovy   |  111 -
+ .../edu/uci/ics/crawler4j/crawler/PageTest.groovy  |   28 -
+ .../crawler4j/crawler/RedirectHandlerTest.groovy   |  115 -
+ .../ics/crawler4j/crawler/WebCrawlerTest.groovy    |  104 -
+ .../examples/basic/BasicCrawlController.java       |  124 -
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |   96 -
+ .../examples/fetcher/PageFetcherHtmlOnly.java      |   60 -
+ .../examples/fetcher/PageFetcherHtmlTest.java      |   68 -
+ .../imagecrawler/ImageCrawlController.java         |   72 -
+ .../examples/imagecrawler/ImageCrawler.java        |  105 -
+ .../crawler4j/examples/localdata/CrawlStat.java    |   60 -
+ .../crawler4j/examples/localdata/Downloader.java   |   97 -
+ .../localdata/LocalDataCollectorController.java    |   75 -
+ .../localdata/LocalDataCollectorCrawler.java       |   97 -
+ .../crawler4j/examples/multiple/BasicCrawler.java  |   87 -
+ .../multiple/MultipleCrawlerController.java        |  108 -
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |   73 -
+ .../examples/shutdown/ControllerWithShutdown.java  |   95 -
+ .../StatusHandlerCrawlController.java              |  119 -
+ .../statushandler/StatusHandlerCrawler.java        |   74 -
+ .../crawler4j/tests/HtmlContentHandlerTest.java    |   79 -
+ .../RobotstxtParserNonLowercaseUserAgentTest.java  |   28 -
+ .../ics/crawler4j/tests/RobotstxtPathRuleTest.java |   55 -
+ .../edu/uci/ics/crawler4j/tests/TLDListTest.java   |   45 -
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |   84 -
+ .../edu/uci/ics/crawler4j/tests/WebURLTest.java    |   18 -
+ src/test/resources/logback.xml                     |   26 -
+ 165 files changed, 18393 insertions(+), 19952 deletions(-)
+93b32be4cd40d08d06a0c3071c892a9fefa51f0c
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+508e3b953b099bee2510a30de352615eaa23842d
+
+ .../java/edu/uci/ics/crawler4j/crawler/CrawlController.java   | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+fbfa59b3ff1d954b8fa4bb14957dad9a280a9986
+bc69ad8bc2dc055b88af517b805ba8b57ae9c2a8
+
+ .../edu/uci/ics/crawler4j/crawler/PageTest.groovy  | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+a0361ed10bb4678a09b244a71781bdacc9d100a5
+
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 73 +++++++++++-----------
+ 1 file changed, 36 insertions(+), 37 deletions(-)
+e513c60a0394e27629877df8ce8868286473308d
+eedee50a092c17a04be6d8d7d96c51c4afa49bf1
+a746f870942d1e0e725fe648b662ffdbcbd661cc
+af1627cf703f70aebcb14bcb78b1b2e8b6cd27b3
+
+ pom.xml | 186 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 184 insertions(+), 2 deletions(-)
+e19965528f03019917b936241a3d81b6f4823345
+55133d0bd03f0a8bfe2c5df1cf4ba5e9f984810d
+70b53d9365adb57910cc253391e1459d34dd5eb8
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+4a0788cd2da9e3894a05d82c37d2f039a9cc7cfa
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/Page.java | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+8444face0bd371a0661c231f3432304b0ed5d8ab
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/Page.java | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+0b7d9f0bd71ef8d7248782538e5804cb51de4031
+457d92215a12e8ff49abb9cbe5f56c9d5316ea55
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |  28 ++++++
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  27 ++++-
+ .../crawler4j/parser/ExtractedUrlAnchorPair.java   |  20 ++++
+ .../ics/crawler4j/parser/HtmlContentHandler.java   |  17 +++-
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |   4 +
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |   1 +
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |  18 ++++
+ .../uci/ics/crawler4j/crawler/NoFollowTest.groovy  |  93 +++++++++++++++++
+ .../uci/ics/crawler4j/crawler/NoIndexTest.groovy   | 111 +++++++++++++++++++++
+ .../crawler4j/tests/HtmlContentHandlerTest.java    |  11 ++
+ 10 files changed, 323 insertions(+), 7 deletions(-)
+469a0aaea7792e373aa261ad1d9390242313e3c1
+d78ccda16f446693df1f223677ceb8f72f461308
+
+ .../java/edu/uci/ics/crawler4j/crawler/CrawlConfig.java   | 15 +++++++++++++++
+ .../java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java   |  3 +--
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+a7ef28e6e4878a84ba12a7bb66d5c7205d8b37a8
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+c8400bf4db5b0fc9f39ee8780e07828f9e5407c7
+
+ README.md | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
+f76a32a8fcbcc2d4029527410fd09c6b487f54ba
+
+ pom.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+0da0901d8225783d856687aa35402749582eeff4
+
+ pom.xml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+77e0f3c08301fdf3556a349477b8a5070f0644db
+
+ crawler4j.iml | 62 -----------------------------------------------------------
+ 1 file changed, 62 deletions(-)
+10670d90f4bc083832020316a8a688f767739de4
+
+ .gitignore     |  8 ++------
+ .idea/misc.xml | 22 +++++-----------------
+ 2 files changed, 7 insertions(+), 23 deletions(-)
+bfac183bdf9e0f1f667b9c4449f8dc8e5c75cd22
+
+ pom.xml | 159 +++++++++++++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 107 insertions(+), 52 deletions(-)
+a5ddb37eb3cbd1d0af922bc9925ec00692f2ac45
+
+ pom.xml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+fa2453de93454ac50e7570ca8e2426daf7f984fc
+79b7b8a5a78d4e607d23e8b42806ae8db6b977ed
+
+ README.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+67f9f91e2dbf0d6341765abaaad226ec71a942c5
+5328286de7a609e9aecb4041c5b35640ba407879
+
+ pom.xml | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+278d12131638ce174b6dc2a12849c76bef396d31
+386da9171bd1a4b79424feb643e569dfd46f7eed
+
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 61 ++++++++++------------
+ 1 file changed, 28 insertions(+), 33 deletions(-)
+81bcfbe39a79f3879645f47a57b309b30a8df96b
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+5f5276e84b51d3f693d425cf41c27ba9c7002a47
+c4d33722f2ce35204b0fa093b6a11bee4f376e06
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+7fdec3938d76284448590e5d460e2f2623b2c237
+
+ README.md | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+be41378ba07e8264bf7aef6ed280d70f89bef63e
+
+ .../ics/crawler4j/crawler/CrawlerWithJSTest.groovy | 140 +++++++++++++++++++++
+ 1 file changed, 140 insertions(+)
+582ae1437a9ad843f110c3402072f4c21af5d278
+
+ pom.xml | 3 +++
+ 1 file changed, 3 insertions(+)
+935195cfa41d63add0de0f190e0231bb5c632fc8
+194db8df58bae0def7276a776bbb633f5fa85267
+
+ .../crawler4j/crawler/RedirectHandlerTest.groovy   | 115 +++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
+0e6589aad33ff83a39e88a3cf1685bb73a350d0b
+635a5cf4fcaecce23f42d598446d937426ca760d
+bd43fc7d0dc3aba5002058a9615f551efd2a2299
+
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  5 ++-
+ .../edu/uci/ics/crawler4j/parser/AllTagMapper.java | 43 ++++++++++++++++++++++
+ .../ics/crawler4j/parser/HtmlContentHandler.java   |  5 ++-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  7 +++-
+ .../crawler4j/examples/localdata/Downloader.java   |  4 +-
+ .../crawler4j/tests/HtmlContentHandlerTest.java    | 15 ++++++++
+ 6 files changed, 72 insertions(+), 7 deletions(-)
+56e4c9533835803380eb639640eb645d0f83e5f6
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+11f4bd2ccbad1a0f9fda5c8bccee1ddd121331a4
+f41cf1987a59c6857cd219f93cd27c47363a35de
+
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  12 +-
+ .../edu/uci/ics/crawler4j/robotstxt/PathRule.java  | 235 ++++++------
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java   |  54 +--
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   | 111 +++---
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   | 222 ++++++------
+ .../crawler4j/robotstxt/UserAgentDirectives.java   | 400 +++++++++++----------
+ .../RobotstxtParserNonLowercaseUserAgentTest.java  |   9 +-
+ .../ics/crawler4j/tests/RobotstxtPathRuleTest.java |  86 ++---
+ 8 files changed, 589 insertions(+), 540 deletions(-)
+07704c7577a61a5127916a14fad570177c36fe50
+
+ .../ics/crawler4j/robotstxt/HostDirectives.java    | 109 +++++++++-
+ .../edu/uci/ics/crawler4j/robotstxt/PathRule.java  | 130 ++++++++++++
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java   |  44 ++--
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   | 104 +++++-----
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   | 198 +++++++++---------
+ .../edu/uci/ics/crawler4j/robotstxt/RuleSet.java   |  53 -----
+ .../crawler4j/robotstxt/UserAgentDirectives.java   | 226 +++++++++++++++++++++
+ .../ics/crawler4j/tests/RobotstxtPathRuleTest.java |  49 +++++
+ 8 files changed, 687 insertions(+), 226 deletions(-)
+4e6cdaa3a20bcd7df27e7bf3c0442e508825288c
+
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 27 +++++++++++++++-------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
+0940b99f68a69147e76fda032850a20a2d2a054b
+
+ README.md | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+46800351881864133fa3cfdaa091425325bbc9fa
+
+ .../ics/crawler4j/crawler/WebCrawlerTest.groovy    | 104 +++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+b98028c666da63afd987e774902b85da69061ecc
+
+ pom.xml | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+9653c47cc09ace254642c079bdea01a4530478fe
+
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  9 ++--
+ .../SniPoolingHttpClientConnectionManager.java     | 58 ++++++++++++++++++++++
+ .../fetcher/SniSSLConnectionSocketFactory.java     | 45 +++++++++++++++++
+ 3 files changed, 107 insertions(+), 5 deletions(-)
+579cff01bcacaa0749437fefeba901836286202c
+
+ pom.xml | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+af591e89bca5d665d83435e49f4fef0b6e1c299f
+09ed4d78eca3bb1a5c8201369dba98700ae30ad5
+
+ .idea/compiler.xml |   2 +-
+ .idea/misc.xml     | 327 +++++++++++++++++++++++++++++++++++++++++++++++++----
+ crawler4j.iml      | 151 +++++--------------------
+ 3 files changed, 337 insertions(+), 143 deletions(-)
+9f6ef444979291e887c1c5385b99b14ff209c75b
+b8a58b746a4243f1bed673942a571a5ae8445126
+
+ pom.xml | 5 +++++
+ 1 file changed, 5 insertions(+)
+7df5521be990f7d8eeb77dd4920a621658fa553c
+
+ pom.xml | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+0675b338463b06826e79364ebe24ef8961509fc1
+97109e0b70eb5583ed80522118eb0908fe6ab839
+
+ .gitignore | 106 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ pom.xml    |  30 ++++++++++++-----
+ 2 files changed, 128 insertions(+), 8 deletions(-)
+a6f2bc2a89885deae550c2e5badd477a033d239b
+
+ pom.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+98aaa96deab0882a3bb7917932ef3181399369d8
+
+ pom.xml                                            |  5 ++
+ .../examples/fetcher/PageFetcherHtmlOnly.java      | 60 +++++++++++++++++++
+ .../examples/fetcher/PageFetcherHtmlTest.java      | 68 ++++++++++++++++++++++
+ src/test/resources/logback.xml                     |  2 +
+ 4 files changed, 135 insertions(+)
+18afc750cf3994872f5dc47d5c94190a4e654fec
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+756451d0c223967bd6efb5589c1e2db0cc1ae63b
+
+ .../edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java     | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+121abad8d53abb616f47f672844e59ed0573f9e5
+
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 71 ++++++++++++++++++++--
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 17 ++++--
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |  6 +-
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   | 40 ++++++------
+ .../crawler4j/examples/localdata/Downloader.java   |  4 +-
+ 5 files changed, 103 insertions(+), 35 deletions(-)
+d6083b3083f5103c5774a4e7872779d3d66977fb
+7d1585cd5de62a6eeb77f5907cb5deb527c48825
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 42 ++++++++++++++++++++++
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 22 +++++++-----
+ 2 files changed, 55 insertions(+), 9 deletions(-)
+324f88de52f7d79f07e7602daafe3ca55128b9f9
+17a3b6c88722c04a3862b08a7ea968c9f01c133a
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+68f00c586076fe213adadaaffe96989e17ca6387
+cab9f8189b90c73885422a935a6bf7ab7105b106
+
+ pom.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+e44ffe27a41970fde91cc57e55b2cf917238c178
+0bd8da378f35178fa4e8e15a5aef077e2ecee7f5
+7e958c26da0baa806649269e3eca3161c8bd7fa8
+
+ .travis.yml | 2 --
+ 1 file changed, 2 deletions(-)
+8a522249dded9cd945b655c4d38b63df6b237c38
+
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+d08bf8738680178b111ce07d9b4593464125fe3a
+
+ .../java/edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+7d65d7197f19b90b05711193936f1ac4ab321789
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlController.java | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+cdbb7293b9701a18488109baccda3705996367eb
+
+ crawler4j.iml                                      | 11 ++++----
+ pom.xml                                            | 32 +++++++++++-----------
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 24 +++++++---------
+ .../crawler/exceptions/RedirectException.java      | 19 -------------
+ 4 files changed, 31 insertions(+), 55 deletions(-)
+b1bfe50b115b9f306790c0a1c1b4338bf66ebff3
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+e532029121e1650efb6c091372e259878ee1b55a
+
+ checkstyle.xml                                     | 128 +++++++++++++++++++++
+ pom.xml                                            |  28 +++++
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  26 ++---
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |   1 -
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |   6 +-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |   5 +-
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |   1 -
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   |   2 -
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |   4 +-
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |   8 +-
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     |  98 ++++++++--------
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |   1 -
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |   1 -
+ .../edu/uci/ics/crawler4j/tests/WebURLTest.java    |   1 -
+ 14 files changed, 229 insertions(+), 81 deletions(-)
+3763bb759dcfc53d1310cedc77d49353b81e8fb1
+
+ .../uci/ics/crawler4j/crawler/Configurable.java    |  14 +-
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 985 +++++++++++----------
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 888 ++++++++++---------
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 408 ++++-----
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 799 +++++++++--------
+ .../crawler4j/crawler/authentication/AuthInfo.java | 322 +++----
+ .../crawler/authentication/BasicAuthInfo.java      |  32 +-
+ .../crawler/authentication/FormAuthInfo.java       |  93 +-
+ .../crawler/authentication/NtAuthInfo.java         |  28 +-
+ .../exceptions/PageBiggerThanMaxSizeException.java |  17 +-
+ .../crawler/exceptions/RedirectException.java      |  13 +-
+ .../fetcher/IdleConnectionMonitorThread.java       |  54 +-
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java | 138 +--
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 464 +++++-----
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   | 155 ++--
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    | 207 ++---
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   | 284 +++---
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |  51 +-
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |  44 +-
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java | 194 ++--
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  | 149 ++--
+ .../crawler4j/parser/ExtractedUrlAnchorPair.java   |  42 +-
+ .../ics/crawler4j/parser/HtmlContentHandler.java   | 319 +++----
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    | 106 +--
+ .../parser/NotAllowedContentException.java         |   9 +-
+ .../edu/uci/ics/crawler4j/parser/ParseData.java    |   8 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  | 218 ++---
+ .../uci/ics/crawler4j/parser/TextParseData.java    |  50 +-
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  52 +-
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java   |  80 +-
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   | 130 +--
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   | 201 +++--
+ .../edu/uci/ics/crawler4j/robotstxt/RuleSet.java   |  48 +-
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    | 144 +--
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    | 278 +++---
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     | 809 ++++++++---------
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     | 371 ++++----
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |  36 +-
+ src/main/java/edu/uci/ics/crawler4j/util/Net.java  |  62 +-
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |  86 +-
+ .../examples/basic/BasicCrawlController.java       |  62 +-
+ .../ics/crawler4j/examples/basic/BasicCrawler.java | 104 +--
+ .../imagecrawler/ImageCrawlController.java         |  52 +-
+ .../examples/imagecrawler/ImageCrawler.java        | 102 +--
+ .../crawler4j/examples/localdata/CrawlStat.java    |  60 +-
+ .../crawler4j/examples/localdata/Downloader.java   | 102 +--
+ .../localdata/LocalDataCollectorController.java    |  71 +-
+ .../localdata/LocalDataCollectorCrawler.java       | 107 +--
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  80 +-
+ .../multiple/MultipleCrawlerController.java        |  80 +-
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  58 +-
+ .../examples/shutdown/ControllerWithShutdown.java  |  60 +-
+ .../StatusHandlerCrawlController.java              |  53 +-
+ .../statushandler/StatusHandlerCrawler.java        |  65 +-
+ .../crawler4j/tests/HtmlContentHandlerTest.java    |  84 +-
+ .../RobotstxtParserNonLowercaseUserAgentTest.java  |  27 +-
+ .../edu/uci/ics/crawler4j/tests/TLDListTest.java   |  50 +-
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |  91 +-
+ .../edu/uci/ics/crawler4j/tests/WebURLTest.java    |  10 +-
+ 59 files changed, 4919 insertions(+), 4787 deletions(-)
+870c2e2a9142d3f676f81b095189b4a3f06d83ce
+
+ .gitignore                                     |    9 +-
+ .idea/.name                                    |    1 +
+ .idea/codeStyleSettings.xml                    |   84 ++
+ .idea/compiler.xml                             |   32 +
+ .idea/copyright/profiles_settings.xml          |    3 +
+ .idea/encodings.xml                            |    6 +
+ .idea/inspectionProfiles/Project_Default.xml   | 1086 ++++++++++++++++++++++++
+ .idea/inspectionProfiles/profiles_settings.xml |    7 +
+ .idea/misc.xml                                 |  370 ++++++++
+ .idea/modules.xml                              |    8 +
+ .idea/sqldialects.xml                          |    6 +
+ .idea/vcs.xml                                  |    6 +
+ crawler4j.iml                                  |   63 ++
+ 13 files changed, 1679 insertions(+), 2 deletions(-)
+681c7ca65b13e9b3415eee08232dfef54baad11f
+83eccaa53f8254116d81ba866bcaafa66ba034f4
+
+ src/main/java/edu/uci/ics/crawler4j/url/WebURL.java | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+e7444bcb82944930d987042b0ae5950614e5d351
+58ccfe031bbbaa44c102851ecc7a3b36a1abab5d
+
+ .../ics/crawler4j/parser/HtmlContentHandler.java   | 12 +++--
+ .../crawler4j/tests/HtmlContentHandlerTest.java    | 55 ++++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 5 deletions(-)
+0f18d9a3bc4bf594a45ef96887fc2835a76f9586
+
+ pom.xml                                            |   6 +
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |  37 +-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 481 ++++++++++-----------
+ .../fetcher/politness/PolitenessServer.java        |  81 ++++
+ .../examples/basic/BasicCrawlController.java       |   8 +-
+ .../imagecrawler/ImageCrawlController.java         |   8 +-
+ .../crawler4j/examples/localdata/Downloader.java   |  10 +-
+ .../localdata/LocalDataCollectorController.java    |  12 +-
+ .../multiple/MultipleCrawlerController.java        |  10 +-
+ .../examples/shutdown/ControllerWithShutdown.java  |   8 +-
+ .../StatusHandlerCrawlController.java              |   8 +-
+ .../crawler4j/tests/PolitenessServerTestCase.java  | 147 +++++++
+ 12 files changed, 538 insertions(+), 278 deletions(-)
+096819e404885a30597a0ae8f9691766c732548f
+4bff407b1d69f73ec7770f71648e5ec514f3105c
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java        | 3 ++-
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java | 7 ++++---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+16c0b7482d717dc4325ce0d81b74c7509bf0af13
+
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 65 ++++++++++++++--------
+ 1 file changed, 41 insertions(+), 24 deletions(-)
+9b2b1ea48ed5989e7ce4b1f97abf0115547ab7c7
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+4a89f0af55e8486176198e08735c98dd10afcaa8
+9076c8193599c0f94b5c73075aef05c2807fbe06
+
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtParser.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+bb6bb787e3d1e1edca9334af8eb6730671f2dd7d
+
+ .../RobotstxtParserNonLowercaseUserAgentTest.java  | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+996f6d0ddf561cfe29629f4edf5cc9e6ad767a22
+9566990b3c3e89831f5c63f1c4f76e6baee67ebf
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2932e729933f9d149c70d3ba3f34788155893e20
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+16a729992f6a8da09fb4f1c6fc10d8e4068e650b
+5bdcf4b9294262031923b7d3a3a6074d3168a9be
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+fdb3baa85309dbd88c5ff7ee6391982d29feaa6f
+b52e54c946205e8e499d087c08e8bafbe44e3f0a
+
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    | 25 +++++++++++-----------
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |  4 ++--
+ 2 files changed, 14 insertions(+), 15 deletions(-)
+48ce714e30faa8d25cbc2ea4ed3e901d2e3ae714
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+a8121e3120161ba5d597b004b0756d6e7ad88d32
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+810f705a41bcbe211f78d8653a28e9520bd04406
+f9c82fec00cbc0dc10bcc644a8c08c8e1a57d11c
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+28ca8ebb6068826104665f40b60957287df73653
+
+ .../java/edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+bdbdc3e503ecad864ef27a17ddbc4e5df1ec949d
+373f09dd126825925dfc84e87ea712d7d5ed3746
+7ed6385ca2e88c0bf9830131e78b1ff2de92fa49
+ce856f445e51b9211253407fafd0066e879221c2
+f79a7848f410dc89eca8ee9eabd4311ba528548e
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+de46d30530f6ebb7805dbb89565445af1e95c566
+4fd9c8425674a2e7567bb51955f620ba77e9020f
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+2adfeb36d8d2c3959da1be9ee8bbc9ab9af4e7f3
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+be02e29c480aa16e683fb0534cc2f664d4a783a6
+
+ README.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+3d4354a7ba7da57c106e2107ac9a7058b713cd03
+
+ README.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+64915c883929edf3b97609713760b25fd4137de6
+
+ LICENSE | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+7502a4a44249781e301a02a2dceea93519cdc74b
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+e0422d79c4d97d786c9a313ab310c4c23a947a6c
+
+ .travis.yml | 5 +++++
+ 1 file changed, 5 insertions(+)
+fd59541bb1b524a624df2a93486a57809ae9138d
+5d555f3c0d7085e01a4516216b62d7aef8d154db
+
+ src/main/java/edu/uci/ics/crawler4j/url/TLDList.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+705cac02c672d24730019c3bd6052bcd60af862c
+
+ .../java/edu/uci/ics/crawler4j/crawler/CrawlConfig.java  | 16 ++++++++++++++++
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java   |  6 +++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+4f6b7db2d7c4cab927cbbc6777b8bbcf22415230
+
+ src/main/java/edu/uci/ics/crawler4j/parser/HtmlContentHandler.java | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+9687c8eef494bd0d52e05fa4daccbf7cd47842bf
+
+ .../java/edu/uci/ics/crawler4j/crawler/CrawlConfig.java  | 16 ++++++++++++++++
+ .../edu/uci/ics/crawler4j/crawler/CrawlController.java   | 16 +++++++++++++---
+ 2 files changed, 29 insertions(+), 3 deletions(-)
+c51fa779d5fc84c8f8d3f63c589a62eae4181cd5
+f82a862ac20c5f51dfc8cd348c576f4e5434deb7
+
+ .../java/edu/uci/ics/crawler4j/frontier/InProcessPagesDB.java  | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+2096dc3aeb52c3babc60804debef7a555be923cf
+
+ src/main/java/edu/uci/ics/crawler4j/frontier/InProcessPagesDB.java | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+608e5d2de1422d44990b3848661054d85a25ab17
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 16 ++++-----
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  3 +-
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    | 40 ++++++++++------------
+ 3 files changed, 27 insertions(+), 32 deletions(-)
+df0214a67b95814a018b7db27f0d094027754526
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 20 +++++
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  4 +
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    | 97 +++++++++++++++-------
+ 3 files changed, 89 insertions(+), 32 deletions(-)
+40f76ce8b87f27a597bf56fa93a7a1c823096cd5
+0907b9ad458dd463db5a88278aa0a5b0d760463f
+
+ src/main/resources/logback.xml | 24 ------------------------
+ src/test/resources/logback.xml | 24 ++++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 24 deletions(-)
+b5826dc6dda9e8f326a8d99b9f068799d9131171
+
+ README.md | 4 ++++
+ 1 file changed, 4 insertions(+)
+95be562529a47f6586e8c37aedbd02684514592a
+c836dcb2f8e08efa74f94e434feefcfe994cd304
+
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 61 ++++++++++++++++++++--
+ 1 file changed, 56 insertions(+), 5 deletions(-)
+ceaeaf1dbcf2adf01d21f50f7b60b5969ad358d8
+7a7b75fded0bb68728b807f90bb19d4d8620a18e
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+50d3caeb7717f16f8d2e7a2bc5ab86ccb8140341
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+bebe4b1a9f7088109381fab52f7764e94f09b2dc
+93d7c29cc3054a3c806ca00096b21632f9f3e8d8
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java     | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
+981712c94627e79bdd61ebc023718e13f013b9d4
+9b1ebfd62c2bb5b815be3a2a4d751a480bef6677
+960cd3667c510a882475344a20b506cbee207141
+
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 34 ++++++++++++----------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
+22597eacf0a82e9c0adb9ae29bbf4554aaefa481
+
+ .gitignore                                         |  4 +++-
+ .../crawler4j/crawler/authentication/AuthInfo.java |  3 ++-
+ .../crawler/authentication/NtAuthInfo.java         | 24 ++++++++++++++++++++++
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 21 ++++++++++++++++++-
+ 4 files changed, 49 insertions(+), 3 deletions(-)
+19fa3c26a7772e0ea7662265941ba1a4cd9fd385
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 36 ++++++++++++++++++++++
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  1 +
+ 2 files changed, 37 insertions(+)
+70fe6f1942427d2c054b50ad8a924b0e6c4beba3
+e01b206ab927b91423814192bfa507786173a612
+
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 25 ++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+cda9d53876af21c39a304e9067c71760aa32baaa
+
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+9ff61ee7f183c012b4b4e0375bdfd7368f889106
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 11 -----------
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java   |  5 +++--
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+9199a2c4b595e22ca24ce4c21d8fa6589f02f7ff
+f65b4a2bd20c16852f0f41e07ba240f0b3d1e4e5
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 11 +++++++++++
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java   |  4 ++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+6bd194a2bbcaf716ebaed81586488a7ca8e19a4a
+
+ README.md                                          |   2 +-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  10 +-
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   |   6 +-
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    |  63 ++++++------
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |   2 +-
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |  42 +++-----
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java | 108 ++++++---------------
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  14 +--
+ 8 files changed, 91 insertions(+), 156 deletions(-)
+54db52af135ac6828520b206b6dc40a1ac20a559
+b7c3b505d778739a941bae1e566cd588fa98af7f
+
+ src/main/java/edu/uci/ics/crawler4j/frontier/Counters.java         | 3 ++-
+ src/main/java/edu/uci/ics/crawler4j/frontier/DocIDServer.java      | 3 ++-
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java         | 4 ++--
+ src/main/java/edu/uci/ics/crawler4j/frontier/InProcessPagesDB.java | 4 ++--
+ 4 files changed, 8 insertions(+), 6 deletions(-)
+ab22b0a5e61774adacdf3263eefb605b98576480
+3e50c8b30e80b5960c101df160d695a3b9927354
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+6270f5013905742654d9580f717a780984c61d2b
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+dc207db0dd23ca6ba9de2830a25ade7a784fb302
+
+ README.md                                          | 34 ++++++++++++----------
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 10 ++++---
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  2 +-
+ .../examples/imagecrawler/ImageCrawler.java        |  2 +-
+ .../localdata/LocalDataCollectorCrawler.java       |  2 +-
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  2 +-
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  2 +-
+ .../statushandler/StatusHandlerCrawler.java        |  2 +-
+ 8 files changed, 30 insertions(+), 26 deletions(-)
+3319b95643dd00dd84e6156654e73aaf148b0e0b
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/Configurable.java           | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlController.java        | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/crawler/Page.java                   | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java             | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetchResult.java        | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java            | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/Counters.java              | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/DocIDServer.java           | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java              | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/InProcessPagesDB.java      | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/WebURLTupleBinding.java    | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/WorkQueues.java            | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java                  | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/HostDirectives.java       | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtParser.java      | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java      | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/url/URLCanonicalizer.java           | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/url/WebURL.java                     | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java                        | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java                      | 2 +-
+ .../java/edu/uci/ics/crawler4j/examples/basic/BasicCrawlController.java | 2 +-
+ src/test/java/edu/uci/ics/crawler4j/examples/basic/BasicCrawler.java    | 2 +-
+ .../uci/ics/crawler4j/examples/imagecrawler/ImageCrawlController.java   | 2 +-
+ .../java/edu/uci/ics/crawler4j/examples/imagecrawler/ImageCrawler.java  | 2 +-
+ src/test/java/edu/uci/ics/crawler4j/examples/multiple/BasicCrawler.java | 2 +-
+ .../uci/ics/crawler4j/examples/multiple/MultipleCrawlerController.java  | 2 +-
+ src/test/java/edu/uci/ics/crawler4j/examples/shutdown/BasicCrawler.java | 2 +-
+ .../edu/uci/ics/crawler4j/examples/shutdown/ControllerWithShutdown.java | 2 +-
+ .../crawler4j/examples/statushandler/StatusHandlerCrawlController.java  | 2 +-
+ .../uci/ics/crawler4j/examples/statushandler/StatusHandlerCrawler.java  | 2 +-
+ 30 files changed, 30 insertions(+), 30 deletions(-)
+cc99492215c4f01fa055eb293548b5cdd4fcd415
+
+ pom.xml                                            | 122 ++++++++++-----------
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |   4 +-
+ 2 files changed, 63 insertions(+), 63 deletions(-)
+61de075d55f393d95494c0232c33e1065482ff8d
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |  3 ---
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 22 ++++++++--------
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  5 ++--
+ .../fetcher/IdleConnectionMonitorThread.java       |  2 +-
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |  2 +-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 14 +++++------
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   | 12 ++++-----
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    |  8 +++---
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   | 11 ++++----
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |  5 ++--
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java | 29 ++++++++++------------
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  |  9 +++----
+ .../ics/crawler4j/parser/HtmlContentHandler.java   | 26 +++++++++----------
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  6 ++---
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  8 +++---
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   | 12 +++------
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  7 +++---
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    | 10 ++++----
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    | 21 ++++++++--------
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     |  6 ++---
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     | 10 ++++----
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |  2 +-
+ src/main/java/edu/uci/ics/crawler4j/util/Net.java  |  5 ++--
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |  7 +++---
+ .../examples/basic/BasicCrawlController.java       |  2 +-
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  2 +-
+ .../imagecrawler/ImageCrawlController.java         |  4 +--
+ .../examples/imagecrawler/ImageCrawler.java        |  8 +++---
+ .../crawler4j/examples/localdata/Downloader.java   |  6 ++---
+ .../localdata/LocalDataCollectorController.java    |  2 +-
+ .../localdata/LocalDataCollectorCrawler.java       | 10 ++++----
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  4 +--
+ .../multiple/MultipleCrawlerController.java        |  6 ++---
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  8 +++---
+ .../examples/shutdown/ControllerWithShutdown.java  |  2 +-
+ .../StatusHandlerCrawlController.java              |  2 +-
+ .../statushandler/StatusHandlerCrawler.java        |  6 ++---
+ .../edu/uci/ics/crawler4j/tests/TLDListTest.java   |  2 +-
+ 38 files changed, 148 insertions(+), 158 deletions(-)
+6ffe56b42c2b045c856455ca21302bbce5e38b0c
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |   8 +-
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  30 +++---
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |  12 +--
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 103 +++++++++++----------
+ .../crawler4j/crawler/authentication/AuthInfo.java |  12 ++-
+ .../crawler/authentication/BasicAuthInfo.java      |   6 +-
+ .../crawler/authentication/FormAuthInfo.java       |  12 ++-
+ .../crawler/exceptions/RedirectException.java      |   3 +-
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |   8 +-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  84 +++++++++--------
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   |  24 +++--
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    |  12 ++-
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |  10 +-
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |   9 +-
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java |  19 +++-
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  |  12 ++-
+ .../ics/crawler4j/parser/HtmlContentHandler.java   |  11 ++-
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |   4 +-
+ .../parser/NotAllowedContentException.java         |   6 +-
+ .../edu/uci/ics/crawler4j/parser/ParseData.java    |   4 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  12 +--
+ .../uci/ics/crawler4j/parser/TextParseData.java    |   4 +-
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  21 +++--
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |  14 +--
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |  22 ++---
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     |  13 +--
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |   2 +-
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |   7 +-
+ src/main/java/edu/uci/ics/crawler4j/util/Net.java  |  25 +++--
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |  25 ++---
+ .../examples/basic/BasicCrawlController.java       |   6 +-
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  20 ++--
+ .../imagecrawler/ImageCrawlController.java         |   9 +-
+ .../examples/imagecrawler/ImageCrawler.java        |   9 +-
+ .../crawler4j/examples/localdata/Downloader.java   |   9 +-
+ .../localdata/LocalDataCollectorController.java    |  75 +++++++--------
+ .../localdata/LocalDataCollectorCrawler.java       |  22 +++--
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  10 +-
+ .../multiple/MultipleCrawlerController.java        |   9 +-
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  16 ++--
+ .../examples/shutdown/ControllerWithShutdown.java  |   5 +-
+ .../StatusHandlerCrawlController.java              |   5 +-
+ .../statushandler/StatusHandlerCrawler.java        |  72 +++++++-------
+ .../edu/uci/ics/crawler4j/tests/TLDListTest.java   |   9 +-
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |  43 +++++----
+ .../edu/uci/ics/crawler4j/tests/WebURLTest.java    |   3 +-
+ 46 files changed, 467 insertions(+), 389 deletions(-)
+516799e73b1f2a681510dbb64149596751b2f70d
+5f6cf9c2ce1676de8f23b88dbff616338cbb3381
+
+ src/test/java/edu/uci/ics/crawler4j/examples/basic/BasicCrawler.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+192a48142f682d5e27dbc9ff4af76c86935ba5b9
+
+ pom.xml | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+a166258780c76cf9305ecc5d3f375906f7c98b7f
+
+ README.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+4fad6c0e4614fdabde69999827e5f9fff9ce0aaf
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+97ec5eb3e8e172739c83491d7b172d0c23db9e09
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+586ea89caca9017b9d70196989ee6ebcbb4e13c7
+
+ pom.xml | 54 +++++++++++++++++++++---------------------------------
+ 1 file changed, 21 insertions(+), 33 deletions(-)
+4ac9e6fa347790a959cb03b830eb568edf5483b5
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+bd26c7535da83a88516caa8bcdd643cc47f0604e
+
+ CHANGES.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+4b2ef3ecf6bab4b05181920496b3d1cd132b36ab
+
+ README.md | 195 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 195 insertions(+)
+ee95ff22aa7f9402c56473ce07c3b0deecfdb7b1
+
+ CHANGES.txt                                        |  1 +
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  | 12 +----
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  3 --
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    | 54 ++++++++++++----------
+ 4 files changed, 31 insertions(+), 39 deletions(-)
+853afc5a5f13579ce9b4e9be769acb08ea487ce1
+
+ .../java/edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java  | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+4b25e33f25613589a1154fcb75292a5726fdf101
+
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtParser.java | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+457570261471d573c032677d8a748ea2795d9560
+
+ CHANGES.txt                                        |    1 +
+ .../uci/ics/crawler4j/crawler/CrawlController.java |   67 +-
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |    4 +-
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |    4 +-
+ .../fetcher/IdleConnectionMonitorThread.java       |    3 +-
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |   11 +-
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   |   18 +-
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    |   67 +-
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |   21 +-
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |    2 +-
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java |   10 +-
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  |   16 +-
+ .../ics/crawler4j/parser/HtmlContentHandler.java   |   63 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  142 +-
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |   48 +-
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |    2 +-
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |   23 +-
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     |    3 +-
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |   48 +-
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |   16 +-
+ src/main/resources/logback.xml                     |    2 +-
+ src/main/resources/tld-names.txt                   | 8730 ++++++++++++++++++++
+ .../examples/imagecrawler/Cryptography.java        |   55 -
+ .../examples/imagecrawler/ImageCrawler.java        |   28 +-
+ .../crawler4j/examples/localdata/Downloader.java   |   51 +-
+ 25 files changed, 9027 insertions(+), 408 deletions(-)
+bef38047210035590ccb56fa750e1a205fe85ca5
+
+ CHANGES.txt                      |   1 +
+ src/main/resources/tld-names.zip | Bin 44057 -> 0 bytes
+ 2 files changed, 1 insertion(+)
+b393d121fbbfffcc04a5a4a543a790f184fce7e9
+
+ src/main/java/edu/uci/ics/crawler4j/url/TLDList.java | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+fa59ff2537b3f3df5caac007cbb7779476c7f452
+
+ CHANGES.txt                                        |  14 ++-
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  19 ++-
+ .../exceptions/PageBiggerThanMaxSizeException.java |   1 +
+ .../ics/crawler4j/fetcher/CustomFetchStatus.java   |  76 ------------
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 131 ++++++---------------
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  29 +++--
+ .../crawler4j/examples/localdata/Downloader.java   |  18 +--
+ 7 files changed, 86 insertions(+), 202 deletions(-)
+26b9c66e0e2b0781f22b19d8911f463f8304754e
+
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+ddf4e15260ee93d3227c47640e33bf7fb6df1cfc
+
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 50 +++-------------------
+ 1 file changed, 5 insertions(+), 45 deletions(-)
+bb4510ee80299b23b334a8c51091d0b75f28fb2e
+
+ .../ics/crawler4j/fetcher/CustomFetchStatus.java   | 114 ++++++++-------------
+ 1 file changed, 40 insertions(+), 74 deletions(-)
+e7ba2db4c596387839ab6e75034792d4f6be1500
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlController.java     |  2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/Counters.java | 14 --------------
+ .../java/edu/uci/ics/crawler4j/frontier/DocIDServer.java   | 14 --------------
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java | 12 +-----------
+ .../java/edu/uci/ics/crawler4j/frontier/WorkQueues.java    | 14 --------------
+ 5 files changed, 2 insertions(+), 54 deletions(-)
+511df211f744c8cc4e5f9400e5ab416bf635e715
+
+ pom.xml                                            |   7 +
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 160 ++++++++++-----------
+ .../crawler/exceptions/ContentFetchException.java  |  10 ++
+ .../exceptions/PageBiggerThanMaxSizeException.java |  17 +++
+ .../crawler/exceptions/ParseException.java         |  10 ++
+ .../crawler/exceptions/RedirectException.java      |  17 +++
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |   2 +
+ 7 files changed, 143 insertions(+), 80 deletions(-)
+3b29d6feb45971fd3a2131ed46545a24398bef12
+
+ CHANGES.txt                                        |  1 +
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |  8 +++++--
+ .../examples/basic/BasicCrawlController.java       | 16 ++++++++++---
+ .../ics/crawler4j/examples/basic/BasicCrawler.java | 26 +++++++++++-----------
+ .../imagecrawler/ImageCrawlController.java         | 17 ++++++--------
+ .../examples/imagecrawler/ImageCrawler.java        |  2 +-
+ .../crawler4j/examples/localdata/Downloader.java   | 17 ++++++++------
+ .../localdata/LocalDataCollectorController.java    | 17 ++++++++------
+ .../localdata/LocalDataCollectorCrawler.java       | 25 ++++++++++++---------
+ .../crawler4j/examples/multiple/BasicCrawler.java  | 17 ++++++++------
+ .../multiple/MultipleCrawlerController.java        | 11 +++++----
+ .../crawler4j/examples/shutdown/BasicCrawler.java  | 17 ++++++++------
+ .../examples/shutdown/ControllerWithShutdown.java  |  9 +++++---
+ .../StatusHandlerCrawlController.java              |  9 +++++---
+ .../statushandler/StatusHandlerCrawler.java        |  7 ++++--
+ 15 files changed, 120 insertions(+), 79 deletions(-)
+028dd360a054a20dbdebcb27170318135ce362f5
+
+ CHANGES.txt                                            |  4 +++-
+ .../java/edu/uci/ics/crawler4j/crawler/WebCrawler.java | 18 ++++++++++++++----
+ .../uci/ics/crawler4j/examples/basic/BasicCrawler.java | 11 ++++++++---
+ 3 files changed, 25 insertions(+), 8 deletions(-)
+35e76bc74642e04d321681f9e07f5a8e7ceeaeb5
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+70ce84fbe71b15fecaeb974c2ad026b2ad0e2e42
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+209e0f906d6b604a81641a38223a5f77a057b7e1
+
+ pom.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+8a50697e487ac078cdd4bf94139bfbe1c36f197a
+
+ .../uci/ics/crawler4j/crawler/Configurable.java    |  2 +-
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 61 +++++++++-------
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  6 +-
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 26 ++++---
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 32 ++++----
+ .../crawler4j/crawler/authentication/AuthInfo.java | 85 +++++++++++++++++-----
+ .../crawler/authentication/BasicAuthInfo.java      |  2 +
+ .../crawler/authentication/FormAuthInfo.java       | 20 +++--
+ .../ics/crawler4j/fetcher/CustomFetchStatus.java   |  2 +-
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |  2 +-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  2 +-
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   |  2 +-
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    |  2 +-
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |  2 +-
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |  2 +-
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |  2 +-
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java |  2 +-
+ .../parser/NotAllowedContentException.java         |  2 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  2 +-
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  2 +-
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   |  2 +-
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  2 +-
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |  2 +-
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     | 40 +++++-----
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |  2 +-
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |  2 +-
+ .../examples/basic/BasicCrawlController.java       |  2 +-
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  2 +-
+ .../examples/imagecrawler/Cryptography.java        |  2 +-
+ .../imagecrawler/ImageCrawlController.java         |  2 +-
+ .../examples/imagecrawler/ImageCrawler.java        |  2 +-
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  2 +-
+ .../multiple/MultipleCrawlerController.java        |  2 +-
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  2 +-
+ .../examples/shutdown/ControllerWithShutdown.java  |  2 +-
+ .../StatusHandlerCrawlController.java              |  2 +-
+ .../statushandler/StatusHandlerCrawler.java        |  2 +-
+ 37 files changed, 207 insertions(+), 123 deletions(-)
+b5f97a68735347ba1e1f8e45ea768a8371f81634
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+f811b46e0c8432ef74b5af82b080ce4c26ad2580
+
+ .../edu/uci/ics/crawler4j/crawler/authentication/BasicAuthInfo.java | 6 ++++++
+ .../edu/uci/ics/crawler4j/crawler/authentication/FormAuthInfo.java  | 1 +
+ 2 files changed, 7 insertions(+)
+ffae456338f9018824a947469fd197c04c40fc83
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 11 -----------
+ 1 file changed, 11 deletions(-)
+4388892aeb78590d569d062b4e422e2999b65872
+
+ CHANGES.txt                                        |  17 +--
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |  32 ++++++
+ .../crawler4j/crawler/authentication/AuthInfo.java | 125 +++++++++++++++++++++
+ .../crawler/authentication/BasicAuthInfo.java      |  23 ++++
+ .../crawler/authentication/FormAuthInfo.java       |  51 +++++++++
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  84 +++++++++++---
+ 6 files changed, 311 insertions(+), 21 deletions(-)
+b4e08024a90be3bb1df939be122f05db938de0e2
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+00a422937bc388c9ab1f1f293f5ac19cb2edb12d
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/CustomFetchStatus.java | 6 ++++++
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java       | 7 ++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+bb795ce16c13019b44b4f40b90a300fca6b396ae
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+553bd7f91c5f944d1eb07d5638698c7b0ecb0daf
+
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+da006f8975b81cfc786e00b724295aa4590a659e
+
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java | 1 +
+ 1 file changed, 1 insertion(+)
+0a9abddd67db054e7b97a8d190786c3efc079258
+
+ CHANGES.txt | 1 +
+ 1 file changed, 1 insertion(+)
+dd9f014c35684343621b83902b8e4307d6a7eb34
+
+ CHANGES.txt                                        |  1 +
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java | 21 +++++++--------------
+ 2 files changed, 8 insertions(+), 14 deletions(-)
+1ac149397bef26f830e820483231b542811f00c9
+
+ CHANGES.txt                                        |  38 ++++---
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  43 ++++----
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  | 116 ++++++++++++---------
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |   2 +
+ .../edu/uci/ics/crawler4j/parser/ParseData.java    |  10 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |   7 +-
+ .../uci/ics/crawler4j/parser/TextParseData.java    |  16 +++
+ src/main/java/edu/uci/ics/crawler4j/util/Net.java  |  50 +++++++++
+ 8 files changed, 189 insertions(+), 93 deletions(-)
+22216c5eec2f78bd05ec6da6dc7b3b2c11a5ef10
+
+ .../fetcher/IdleConnectionMonitorThread.java       |  12 +--
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 112 +++++++++++----------
+ 2 files changed, 63 insertions(+), 61 deletions(-)
+a96701fed1852fce9ab713c4b6b764de0af60dd6
+
+ .../java/edu/uci/ics/crawler4j/crawler/WebCrawler.java   |  2 ++
+ .../java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java  | 16 +++++++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+0d4209670cee021e2e5bb22e80857e72059ea253
+
+ CHANGES.txt                    |  1 +
+ src/main/resources/logback.xml | 24 ++++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+3aa3cd82b7239f853eeba16bbb772c6e6ab66e6c
+
+ CHANGES.txt                                                        | 1 +
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java       | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java | 6 +++++-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+b77ca34d7d14deafb6551cdebe9387b6e177e4ff
+
+ CHANGES.txt                                        |  3 ++-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 24 ++++++++++++----------
+ 2 files changed, 15 insertions(+), 12 deletions(-)
+2264d63b4c2085fefd896a6b7bb9b8c421e3014e
+
+ CHANGES.txt                                                      | 4 +++-
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlController.java | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+b9a8b5cadaed86001207bb5c4322b4a325c4cd86
+
+ src/main/java/edu/uci/ics/crawler4j/parser/HtmlContentHandler.java | 4 ++++
+ 1 file changed, 4 insertions(+)
+4ed3d4efa09a762960d4dbe35e26fe4f56816595
+
+ CHANGES.txt                                                 |  1 +
+ .../uci/ics/crawler4j/parser/ExtractedUrlAnchorPair.java    |  9 +++++++++
+ .../edu/uci/ics/crawler4j/parser/HtmlContentHandler.java    |  9 +++++++--
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java      |  1 +
+ src/main/java/edu/uci/ics/crawler4j/url/WebURL.java         | 13 +++++++++++++
+ 5 files changed, 31 insertions(+), 2 deletions(-)
+1e464612ed6adeebf9f8df3f10574f69c0461196
+
+ CHANGES.txt                                        | 114 +++++++++++----------
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |   1 +
+ .../ics/crawler4j/parser/HtmlContentHandler.java   |   6 ++
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |  11 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |   1 +
+ 5 files changed, 76 insertions(+), 57 deletions(-)
+41244315b65c067603aebd42f6ad0bd8a2694ff7
+
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |   42 +-
+ src/main/resources/tld-names.txt                   | 5199 --------------------
+ src/main/resources/tld-names.zip                   |  Bin 0 -> 44057 bytes
+ 3 files changed, 34 insertions(+), 5207 deletions(-)
+f9df699e04311574a8b9755b8708f807b0f30295
+
+ .classpath  | 11 -----------
+ .gitignore  |  4 +++-
+ .project    | 29 -----------------------------
+ CHANGES.txt |  3 +++
+ 4 files changed, 6 insertions(+), 41 deletions(-)
+c874761011d63e77977b914810eb44c054845233
+
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 89 +++++++++++++++++-----
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 47 +++++++-----
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  3 +
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  2 +-
+ .../examples/imagecrawler/ImageCrawler.java        |  2 +-
+ .../localdata/LocalDataCollectorCrawler.java       |  2 +-
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  2 +-
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  2 +-
+ .../statushandler/StatusHandlerCrawler.java        |  2 +-
+ 9 files changed, 106 insertions(+), 45 deletions(-)
+30133d72455fa79ee1c5e203b76459d456b11b28
+
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+274fa1f28d4c36a37c19a4c608168d38fe1ec373
+
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+f5ec5157fcf416573db756f6cda9c4241fce7fa0
+
+ CHANGES.txt                                        |   2 +
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |   7 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |   6 +-
+ .../examples/basic/BasicCrawlController.java       | 169 ++++++++++-----------
+ .../ics/crawler4j/examples/basic/BasicCrawler.java | 106 ++++++-------
+ .../localdata/LocalDataCollectorCrawler.java       |   4 +-
+ .../crawler4j/examples/multiple/BasicCrawler.java  |   4 +-
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |   4 +-
+ 8 files changed, 152 insertions(+), 150 deletions(-)
+bd9de877342417e384936beb2d12bad5bcfd01e1
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java        | 4 +++-
+ src/main/java/edu/uci/ics/crawler4j/fetcher/CustomFetchStatus.java | 1 +
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java       | 4 +++-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+c62179b7a1f6cfb49e503ca52cdceed9cf4131b4
+
+ CHANGES.txt                                        |   2 +
+ .../uci/ics/crawler4j/crawler/Configurable.java    |  20 +-
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 762 ++++++++++---------
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 808 ++++++++++----------
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 263 ++++---
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 673 +++++++++--------
+ .../ics/crawler4j/fetcher/CustomFetchStatus.java   | 153 ++--
+ .../fetcher/IdleConnectionMonitorThread.java       |  56 +-
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java | 151 ++--
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 389 +++++-----
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   | 224 +++---
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    | 246 +++----
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   | 342 ++++-----
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |  96 +--
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |  46 +-
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java | 342 ++++-----
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  |  68 +-
+ .../crawler4j/parser/ExtractedUrlAnchorPair.java   |  31 +-
+ .../ics/crawler4j/parser/HtmlContentHandler.java   | 329 +++++----
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |  67 +-
+ .../parser/NotAllowedContentException.java         |   2 +-
+ .../edu/uci/ics/crawler4j/parser/ParseData.java    |   7 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  | 232 +++---
+ .../uci/ics/crawler4j/parser/TextParseData.java    |  27 +-
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  68 +-
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java   |  83 ++-
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   | 144 ++--
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   | 174 ++---
+ .../edu/uci/ics/crawler4j/robotstxt/RuleSet.java   |  56 +-
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |  77 +-
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    | 346 ++++-----
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     | 814 ++++++++++-----------
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     | 343 +++++----
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |  62 +-
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java | 104 +--
+ .../examples/imagecrawler/Cryptography.java        |  52 +-
+ .../imagecrawler/ImageCrawlController.java         |  60 +-
+ .../examples/imagecrawler/ImageCrawler.java        | 128 ++--
+ .../crawler4j/examples/localdata/CrawlStat.java    |  81 +-
+ .../crawler4j/examples/localdata/Downloader.java   | 116 +--
+ .../localdata/LocalDataCollectorController.java    |   5 +-
+ .../localdata/LocalDataCollectorCrawler.java       | 102 +--
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  82 ++-
+ .../multiple/MultipleCrawlerController.java        | 146 ++--
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  56 +-
+ .../examples/shutdown/ControllerWithShutdown.java  | 120 +--
+ .../StatusHandlerCrawlController.java              | 168 ++---
+ .../statushandler/StatusHandlerCrawler.java        |   5 +-
+ .../edu/uci/ics/crawler4j/tests/TLDListTest.java   |  64 +-
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |  84 +--
+ .../edu/uci/ics/crawler4j/tests/WebURLTest.java    |  11 +-
+ 51 files changed, 4433 insertions(+), 4454 deletions(-)
+a047d66cfa35c14a4a1d2097eeb7b7caed0ba532
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+c95f66385c6acaabc2b117680f29eb198c385b05
+
+ CHANGES.txt                                        |  12 +-
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 181 +++++++++++----------
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |   4 +-
+ .../parser/NotAllowedContentException.java         |  13 ++
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |   6 +-
+ 5 files changed, 119 insertions(+), 97 deletions(-)
+65954e30f21900ff8deeda21890a9c958b3c3796
+
+ CHANGES.txt                                           |  2 ++
+ src/main/java/edu/uci/ics/crawler4j/url/WebURL.java   |  1 +
+ .../java/edu/uci/ics/crawler4j/tests/WebURLTest.java  | 19 +++++++++++++++++++
+ 3 files changed, 22 insertions(+)
+b7191f4d6336ba4b74fa06802d81e0867f4beeb8
+
+ CHANGES.txt                                                   |  1 +
+ src/test/java/edu/uci/ics/crawler4j/tests/TLDListTest.java    | 11 ++++++-----
+ .../edu/uci/ics/crawler4j/tests/URLCanonicalizerTest.java     | 11 +++++++----
+ 3 files changed, 14 insertions(+), 9 deletions(-)
+abf1ded6495c4ab2f8ed9bbdcf05f807f4634d9f
+
+ CHANGES.txt | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+8e0bdb83ab2bc33bde424d58a0119ff4388b6e9c
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 12 ++++++++----
+ .../edu/uci/ics/crawler4j/fetcher/CustomFetchStatus.java     |  2 +-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+cc0e9ecbc4a3288cc833060bb28c6e08877f8454
+
+ .../uci/ics/crawler4j/examples/multiple/MultipleCrawlerController.java  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+9a9b6846f3a521ad925608baac95ab881969c688
+
+ src/main/java/edu/uci/ics/crawler4j/parser/BinaryParseData.java | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+6bdccbd254d068d537bd0cb69f9f3beb994a5219
+
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 45 ++++++++++++++++++----
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  3 +-
+ 2 files changed, 40 insertions(+), 8 deletions(-)
+384d98113c868d939925f01270bd6f08fcde0653
+
+ .../java/edu/uci/ics/crawler4j/crawler/WebCrawler.java | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+091f5043337fb8ec958143794fffbee92e4ef410
+
+ src/main/java/edu/uci/ics/crawler4j/url/URLCanonicalizer.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+95c91d8c1dde00aa0e6754d7ebaa581511618fe7
+
+ LICENSE   | 201 --------------------------------------------------------------
+ README.md |  87 ---------------------------
+ pom.xml   |   8 +--
+ 3 files changed, 4 insertions(+), 292 deletions(-)
+1e3995cbc6d3dd75f688d21c68a9259cb8589ba0
+
+ pom.xml                                            |  52 ++--------
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |   4 +-
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  | 105 ++++++++++++++++++---
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  15 ++-
+ 4 files changed, 110 insertions(+), 66 deletions(-)
+9efaeef20c303fe241c2799d481bea37730c83f6
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlController.java | 4 +++-
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java       | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+a84382f4f4828fb43ae7fd9e408f84104c7c54f3
+846a9798bbfc9f7810e24dc024a3954aa7d389b5
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlController.java     | 14 +++++++-------
+ .../java/edu/uci/ics/crawler4j/crawler/WebCrawler.java     |  6 +++---
+ .../edu/uci/ics/crawler4j/fetcher/PageFetchResult.java     |  3 +--
+ .../java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java    | 13 ++++++-------
+ .../java/edu/uci/ics/crawler4j/frontier/DocIDServer.java   |  2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/Frontier.java | 12 ++++++------
+ .../edu/uci/ics/crawler4j/frontier/InProcessPagesDB.java   |  2 +-
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java     |  6 +++---
+ 8 files changed, 28 insertions(+), 30 deletions(-)
+56c9467c99602ea9cc82c95507fbe7cf39c0eddb
+
+ README.md | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+e2137abf81ba8008916aac2b55f918f5b5f63cc9
+
+ README.md | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+ba9745ecedaaf82c702a5ff179edc4325685d7c4
+
+ README.md | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 57 insertions(+), 2 deletions(-)
+a0bc137d86eb15a0effb579b9ac22a0be5c8a205
+
+ pom.xml                                                   | 15 +++++++++------
+ .../edu/uci/ics/crawler4j/crawler/CrawlController.java    |  5 +++--
+ .../java/edu/uci/ics/crawler4j/crawler/WebCrawler.java    |  5 +++--
+ .../edu/uci/ics/crawler4j/fetcher/PageFetchResult.java    |  5 +++--
+ .../java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java   |  5 +++--
+ .../java/edu/uci/ics/crawler4j/frontier/DocIDServer.java  |  6 +++---
+ .../java/edu/uci/ics/crawler4j/frontier/Frontier.java     |  5 +++--
+ .../edu/uci/ics/crawler4j/frontier/InProcessPagesDB.java  |  5 +++--
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java    |  5 +++--
+ src/main/resources/log4j.properties                       |  9 ---------
+ 10 files changed, 33 insertions(+), 32 deletions(-)
+89318e22cfa4b2331bb56c8c1fc3282b9f1d509c
+
+ pom.xml | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
+8bb591b4c0a75f2c3e9f44508069209d11388a4e
+
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 2 ++
+ 1 file changed, 2 insertions(+)
+21e71a80a04750c343419dfd4c99156302b471bc
+
+ README.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+ad90400e8d900fd767cd149f2f016a8ce683c8fe
+d76ea2d9d881a64ac6f6f1d602bfccc7afa8acf9
+
+ LICENSE   | 201 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ README.md |   4 ++
+ 2 files changed, 205 insertions(+)
+e14a296409390eaba34108481b2ce779e0d99bbf
+
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+bfb73219e98ca61cbca0fc48af1d3c10bee8790e
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+a7a5eb0e7bca58774d41237ce5b186fd1b370bf2
+
+ pom.xml | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+920f47eaf5ee826586231e2d357298530d783360
+
+ pom.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+7a74ac5b577d98551dfe19dae00d895063aa9a5f
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/CrawlController.java   | 6 +++---
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java        | 4 ++--
+ src/main/java/edu/uci/ics/crawler4j/frontier/Counters.java         | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/frontier/WorkQueues.java       | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/parser/HtmlContentHandler.java | 4 ++--
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java             | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/url/TLDList.java               | 2 +-
+ src/main/java/edu/uci/ics/crawler4j/url/URLCanonicalizer.java      | 4 ++--
+ 9 files changed, 14 insertions(+), 14 deletions(-)
+c697a985f58315b10d07ef27f64d2dadac0d7810
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java      | 1 +
+ .../java/edu/uci/ics/crawler4j/frontier/WebURLTupleBinding.java  | 2 ++
+ .../java/edu/uci/ics/crawler4j/parser/HtmlContentHandler.java    | 9 +++++++--
+ .../java/edu/uci/ics/crawler4j/examples/basic/BasicCrawler.java  | 2 ++
+ 4 files changed, 12 insertions(+), 2 deletions(-)
+8f3be74249bc631bc520bda413793aa184f0a3d5
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/WebCrawler.java | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+183d98a269dbdf99c927cb7d052a515f10014071
+
+ src/main/java/edu/uci/ics/crawler4j/parser/Parser.java       | 12 +++++++-----
+ .../java/edu/uci/ics/crawler4j/url/URLCanonicalizer.java     | 10 ++++++----
+ 2 files changed, 13 insertions(+), 9 deletions(-)
+3df4ae16409c00d2927880832e4fe6ae0550a89c
+
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  3 ++
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    | 39 ++++++++++++++--------
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |  2 +-
+ 3 files changed, 30 insertions(+), 14 deletions(-)
+b86018b6efa72b95fb60f618fba649b56bec465d
+
+ src/main/java/edu/uci/ics/crawler4j/crawler/Page.java | 19 ++++++++++++++++++-
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java    | 14 ++++++++++++--
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java    |  3 ++-
+ .../ics/crawler4j/examples/basic/BasicCrawler.java    | 12 +++++++++++-
+ 4 files changed, 43 insertions(+), 5 deletions(-)
+5bb027301a2e3b3775397bd885249e3cef74cf50
+
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 103 +++++++++++++--------
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |   9 +-
+ 2 files changed, 72 insertions(+), 40 deletions(-)
+870d24918bd922deeb8eda67ea818adbaaeb0d41
+
+ src/main/java/edu/uci/ics/crawler4j/parser/HtmlContentHandler.java | 6 ++++++
+ 1 file changed, 6 insertions(+)
+3615d8f58ea3072b85007611a547cf21bccbfb18
+
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |  7 ++++-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  1 +
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |  3 +-
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java | 32 ++++++++++++----------
+ 4 files changed, 25 insertions(+), 18 deletions(-)
+daf202793435d95e2919f477ee5a93c77f2880c5
+
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  7 ++--
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |  3 +-
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 40 ++++++++++++++--------
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  5 +--
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   |  6 ++--
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   |  1 +
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  | 10 +++---
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   | 11 +++---
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   | 22 ++++++------
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     | 12 +++----
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     | 12 ++++---
+ .../examples/imagecrawler/Cryptography.java        |  4 +--
+ .../examples/imagecrawler/ImageCrawler.java        |  4 +--
+ .../crawler4j/examples/localdata/Downloader.java   |  5 ++-
+ .../localdata/LocalDataCollectorCrawler.java       |  9 ++---
+ .../examples/shutdown/ControllerWithShutdown.java  |  2 +-
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |  2 +-
+ 17 files changed, 91 insertions(+), 64 deletions(-)
+839c433bce3a566a638d75c3166df6954e74520c
+
+ pom.xml | 18 ------------------
+ 1 file changed, 18 deletions(-)
+c99423e9d1afb088159569b05d2b1009f00566df
+
+ pom.xml                                            | 39 +++++++++++++++++++---
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  2 +-
+ 2 files changed, 35 insertions(+), 6 deletions(-)
+6d413924d56c57fdd62a61ea1c7e0ecce1cc5219
+
+ .../edu/uci/ics/crawler4j/robotstxt/RobotstxtServer.java  | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+a9cc8a96cf54765af77eefd7b2b069635b29066d
+
+ .classpath                                                        | 2 +-
+ pom.xml                                                           | 8 ++++----
+ src/main/java/edu/uci/ics/crawler4j/crawler/Page.java             | 4 +++-
+ .../uci/ics/crawler4j/fetcher/IdleConnectionMonitorThread.java    | 6 +++---
+ src/main/java/edu/uci/ics/crawler4j/fetcher/PageFetcher.java      | 6 +++---
+ 5 files changed, 14 insertions(+), 12 deletions(-)
+3ffec155fec36b1f09327a0c8d0914e889665e6b
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+7fd8392e4f9fd48601e4c307c79247694c9d9195
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+7b8bf91aab517757f4b62bd3ca22546e105a736b
+
+ pom.xml                                            |  2 +-
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |  2 +
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java | 26 ++++++++--
+ .../crawler4j/parser/ExtractedUrlAnchorPair.java   | 24 ++++++++++
+ .../ics/crawler4j/parser/HtmlContentHandler.java   | 56 ++++++++++++++++------
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  | 18 +++----
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     | 52 +++++++++++++++-----
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |  9 +++-
+ 8 files changed, 143 insertions(+), 46 deletions(-)
+1c23e3205590a6b75f04ee8448a47eda62ad2380
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 193 ++++++++++++---------
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |   2 -
+ 2 files changed, 109 insertions(+), 86 deletions(-)
+29a2daf4ba80f761c4050d79985a215726f43d36
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+b22c75d99b4a6f5fee6ac02c128720076394d212
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+d362515f7d300dcdb1fe7ca2b08c92c5c363f9c4
+
+ pom.xml                                            |   2 +-
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |   2 +-
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  |  26 +-
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |  21 +-
+ .../edu/uci/ics/crawler4j/url/UrlResolver.java     | 462 +++++++++++++++++++++
+ .../examples/basic/BasicCrawlController.java       |   5 +-
+ .../multiple/MultipleCrawlerController.java        |   2 +-
+ .../examples/shutdown/ControllerWithShutdown.java  |   2 +-
+ .../StatusHandlerCrawlController.java              |   2 +-
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |  17 +-
+ 10 files changed, 501 insertions(+), 40 deletions(-)
+2f6a89cfd07bf6e87f92f361359d0fbca81b634d
+
+ pom.xml                                            |  2 +-
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  2 +
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |  2 +
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     | 61 ++++++++++++++++++++--
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  6 ++-
+ .../statushandler/StatusHandlerCrawler.java        |  2 +-
+ 6 files changed, 67 insertions(+), 8 deletions(-)
+6eb2ef843bde9caf22b9668b53ab4361116dfa3c
+
+ pom.xml                                            |    2 +-
+ .../java/edu/uci/ics/crawler4j/url/TLDList.java    |   35 +
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |   48 +-
+ src/main/resources/tld-names.txt                   | 5199 ++++++++++++++++++++
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |   13 +-
+ .../edu/uci/ics/crawler4j/tests/TLDListTest.java   |   43 +
+ 6 files changed, 5326 insertions(+), 14 deletions(-)
+e5dcab1e1d7cafc3e128e3f3105e31244f979a61
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+b5b88a4d5c649a03e522b4e0557e7bbca1cc737b
+
+ .../java/edu/uci/ics/crawler4j/url/URLCanonicalizer.java | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+fdd91b8d194b3a0e858fd80a8a9a96f4614918d4
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+9bc8c1b54eedfd8fd0384822517159d997670e5e
+
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 39 +++++++++++++++++++---
+ 1 file changed, 35 insertions(+), 4 deletions(-)
+7a7efd28114aaca361c9f87c1de3dc5a771fead6
+
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 41 ++++++++++++++++++----
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    | 20 +++++++++++
+ 2 files changed, 55 insertions(+), 6 deletions(-)
+0161a713f264d504013c83f3152c2cd40366a790
+
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |  16 ---
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 125 +++++++++++----------
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  38 ++++---
+ .../ics/crawler4j/fetcher/CustomFetchStatus.java   | 104 +++++++++++++++++
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |   9 ++
+ .../uci/ics/crawler4j/fetcher/PageFetchStatus.java |  43 -------
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java |  23 ++--
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  17 +--
+ .../examples/basic/BasicCrawlController.java       |   4 +-
+ .../crawler4j/examples/localdata/Downloader.java   |   5 +-
+ .../StatusHandlerCrawlController.java              | 114 +++++++++++++++++++
+ .../statushandler/StatusHandlerCrawler.java        |  71 ++++++++++++
+ 12 files changed, 412 insertions(+), 157 deletions(-)
+a74d2c0b1b382911392c5ce6c8c08103abd625e3
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+01d521e8cebe72ec219ddf6dfb662693a110373d
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+b0fd2cbed00843eca3ee52b498a95f13b6f67ac1
+
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  |  26 +++---
+ .../uci/ics/crawler4j/fetcher/PageFetchResult.java |  92 ++++++++++++++++++
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 103 +++++++++------------
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   |  11 ++-
+ .../crawler4j/examples/localdata/Downloader.java   |  10 +-
+ 5 files changed, 162 insertions(+), 80 deletions(-)
+ab57c9b4129266c20b1486080fdd1e2a50c917c9
+
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    | 87 ++++++++--------------
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  | 23 +++++-
+ 2 files changed, 52 insertions(+), 58 deletions(-)
+dbc9d3cb0d1efde4431f68b8417ee2ed5d551a43
+
+ pom.xml                                            |   6 +
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    | 227 +++++++++++++++++++--
+ .../ics/crawler4j/tests/URLCanonicalizerTest.java  |  45 ++++
+ 3 files changed, 258 insertions(+), 20 deletions(-)
+f65693c2eac499c64cfd5ab3d01bf798116d988a
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+bc227deb23da126ff256f7db142e249114c400f2
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+5b4981241286fefdf1ee084c1691f58404f76453
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+8c4c6de7ab33dcb7cff8a19f907d8d680e8a3974
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+e65c74522b9aa38c78ed789fc3909e9b0214caa3
+
+ README       |   0
+ jar-pack.xml |  25 ---------
+ pom-pack.xml | 176 -----------------------------------------------------------
+ pom.xml      |   2 +-
+ 4 files changed, 1 insertion(+), 202 deletions(-)
+280fac2603e78dc7916aec16f4c4fe882c5454f3
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+f30fedf792fe4fcfc7e92fec1c3982a30d8369bb
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+18ef80b688bcf8e029c8de7c22bfd261a70b20e3
+
+ pom-pack.xml | 6 +++---
+ pom.xml      | 8 ++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+7f248bb489b7cfc24e84ffbedcff718e144e06a9
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+0644d7bb133dc7371e14923164a044d06db1e7be
+
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+82b93199d6a45e73a1d905697e1397116b5eb5c2
+
+ pom.xml | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+144da5eb3723acfeee4f256d3249152a054457f0
+
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 194 +++++++++++----------
+ 1 file changed, 99 insertions(+), 95 deletions(-)
+5e2eff247e232fc810192043a08d0314eb701974
+
+ pom-pack.xml                                       | 176 +++++++++++++++++++++
+ pom.xml                                            |  52 +++---
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java |   2 +
+ 3 files changed, 208 insertions(+), 22 deletions(-)
+497d71e24e24d5eab9a49b80dcfbd2ec2289e5d7
+
+ .../edu/uci/ics/crawler4j/examples/basic/BasicCrawler.java  | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+52f65ccd389e6f82483bb060a2e677760e2b2918
+
+ pom.xml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+e6a6274fe8f0f909a0dc088ac85dd747b5681d7d
+
+ .../edu/uci/ics/crawler4j/advanced/Controller.java |  73 -------------
+ .../edu/uci/ics/crawler4j/advanced/CrawlStat.java  |  62 -----------
+ .../edu/uci/ics/crawler4j/advanced/Downloader.java |  92 -----------------
+ .../edu/uci/ics/crawler4j/advanced/MyCrawler.java  |  88 ----------------
+ .../ics/crawler4j/basic/BasicCrawlController.java  | 112 --------------------
+ .../edu/uci/ics/crawler4j/basic/BasicCrawler.java  |  67 ------------
+ .../examples/basic/BasicCrawlController.java       | 114 +++++++++++++++++++++
+ .../ics/crawler4j/examples/basic/BasicCrawler.java |  67 ++++++++++++
+ .../examples/imagecrawler/Cryptography.java        |  55 ++++++++++
+ .../imagecrawler/ImageCrawlController.java         |  74 +++++++++++++
+ .../examples/imagecrawler/ImageCrawler.java        | 104 +++++++++++++++++++
+ .../crawler4j/examples/localdata/CrawlStat.java    |  61 +++++++++++
+ .../crawler4j/examples/localdata/Downloader.java   |  92 +++++++++++++++++
+ .../localdata/LocalDataCollectorController.java    |  69 +++++++++++++
+ .../localdata/LocalDataCollectorCrawler.java       |  88 ++++++++++++++++
+ .../crawler4j/examples/multiple/BasicCrawler.java  |  80 +++++++++++++++
+ .../multiple/MultipleCrawlerController.java        | 104 +++++++++++++++++++
+ .../crawler4j/examples/shutdown/BasicCrawler.java  |  68 ++++++++++++
+ .../examples/shutdown/ControllerWithShutdown.java  |  91 ++++++++++++++++
+ .../ics/crawler4j/imagecrawler/Cryptography.java   |  54 ----------
+ .../imagecrawler/ImageCrawlController.java         |  74 -------------
+ .../ics/crawler4j/imagecrawler/ImageCrawler.java   | 104 -------------------
+ .../uci/ics/crawler4j/multiple/BasicCrawler.java   |  80 ---------------
+ .../multiple/MultipleCrawlerController.java        | 103 -------------------
+ .../uci/ics/crawler4j/shutdown/BasicCrawler.java   |  68 ------------
+ .../crawler4j/shutdown/ControllerWithShutdown.java |  93 -----------------
+ 26 files changed, 1067 insertions(+), 1070 deletions(-)
+1c2210116961cad58f72cd4949a1e24c83172668
+
+ .../uci/ics/crawler4j/crawler/Configurable.java    |   6 ++
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 100 +++++++++++++++++----
+ .../uci/ics/crawler4j/crawler/CrawlController.java |  70 ++++++++++++---
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |  67 +++++++++++---
+ 4 files changed, 207 insertions(+), 36 deletions(-)
+0bd0bb5922ee911b11c327489ea89d23c2ae742d
+
+ .gitignore                                         |   1 +
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   |  12 +--
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 114 ++++++++++++++++++---
+ 3 files changed, 107 insertions(+), 20 deletions(-)
+b861b180027c0c5a78d2d785f3f6c9ce64033a0d
+
+ .gitignore                                          |  4 ++++
+ .../edu/uci/ics/crawler4j/crawler/Configurable.java | 17 +++++++++++++++++
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java  | 17 +++++++++++++++++
+ .../uci/ics/crawler4j/parser/BinaryParseData.java   | 17 +++++++++++++++++
+ .../ics/crawler4j/parser/HtmlContentHandler.java    | 17 +++++++++++++++++
+ .../edu/uci/ics/crawler4j/parser/HtmlParseData.java | 21 +++++++++++++++++++--
+ .../edu/uci/ics/crawler4j/parser/ParseData.java     | 17 +++++++++++++++++
+ .../edu/uci/ics/crawler4j/parser/TextParseData.java | 17 +++++++++++++++++
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java    | 17 +++++++++++++++++
+ .../edu/uci/ics/crawler4j/robotstxt/RuleSet.java    | 17 +++++++++++++++++
+ 10 files changed, 159 insertions(+), 2 deletions(-)
+8d76f7dec94d409d6a7f65a05392a65bc2222031
+
+ .classpath                                         |  11 +
+ .project                                           |  29 ++
+ jar-pack.xml                                       |  25 ++
+ pom.xml                                            | 140 +++++++++
+ .../uci/ics/crawler4j/crawler/Configurable.java    |  14 +
+ .../edu/uci/ics/crawler4j/crawler/CrawlConfig.java | 305 +++++++++++++++++++
+ .../uci/ics/crawler4j/crawler/CrawlController.java | 333 +++++++++++++++++++++
+ .../java/edu/uci/ics/crawler4j/crawler/Page.java   | 116 +++++++
+ .../edu/uci/ics/crawler4j/crawler/WebCrawler.java  | 222 ++++++++++++++
+ .../fetcher/IdleConnectionMonitorThread.java       |  60 ++++
+ .../uci/ics/crawler4j/fetcher/PageFetchStatus.java |  43 +++
+ .../edu/uci/ics/crawler4j/fetcher/PageFetcher.java | 288 ++++++++++++++++++
+ .../edu/uci/ics/crawler4j/frontier/Counters.java   | 144 +++++++++
+ .../uci/ics/crawler4j/frontier/DocIDServer.java    | 140 +++++++++
+ .../edu/uci/ics/crawler4j/frontier/Frontier.java   | 203 +++++++++++++
+ .../ics/crawler4j/frontier/InProcessPagesDB.java   |  89 ++++++
+ .../ics/crawler4j/frontier/WebURLTupleBinding.java |  48 +++
+ .../edu/uci/ics/crawler4j/frontier/WorkQueues.java | 184 ++++++++++++
+ .../uci/ics/crawler4j/parser/BinaryParseData.java  |  15 +
+ .../ics/crawler4j/parser/HtmlContentHandler.java   | 141 +++++++++
+ .../uci/ics/crawler4j/parser/HtmlParseData.java    |  52 ++++
+ .../edu/uci/ics/crawler4j/parser/ParseData.java    |   8 +
+ .../java/edu/uci/ics/crawler4j/parser/Parser.java  | 154 ++++++++++
+ .../uci/ics/crawler4j/parser/TextParseData.java    |  20 ++
+ .../ics/crawler4j/robotstxt/HostDirectives.java    |  59 ++++
+ .../ics/crawler4j/robotstxt/RobotstxtConfig.java   |  46 +++
+ .../ics/crawler4j/robotstxt/RobotstxtParser.java   |  97 ++++++
+ .../ics/crawler4j/robotstxt/RobotstxtServer.java   | 125 ++++++++
+ .../edu/uci/ics/crawler4j/robotstxt/RuleSet.java   |  36 +++
+ .../uci/ics/crawler4j/url/URLCanonicalizer.java    |  58 ++++
+ .../java/edu/uci/ics/crawler4j/url/WebURL.java     |  88 ++++++
+ src/main/java/edu/uci/ics/crawler4j/util/IO.java   |  59 ++++
+ src/main/java/edu/uci/ics/crawler4j/util/Util.java |  81 +++++
+ src/main/resources/log4j.properties                |   9 +
+ .../edu/uci/ics/crawler4j/advanced/Controller.java |  73 +++++
+ .../edu/uci/ics/crawler4j/advanced/CrawlStat.java  |  62 ++++
+ .../edu/uci/ics/crawler4j/advanced/Downloader.java |  92 ++++++
+ .../edu/uci/ics/crawler4j/advanced/MyCrawler.java  |  88 ++++++
+ .../ics/crawler4j/basic/BasicCrawlController.java  | 112 +++++++
+ .../edu/uci/ics/crawler4j/basic/BasicCrawler.java  |  67 +++++
+ .../ics/crawler4j/imagecrawler/Cryptography.java   |  54 ++++
+ .../imagecrawler/ImageCrawlController.java         |  74 +++++
+ .../ics/crawler4j/imagecrawler/ImageCrawler.java   | 104 +++++++
+ .../uci/ics/crawler4j/multiple/BasicCrawler.java   |  80 +++++
+ .../multiple/MultipleCrawlerController.java        | 103 +++++++
+ .../uci/ics/crawler4j/shutdown/BasicCrawler.java   |  68 +++++
+ .../crawler4j/shutdown/ControllerWithShutdown.java |  93 ++++++
+ 47 files changed, 4512 insertions(+)
+8a60ab1a0025b750602f3ba785e6014cf1c522f9
+
+ README | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
