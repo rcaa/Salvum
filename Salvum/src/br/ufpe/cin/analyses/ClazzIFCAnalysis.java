@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.eclipse.core.runtime.CoreException;
 
 import br.ufpe.cin.mapping.LineMappingGenerator;
