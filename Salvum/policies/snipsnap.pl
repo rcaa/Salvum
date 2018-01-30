@@ -1,0 +1,1 @@
+snipsnap.api.user.User {passwd} noflow Writeops where Writeops = {setCookie,sendError}

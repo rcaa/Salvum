@@ -32,11 +32,11 @@ public class HSQLDBExample {
 			CancelException {
 
 		// #if HOME
-		 PrintStream out = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/output.txt"));
-		 PrintStream outST = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/stackTrace.txt"));
+//@		 PrintStream out = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/output.txt"));
+//@		 PrintStream outST = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/stackTrace.txt"));
 		// #else
-//@		PrintStream out = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/output.txt"));
-//@		PrintStream outST = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/stackTrace.txt"));
+		PrintStream out = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/output.txt"));
+		PrintStream outST = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/stackTrace.txt"));
 		// #endif
 		System.setOut(out);
 		System.setErr(outST);
@@ -46,9 +46,9 @@ public class HSQLDBExample {
 		 * classes of the program which you want to analyze
 		 */
 		// #if HOME
-		 String classPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/bin";
+//@		 String classPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/bin";
 		// #else
-//@		String classPath = "/home/local/CIN/rcaa2/opensource/HSQLDB/bin";
+		String classPath = "/home/local/CIN/rcaa2/opensource/HSQLDB/bin";
 		// #endif
 
 		/**
@@ -70,15 +70,15 @@ public class HSQLDBExample {
 		 * adiciona libs necessarias (dependencias)
 		 */
 		// #if HOME
-		
-		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/lib/ant.jar");
-		 
-		 
-		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/lib/servlet-2_3-fcs-classfiles.jar");
+//@		
+//@		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/lib/ant.jar");
+//@		 
+//@		 
+//@		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/HSQLDB/lib/servlet-2_3-fcs-classfiles.jar");
 		// #else
-//@
-//@		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/HSQLDB/lib/ant.jar");
-//@		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/HSQLDB/lib/servlet-2_3-fcs-classfiles.jar");
+
+		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/HSQLDB/lib/ant.jar");
+		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/HSQLDB/lib/servlet-2_3-fcs-classfiles.jar");
 		// #endif
 
 		/**
@@ -110,11 +110,11 @@ public class HSQLDBExample {
 
 		/** optional: save PDG to disk */
 		// #if HOME
-		 SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
-		 "/Users/rodrigoandrade/Desktop/SDGInformationFlow.pdg"));
+//@		 SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
+//@		 "/Users/rodrigoandrade/Desktop/SDGInformationFlow.pdg"));
 		// #else
-//@		SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
-//@				"/home/local/CIN/rcaa2/experimentOutput/SDGInformationFlow.pdg"));
+		SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
+				"/home/local/CIN/rcaa2/experimentOutput/SDGInformationFlow.pdg"));
 		// #endif
 
 		// IFCAnalysis ana = new IFCAnalysis(program);

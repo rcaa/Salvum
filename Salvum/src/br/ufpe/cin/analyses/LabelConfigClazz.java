@@ -7,6 +7,7 @@ import java.util.Set;
 
 import br.ufpe.cin.policy.PolicyClazz;
 import edu.kit.joana.api.IFCAnalysis;
+import edu.kit.joana.api.annotations.IFCAnnotation;
 import edu.kit.joana.api.lattice.BuiltinLattices;
 import edu.kit.joana.api.sdg.SDGAttribute;
 import edu.kit.joana.api.sdg.SDGClass;
@@ -24,13 +25,16 @@ import edu.kit.joana.api.sdg.SDGProgramPart;
 public class LabelConfigClazz {
 
 	public void labellingElements(List<SDGProgramPart> sources,
-			List<SDGProgramPart> sinks, SDGProgram program, IFCAnalysis ana) {
+			List<SDGProgramPart> sinks, List<SDGProgramPart> declassifications,
+			SDGProgram program, IFCAnalysis ana) {
 
 		/** annotate sources and sinks */
 
 		annotateSources(sources, program, ana);
 
 		annotateSinks(sinks, program, ana);
+
+		annotateDeclassification(declassifications, program, ana);
 	}
 
 	private void annotateSources(List<SDGProgramPart> sources,
@@ -85,9 +89,40 @@ public class LabelConfigClazz {
 		}
 	}
 
+	private void annotateDeclassification(
+			List<SDGProgramPart> declassifications, SDGProgram program,
+			IFCAnalysis ana) {
+		for (SDGProgramPart declass : declassifications) {
+			if (declass instanceof SDGMethod) {
+				ana.addDeclassification(program.getMethod(declass.toString()),
+						BuiltinLattices.STD_SECLEVEL_HIGH,
+						BuiltinLattices.STD_SECLEVEL_LOW);
+			} else if (declass instanceof SDGAttribute) {
+				ana.addDeclassification(program.getPart(declass.toString()),
+						BuiltinLattices.STD_SECLEVEL_HIGH,
+						BuiltinLattices.STD_SECLEVEL_LOW);
+			} else if (declass instanceof SDGInstruction) {
+				Collection<SDGInstruction> instructions = program
+						.getInstruction(declass.getOwningMethod()
+								.getSignature(), ((SDGInstruction) declass)
+								.getBytecodeIndex());
+				for (SDGInstruction sdgInstruction : instructions) {
+					ana.addDeclassification(sdgInstruction,
+							BuiltinLattices.STD_SECLEVEL_HIGH,
+							BuiltinLattices.STD_SECLEVEL_LOW);
+				}
+			} else {
+				ana.addDeclassification(declass,
+						BuiltinLattices.STD_SECLEVEL_HIGH,
+						BuiltinLattices.STD_SECLEVEL_LOW);
+			}
+		}
+	}
+
 	public void prepareListsOfSourceAndSinks(Collection<SDGClass> classes,
 			Map<String, Set<Integer>> mapClassLines, PolicyClazz policy,
 			List<SDGProgramPart> sources, List<SDGProgramPart> sinks,
+			List<SDGProgramPart> declassifications,
 			Map<String, Integer> mapInstructionsLines) {
 		for (SDGClass sdgClass : classes) {
 			Map<String, Set<String>> elements = policy.getClazzAndElements();
@@ -100,6 +135,12 @@ public class LabelConfigClazz {
 				labelSink(mapClassLines, policy, sources, sinks, sdgClass,
 						mapInstructionsLines);
 			}
+			List<String> declassList = policy.getDeclassifications();
+			if (declassList != null && !declassList.isEmpty()) {
+				// por enquanto so marca instrucao de metodo como
+				// declassification
+				labelDeclassification(policy, declassifications, sdgClass);
+			}
 		}
 	}
 
@@ -111,9 +152,11 @@ public class LabelConfigClazz {
 				Set<String> sensitiveResources = policy
 						.getSensitiveResources(clazz);
 				for (String sensitiveResource : sensitiveResources) {
-					if (sdgAttribute.toString().equals(sensitiveResource.toString())) {
+					if (sdgAttribute.toString().equals(
+							sensitiveResource.toString())) {
 						if (policy.getOperator().equals("noflow")) {
-							System.out.println("source to be labelled: " + sdgAttribute);
+							System.out.println("source to be labelled: "
+									+ sdgAttribute);
 							sources.add(sdgAttribute);
 						} else if (policy.getOperator().equals("noset")) {
 							sinks.add(sdgAttribute);
@@ -146,10 +189,11 @@ public class LabelConfigClazz {
 						break;
 					}
 				}
-				
+
 				if (lineNumbers != null && lineNumbers.contains(sourceLine)) {
 					if (policy.getOperator().equals("noflow")) {
-						System.out.println("sink to be labelled: " + sdgInstruction);
+						System.out.println("sink to be labelled: "
+								+ sdgInstruction);
 						sinks.add(sdgInstruction);
 					} else if (policy.getOperator().equals("noset")) {
 						sources.add(sdgInstruction);
@@ -159,4 +203,24 @@ public class LabelConfigClazz {
 			}
 		}
 	}
+
+	private void labelDeclassification(PolicyClazz policy,
+			List<SDGProgramPart> declassifications, SDGClass sdgClass) {
+		for (SDGMethod sdgMethod : sdgClass.getMethods()) {
+			List<SDGInstruction> methodInstructions = sdgMethod
+					.getInstructions();
+			for (SDGInstruction sdgInstruction : methodInstructions) {
+				String instructionStr = sdgInstruction.toString();
+
+				for (String declass : policy.getDeclassifications()) {
+					if (instructionStr.contains(declass)) {
+						System.out.println("declassification to be labelled: "
+								+ sdgInstruction);
+						declassifications.add(sdgInstruction);
+					}
+				}
+			}
+		}
+	}
+
 }

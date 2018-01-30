@@ -1,0 +1,1 @@
+org.gridsphere.portlets.core.admin.users.UserManagerPortlet {passwordBean}, org.gridsphere.portlets.core.login.LoginPortlet {certificate}, org.gridsphere.portlets.core.login.LoginPortlet {passwordValue}, org.gridsphere.servlets.SetupServlet {pass} noflow Writeops where Writeops = {sendMail,log,store,System}

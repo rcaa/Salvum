@@ -10,17 +10,17 @@ public class DuplicateRemovalUtil {
 	public static void main(String[] args) throws IOException {
 		// PrintWriter object for output.txt
 		PrintWriter pw = new PrintWriter(
-				"C:\\Users\\Rodrigo Andrade\\Desktop\\output-blojsom2.txt");
+				"C:\\Users\\Rodrigo Andrade\\Desktop\\nohup-snipsnap3.txt");
 		// BufferedReader object for input.txt
 		BufferedReader br1 = new BufferedReader(new FileReader(
-				"C:\\Users\\Rodrigo Andrade\\Desktop\\nohup-blojsom2.out"));
+				"C:\\Users\\Rodrigo Andrade\\Desktop\\nohup-snipsnap3.out"));
 		String line1 = br1.readLine();
 		// loop for each line of input.txt
 		while (line1 != null) {
 			boolean flag = false;
 			// BufferedReader object for output.txt
 			BufferedReader br2 = new BufferedReader(new FileReader(
-					"C:\\Users\\Rodrigo Andrade\\Desktop\\output-blojsom2.txt"));
+					"C:\\Users\\Rodrigo Andrade\\Desktop\\nohup-snipsnap3.txt"));
 			String line2 = br2.readLine();
 			// loop for each line of output.txt
 			while (line2 != null) {

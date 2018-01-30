@@ -1,0 +1,1 @@
+org.jugjobs.model.Database {password}, org.jugjobs.action.CommonAction {authenticatedJobNumber} noflow Writeops where Writeops = {logger}

@@ -95,6 +95,7 @@ public class ClazzIFCAnalysis {
 			// rotulo statements e expressions
 			List<SDGProgramPart> sources = new ArrayList<SDGProgramPart>();
 			List<SDGProgramPart> sinks = new ArrayList<SDGProgramPart>();
+			List<SDGProgramPart> declassifications = new ArrayList<SDGProgramPart>();
 			LabelConfigClazz lconfig = new LabelConfigClazz();
 
 			Path path = FileSystems.getDefault().getPath(
@@ -107,11 +108,13 @@ public class ClazzIFCAnalysis {
 					.loadMapping(p, sdg);
 
 			lconfig.prepareListsOfSourceAndSinks(classes, mapClassLines,
-					policy, sources, sinks, mapInstructionsLines);
+					policy, sources, sinks, declassifications,
+					mapInstructionsLines);
 
 			// rodo as analises
 			IFCAnalysis ifc = new IFCAnalysis(program);
-			lconfig.labellingElements(sources, sinks, program, ifc);
+			lconfig.labellingElements(sources, sinks, declassifications,
+					program, ifc);
 			Collection<? extends IViolation<SecurityNode>> result = ifc.doIFC();
 			if (result == null || result.isEmpty()) {
 				System.out.println("-----No violations found-----");

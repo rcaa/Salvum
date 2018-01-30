@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,10 +22,12 @@ public class PolicyClazz {
 	private Map<String, Set<String>> clazzAndElements;
 	private String operator;
 	private Map<String, Set<String>> methodsAndArgs;
+	private List<String> declassifications;
 
 	public PolicyClazz(Path path) throws IOException {
 		this.clazzAndElements = new HashMap<String, Set<String>>();
 		this.methodsAndArgs = new HashMap<String, Set<String>>();
+		this.declassifications = new ArrayList<>();
 		if (path.toString().endsWith(".pl")) {
 			// ainda recebe texto
 			String constraint = new String(Files.readAllBytes(path));
@@ -49,6 +53,17 @@ public class PolicyClazz {
 					// TODO tenho que alterar esse null depois
 					this.methodsAndArgs.put(meth, null);
 				}
+				if (secondPart != null && !secondPart.isEmpty()
+						&& secondPart.contains("unless")) {
+					String[] secondPartSplit = secondPart.split("unless");
+					// Writeops where Writeops = {_logger} unless {encrypt,sanitize}
+					String declassString = secondPartSplit[1].substring(
+							secondPartSplit[1].indexOf("{") + 1, secondPartSplit[1].indexOf("}"));
+					String[] declassifications = declassString.split(",");
+					for (String declass : declassifications) {
+						this.declassifications.add(declass);
+					}
+				}
 			} else if (constraint.contains("noset")) {
 
 			}
@@ -72,7 +87,7 @@ public class PolicyClazz {
 				if (module.containsKey("identifier")
 						&& module.containsKey("method")
 						&& module.containsKey("arguments")) {
-					//String identifier = (String) module.get("identifier");
+					// String identifier = (String) module.get("identifier");
 					String meth = (String) module.get("method");
 					JSONArray arguments = (JSONArray) module.get("arguments");
 					Set<String> args = new HashSet<>();
@@ -131,6 +146,10 @@ public class PolicyClazz {
 
 	public Map<String, Set<String>> getMethodsAndArgs() {
 		return methodsAndArgs;
+	}
+
+	public List<String> getDeclassifications() {
+		return this.declassifications;
 	}
 
 	public static void main(String[] args) {

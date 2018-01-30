@@ -24,11 +24,11 @@ public class InformationFlowExample {
 			CancelException {
 
 		// #if HOME
-		 PrintStream out = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/output.txt"));
-		 PrintStream outST = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/stackTrace.txt"));
+//@		 PrintStream out = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/output.txt"));
+//@		 PrintStream outST = new PrintStream(new FileOutputStream("/Users/rodrigoandrade/Documents/workspaces/Doutorado/joana/joana.api/stackTrace.txt"));
 		// #else
-//@		PrintStream out = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/output.txt"));
-//@		PrintStream outST = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/stackTrace.txt"));
+		PrintStream out = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/output.txt"));
+		PrintStream outST = new PrintStream(new FileOutputStream("/home/local/CIN/rcaa2/experimentOutput/stackTrace.txt"));
 		// #endif
 		System.setOut(out);
 		System.setErr(outST);
@@ -38,9 +38,9 @@ public class InformationFlowExample {
 		 * classes of the program which you want to analyze
 		 */
 		// #if HOME
-		 String classPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/bin";
+//@		 String classPath = "/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/bin";
 		// #else
-//@		String classPath = "/home/local/CIN/rcaa2/opensource/gitblit/bin";
+		String classPath = "/home/local/CIN/rcaa2/opensource/gitblit/bin";
 		// #endif
 
 		/**
@@ -62,15 +62,15 @@ public class InformationFlowExample {
 		 * adiciona libs necessarias (dependencias)
 		 */
 		// #if HOME
-		
-		 //config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
-		 
-		 
-		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
+//@		
+//@		 //config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/wicket-1.4.21.jar");
+//@		 
+//@		 
+//@		 config.setThirdPartyLibsPath("/Users/rodrigoandrade/Documents/workspaces/Doutorado/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
 		// #else
-//@
-//@		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
-//@		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/gitblit/ext/wicket-1.4.21.jar");
+
+		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/gitblit/ext/javax.servlet-api-3.1.0.jar");
+		config.setThirdPartyLibsPath("/home/local/CIN/rcaa2/opensource/gitblit/ext/wicket-1.4.21.jar");
 		// #endif
 
 		/**
@@ -102,11 +102,11 @@ public class InformationFlowExample {
 
 		/** optional: save PDG to disk */
 		// #if HOME
-		 SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
-		 "/Users/rodrigoandrade/Desktop/SDGInformationFlow.pdg"));
+//@		 SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
+//@		 "/Users/rodrigoandrade/Desktop/SDGInformationFlow.pdg"));
 		// #else
-//@		SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
-//@				"/home/local/CIN/rcaa2/experimentOutput/SDGInformationFlow.pdg"));
+		SDGSerializer.toPDGFormat(program.getSDG(), new FileOutputStream(
+				"/home/local/CIN/rcaa2/experimentOutput/SDGInformationFlow.pdg"));
 		// #endif
 
 		// IFCAnalysis ana = new IFCAnalysis(program);
